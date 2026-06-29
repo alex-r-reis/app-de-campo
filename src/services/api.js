@@ -9,6 +9,11 @@ function getAdminToken() {
   return sessionStorage.getItem('admin_token') || '';
 }
 
+async function dataUrlToBlob(dataUrl) {
+  const res = await fetch(dataUrl);
+  return res.blob();
+}
+
 export function setAdminToken(token) {
   sessionStorage.setItem('admin_token', token || '');
 }
@@ -70,9 +75,14 @@ export async function enviarVisitaParaServidor(visita, docxBlob) {
     form.append('docx', docxBlob, `Relatorio_${visita.chefeFamilia || 'visita'}.docx`);
   }
 
-  (visita.fotos || []).forEach((f, i) => {
-    if (f.file) form.append('fotos', f.file, f.file.name || `foto_${i + 1}.jpg`);
-  });
+  for (const [i, f] of (visita.fotos || []).entries()) {
+    if (f.file) {
+      form.append('fotos', f.file, f.file.name || `foto_${i + 1}.jpg`);
+    } else if (f.dataUrl) {
+      const blob = await dataUrlToBlob(f.dataUrl);
+      form.append('fotos', blob, f.nome || `foto_${i + 1}.jpg`);
+    }
+  }
 
   const res = await fetch(`${API_BASE}/api/visitas`, { method: 'POST', body: form });
   if (!res.ok) {

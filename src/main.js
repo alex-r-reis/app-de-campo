@@ -8,13 +8,14 @@
 
 import './styles/main.css';
 
-import { state, visitaPorId } from './state/store.js';
+import { state, visitaPorId, carregarEstadoLocal } from './state/store.js';
 import { render } from './render.js';
 import { gerarDocxVisita } from './docx/gerarDocx.js';
 import {
   doLogin,
   logout,
   abrirFamilia,
+  alterarVisita,
   irParaVisita,
   editarArea,
   voltarFamilias,
@@ -40,6 +41,7 @@ window.gerarDocxVisita = gerarDocxVisita;
 window.doLogin = doLogin;
 window.logout = logout;
 window.abrirFamilia = abrirFamilia;
+window.alterarVisita = alterarVisita;
 window.irParaVisita = irParaVisita;
 window.editarArea = editarArea;
 window.voltarFamilias = voltarFamilias;
@@ -64,5 +66,44 @@ window.addEventListener('offline', () => {
   state.online = false;
   render();
 });
+
+carregarEstadoLocal();
+
+async function aquecerCacheOffline() {
+  if (!('caches' in window)) return;
+  const cache = await caches.open('ater-cacau-campo-v1');
+  const urls = new Set([
+    `${location.origin}/`,
+    `${location.origin}/index.html`,
+    `${location.origin}/manifest.webmanifest`,
+    ...performance
+      .getEntriesByType('resource')
+      .map((entry) => entry.name)
+      .filter((url) => url.startsWith(location.origin)),
+  ]);
+
+  await Promise.all(
+    [...urls].map(async (url) => {
+      try {
+        const res = await fetch(url, { cache: 'reload' });
+        if (res.ok) await cache.put(url, res);
+      } catch (err) {
+        console.warn('Nao foi possivel guardar recurso offline', url, err);
+      }
+    })
+  );
+}
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then(() => navigator.serviceWorker.ready)
+      .then(() => aquecerCacheOffline())
+      .catch((err) => {
+        console.warn('Nao foi possivel registrar o cache offline', err);
+      });
+  });
+}
 
 render();

@@ -108,6 +108,29 @@ function extTipo(file) {
   return 'jpg';
 }
 
+async function fotoArrayBuffer(foto) {
+  if (foto.file) return foto.file.arrayBuffer();
+  if (foto.dataUrl) {
+    const res = await fetch(foto.dataUrl);
+    return res.arrayBuffer();
+  }
+  throw new Error('Foto sem arquivo local');
+}
+
+function fotoTipo(foto) {
+  if (foto.file) return extTipo(foto.file);
+  const tipo = foto.tipo || foto.dataUrl?.slice(0, 40) || '';
+  if (tipo.includes('png')) return 'png';
+  if (tipo.includes('gif')) return 'gif';
+  if (tipo.includes('bmp')) return 'bmp';
+  return 'jpg';
+}
+
+function fotoSrc(foto) {
+  if (foto.file) return URL.createObjectURL(foto.file);
+  return foto.dataUrl || '';
+}
+
 /**
  * Gera o .docx da visita, dispara o download no navegador e devolve o blob
  * (usado por src/actions/actions.js para depois enviar ao backend/Drive).
@@ -257,21 +280,22 @@ export async function gerarDocxVisita(visita) {
   const blocosFotos = [];
   for (const f of visita.fotos) {
     let dims = { width: 240, height: 180 };
+    const src = fotoSrc(f);
     try {
-      dims = await getImageDims(URL.createObjectURL(f.file));
+      dims = await getImageDims(src);
     } catch (e) {
       // mantém dimensões padrão se a imagem não puder ser lida
     }
     let buffer;
     try {
-      buffer = await f.file.arrayBuffer();
+      buffer = await fotoArrayBuffer(f);
     } catch (e) {
       continue;
     }
     blocosFotos.push(
       new Paragraph({
         alignment: AlignmentType.CENTER,
-        children: [new ImageRun({ data: buffer, type: extTipo(f.file), transformation: dims })],
+        children: [new ImageRun({ data: buffer, type: fotoTipo(f), transformation: dims })],
       })
     );
     if (f.legenda && f.legenda.trim()) {

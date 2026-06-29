@@ -16,7 +16,7 @@
   body{
     background:var(--bg);
     color:var(--text);
-    font-family:'Work Sans',sans-serif;
+    font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
     min-height:100vh;
     -webkit-font-smoothing:antialiased;
   }
@@ -32,13 +32,13 @@
       var(--bg);
   }
   h1,h2,h3,.display{
-    font-family:'Big Shoulders',sans-serif;
+    font-family:'Arial Narrow','Roboto Condensed',Impact,sans-serif;
     font-weight:800;
     letter-spacing:0.02em;
     text-transform:uppercase;
     margin:0;
   }
-  .mono{font-family:'Space Mono',monospace;}
+  .mono{font-family:'Cascadia Mono','Consolas',monospace;}
   button{font-family:inherit;cursor:pointer;}
   input,select,textarea{font-family:inherit;}
 
@@ -55,15 +55,15 @@
     width:34px;height:34px;border-radius:50%;
     background:var(--accent); color:#1C2118;
     display:flex;align-items:center;justify-content:center;
-    font-family:'Big Shoulders',sans-serif; font-weight:800; font-size:15px;
+    font-family:'Arial Narrow','Roboto Condensed',Impact,sans-serif; font-weight:800; font-size:15px;
   }
   .who .nome{font-size:13px; font-weight:600; line-height:1.1;}
-  .who .reg{font-size:11px; color:var(--text-dim); font-family:'Space Mono',monospace;}
+  .who .reg{font-size:11px; color:var(--text-dim); font-family:'Cascadia Mono','Consolas',monospace;}
   .conn{
     display:flex; align-items:center; gap:6px;
     font-size:11px; padding:5px 9px; border-radius:20px;
     border:1px solid var(--line); cursor:pointer;
-    font-family:'Space Mono',monospace;
+    font-family:'Cascadia Mono','Consolas',monospace;
   }
   .conn.online{color:var(--ok); border-color:var(--ok);}
   .conn.offline{color:var(--pending); border-color:var(--pending);}
@@ -88,7 +88,7 @@
     display:flex; padding:14px 16px 0 16px; gap:6px;
   }
   .step{
-    flex:1; text-align:center; font-family:'Space Mono',monospace; font-size:10px;
+    flex:1; text-align:center; font-family:'Cascadia Mono','Consolas',monospace; font-size:10px;
     color:var(--text-dim); padding-bottom:8px; border-bottom:3px solid var(--line);
   }
   .step.active{color:var(--accent); border-color:var(--accent);}
@@ -110,10 +110,10 @@
 
   .fam-row{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
   .fam-name{font-size:16px; font-weight:700; margin-bottom:2px;}
-  .fam-meta{font-size:12px; color:var(--text-dim); font-family:'Space Mono',monospace;}
+  .fam-meta{font-size:12px; color:var(--text-dim); font-family:'Cascadia Mono','Consolas',monospace;}
 
   .stamp{
-    font-family:'Space Mono',monospace;
+    font-family:'Cascadia Mono','Consolas',monospace;
     font-size:10px; font-weight:700; letter-spacing:0.06em;
     padding:4px 8px; border-radius:3px;
     border:1.5px solid currentColor;
@@ -126,7 +126,7 @@
   .stamp.neutral{color:var(--text-dim);}
 
   .section-label{
-    font-family:'Space Mono',monospace; font-size:11px; color:var(--accent);
+    font-family:'Cascadia Mono','Consolas',monospace; font-size:11px; color:var(--accent);
     text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;
     display:flex; align-items:center; gap:8px;
   }
@@ -136,7 +136,7 @@
   .header-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:4px;}
   .header-grid .mi{background:var(--surface-2); border-radius:5px; padding:8px 10px;}
   .header-grid .mi.full{grid-column:1 / -1;}
-  .header-grid .mi .lbl{font-size:10px; color:var(--text-dim); text-transform:uppercase; font-family:'Space Mono',monospace;}
+  .header-grid .mi .lbl{font-size:10px; color:var(--text-dim); text-transform:uppercase; font-family:'Cascadia Mono','Consolas',monospace;}
   .header-grid .mi .val{font-size:13px; font-weight:600; margin-top:2px;}
   .header-grid select.input-inline{
     width:100%; background:transparent; border:none; color:var(--accent);
@@ -159,7 +159,7 @@
     font-size:13px;
   }
   .goal-item:last-child{border-bottom:none;}
-  .goal-num{font-family:'Space Mono',monospace; color:var(--accent); font-weight:700; flex-shrink:0;}
+  .goal-num{font-family:'Cascadia Mono','Consolas',monospace; color:var(--accent); font-weight:700; flex-shrink:0;}
 
   .opts{display:flex; gap:6px; flex-wrap:wrap;}
   .opt{
@@ -178,7 +178,7 @@
   textarea.obs, textarea.field-text{min-height:64px; resize:vertical;}
 
   .risco-card{background:var(--surface-2); border:1px solid var(--line); border-radius:6px; padding:10px; margin-bottom:10px; position:relative;}
-  .risco-lbl{font-size:10px; color:var(--text-dim); text-transform:uppercase; font-family:'Space Mono',monospace; margin-bottom:4px; display:block;}
+  .risco-lbl{font-size:10px; color:var(--text-dim); text-transform:uppercase; font-family:'Cascadia Mono','Consolas',monospace; margin-bottom:4px; display:block;}
   .risco-remove{
     position:absolute; top:8px; right:8px; background:none; border:none; color:var(--text-dim);
     font-size:14px; line-height:1; padding:2px 6px;
@@ -192,7 +192,7 @@
     background:var(--surface-2); border:1px dashed var(--line); border-radius:6px;
     padding:12px; display:flex; flex-direction:column; gap:8px; margin-bottom:6px;
   }
-  .gps-readout{font-family:'Space Mono',monospace; font-size:12px; color:var(--ok); line-height:1.5;}
+  .gps-readout{font-family:'Cascadia Mono','Consolas',monospace; font-size:12px; color:var(--ok); line-height:1.5;}
   .gps-readout.empty{color:var(--text-dim);}
   .gps-warn{font-size:11px; color:var(--pending);}
 
@@ -201,7 +201,7 @@
     padding:12px; font-size:12.5px; color:var(--text); line-height:1.5; margin-bottom:10px;
   }
   .info-box .info-lbl{
-    font-family:'Space Mono',monospace; font-size:10px; color:var(--accent);
+    font-family:'Cascadia Mono','Consolas',monospace; font-size:10px; color:var(--accent);
     text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:5px;
   }
 
@@ -221,7 +221,7 @@
     border-radius:5px; padding:7px 9px; font-size:12.5px; font-family:inherit;
   }
   .photo-meta-row{display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;}
-  .photo-coord{font-family:'Space Mono',monospace; font-size:10.5px; color:var(--text-dim);}
+  .photo-coord{font-family:'Cascadia Mono','Consolas',monospace; font-size:10.5px; color:var(--text-dim);}
   .photo-coord.com-gps{color:var(--ok);}
   .photo-gps-btn{
     border:1.5px solid var(--line); background:none; color:var(--text-dim);
@@ -236,7 +236,7 @@
   .btn{
     width:100%; padding:13px; border-radius:6px; border:none;
     font-weight:700; font-size:14px; text-transform:uppercase; letter-spacing:0.03em;
-    font-family:'Big Shoulders',sans-serif;
+    font-family:'Arial Narrow','Roboto Condensed',Impact,sans-serif;
   }
   .btn-primary{background:var(--accent); color:#1C2118;}
   .btn-primary:active{background:var(--accent-dim);}
@@ -247,12 +247,12 @@
   .logo-block{text-align:center; margin-bottom:34px;}
   .logo-block .logo-img{width:84px; height:84px; object-fit:contain; margin-bottom:14px;}
   .logo-block .tag{
-    display:inline-block; font-family:'Space Mono',monospace; font-size:10px; color:var(--accent);
+    display:inline-block; font-family:'Cascadia Mono','Consolas',monospace; font-size:10px; color:var(--accent);
     border:1px solid var(--accent); padding:3px 10px; border-radius:20px; margin-bottom:14px; letter-spacing:0.1em;
   }
   .logo-block h1{font-size:34px; line-height:0.98;}
   .logo-block .sub{color:var(--text-dim); font-size:13px; margin-top:6px;}
-  .field-label{font-size:11px; color:var(--text-dim); text-transform:uppercase; font-family:'Space Mono',monospace; margin-bottom:5px; display:block;}
+  .field-label{font-size:11px; color:var(--text-dim); text-transform:uppercase; font-family:'Cascadia Mono','Consolas',monospace; margin-bottom:5px; display:block;}
   .field{margin-bottom:14px;}
   select.input, input.input{
     width:100%; background:var(--surface); border:1px solid var(--line); color:var(--text);
@@ -276,7 +276,7 @@
 
   .back-link{
     display:inline-flex; align-items:center; gap:5px; color:var(--text-dim);
-    font-size:12px; margin-bottom:14px; font-family:'Space Mono',monospace; cursor:pointer;
+    font-size:12px; margin-bottom:14px; font-family:'Cascadia Mono','Consolas',monospace; cursor:pointer;
   }
 
   ::-webkit-scrollbar{width:0px;}

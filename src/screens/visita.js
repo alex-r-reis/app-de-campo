@@ -1,14 +1,26 @@
-// src/screens/visita.js
 import { VISITAS_PADRAO } from '../data/tecnicos.js';
-import { state, getFamilia, isOnline, fmtCoord, fmtHora, fmtDataHoje, todasMetas, totalRespondidas } from '../state/store.js';
+import { atividadePorNome, opcoesProximaEtapa } from '../data/atividades.js';
+import {
+  state,
+  getFamilia,
+  isOnline,
+  fmtCoord,
+  fmtHora,
+  fmtDataHoje,
+  objetivosAtivos,
+  metasAtivas,
+  totalRespondidas,
+} from '../state/store.js';
 import { gerarResumoCumprimento } from '../utils/relatorio.js';
 import { proximaEtapa } from '../utils/cronograma.js';
 
 export function screenVisita() {
   const fam = getFamilia(state.familiaId);
-  const metas = todasMetas(fam);
+  const atividade = atividadePorNome(state.nomeVisita);
+  const objetivos = objetivosAtivos(fam);
+  const metas = metasAtivas(fam);
 
-  const objetivosForm = fam.plano.objetivos
+  const objetivosForm = objetivos
     .map(
       (o) => `
     <div class="card">
@@ -35,7 +47,7 @@ export function screenVisita() {
     .map(
       (r, i) => `
     <div class="risco-card">
-      <button class="risco-remove" onclick="removerRisco(${i})">✕</button>
+      <button class="risco-remove" onclick="removerRisco(${i})">×</button>
       <span class="risco-lbl">Problema encontrado</span>
       <textarea class="field-text" style="min-height:44px; margin-bottom:8px;" oninput="state.riscos[${i}].descricao=this.value" placeholder="Ex.: incidência de podridão-parda em parte da área">${r.descricao}</textarea>
       <span class="risco-lbl">Proposta de solução</span>
@@ -51,7 +63,7 @@ export function screenVisita() {
       LAT ${fmtCoord(state.gps.lat)}  LNG ${fmtCoord(state.gps.lng)}<br>
       precisão ±${state.gps.acc}m · ${fmtHora(state.gps.timestamp)}
     </div>
-    ${state.gps.simulado ? '<div class="gps-warn">Coordenada simulada — permissão de localização indisponível neste navegador</div>' : ''}
+    ${state.gps.simulado ? '<div class="gps-warn">Coordenada simulada - permissão de localização indisponível neste navegador</div>' : ''}
   `
     : `<div class="gps-readout empty">Nenhuma coordenada capturada ainda</div>`;
 
@@ -61,12 +73,12 @@ export function screenVisita() {
       const coordTxt = temGps ? `${fmtCoord(f.gps.lat)}, ${fmtCoord(f.gps.lng)}${f.gps.simulado ? ' (simulado)' : ''}` : 'sem coordenada';
       return `
     <div class="photo-item">
-      <button class="photo-remove" onclick="removerFoto(${i})">✕</button>
+      <button class="photo-remove" onclick="removerFoto(${i})">×</button>
       <div class="photo-thumb"><img src="${f.url}"></div>
       <div class="photo-item-body">
         <input class="photo-legenda" type="text" value="${f.legenda || ''}" placeholder="Legenda da foto (opcional)" oninput="state.fotos[${i}].legenda=this.value">
         <div class="photo-meta-row">
-          <span class="photo-coord ${temGps ? 'com-gps' : ''}">📍 ${coordTxt} · ${fmtHora(f.timestamp)}</span>
+          <span class="photo-coord ${temGps ? 'com-gps' : ''}">${coordTxt} · ${fmtHora(f.timestamp)}</span>
           <button class="photo-gps-btn ${temGps ? 'ativo' : ''}" onclick="alternarGpsFoto(${i})">${temGps ? 'Remover coordenada' : 'Usar coordenada atual'}</button>
         </div>
       </div>
@@ -74,7 +86,7 @@ export function screenVisita() {
     })
     .join('');
 
-  const respondidas = totalRespondidas();
+  const respondidas = totalRespondidas(metas);
   const total = metas.length;
   const podeSalvar = respondidas === total;
 
@@ -82,8 +94,11 @@ export function screenVisita() {
     (v) => `<option value="${v}" ${state.nomeVisita === v ? 'selected' : ''}>${v}</option>`
   ).join('');
 
-  const resumoAutomatico = gerarResumoCumprimento(fam.plano.objetivos, state.respostas);
-  const proximaEtapaTexto = proximaEtapa(state.nomeVisita);
+  const resumoAutomatico = gerarResumoCumprimento(objetivos, state.respostas);
+  const proximaSelecionada = state.proximosPassos || proximaEtapa(state.nomeVisita);
+  const proximasOpts = opcoesProximaEtapa(state.nomeVisita)
+    .map((op) => `<option value="${op}" ${proximaSelecionada === op ? 'selected' : ''}>${op}</option>`)
+    .join('');
 
   return `
   <div class="content">
@@ -97,8 +112,8 @@ export function screenVisita() {
       <div class="mi"><div class="lbl">Técnico(a)</div><div class="val">${state.tecnico.nome}</div></div>
       <div class="mi"><div class="lbl">Data</div><div class="val">${fmtDataHoje()}</div></div>
       <div class="mi full">
-        <div class="lbl">Visita</div>
-        <select class="input-inline" onchange="state.nomeVisita=this.value">${visitaOpts}</select>
+        <div class="lbl">Visita / atividade atual</div>
+        <select class="input-inline" onchange="alterarVisita(this.value)">${visitaOpts}</select>
       </div>
     </div>
 
@@ -106,7 +121,7 @@ export function screenVisita() {
     <textarea class="obs" oninput="state.resumoVisita=this.value" placeholder="Descreva as orientações repassadas e indicadores observados">${state.resumoVisita}</textarea>
 
     <div class="section-label" style="margin-top:18px;">Atividades programadas</div>
-    <div class="section-hint">Marque o cumprimento de cada meta do plano</div>
+    <div class="section-hint">${atividade.atividade}</div>
     ${objetivosForm}
 
     <div class="section-label" style="margin-top:18px;">Riscos e problemas</div>
@@ -123,27 +138,27 @@ export function screenVisita() {
     <div class="section-label" style="margin-top:18px;">Próximos passos</div>
     <div class="info-box">
       <span class="info-lbl">Selecione a próxima etapa</span>
-      ${proximaEtapaTexto}
+      <select class="input-inline" onchange="state.proximosPassos=this.value">${proximasOpts}</select>
     </div>
 
     <div class="section-label" style="margin-top:18px;">Localização GPS</div>
     <div class="gps-box">
       ${gpsBox}
-      <button class="btn btn-ghost" onclick="capturarGPS()">📍 Capturar localização atual</button>
+      <button class="btn btn-ghost" onclick="capturarGPS()">Capturar localização atual</button>
     </div>
 
     <div class="section-label">Registros fotográficos</div>
     <div class="card">
       <label class="btn btn-ghost" style="display:block; text-align:center;">
-        📷 Adicionar fotos da galeria / câmera
+        Adicionar fotos da galeria / câmera
         <input type="file" accept="image/*" multiple capture="environment" style="display:none" onchange="onFotosSelecionadas(this)">
       </label>
-      ${state.fotos.length ? `<div class="photos-list">${fotos}</div>` : `<div style="font-size:11px;color:var(--text-dim); margin-top:8px;">A coordenada GPS de cada foto é opcional — use "Usar coordenada atual" em cada foto para georreferenciá-la, ou deixe sem coordenada.</div>`}
+      ${state.fotos.length ? `<div class="photos-list">${fotos}</div>` : `<div style="font-size:11px;color:var(--text-dim); margin-top:8px;">A coordenada GPS de cada foto é opcional - use "Usar coordenada atual" em cada foto para georreferenciá-la, ou deixe sem coordenada.</div>`}
     </div>
 
     <button class="btn btn-primary" style="margin-top:16px;" ${podeSalvar ? '' : 'disabled'} onclick="salvarVisita()">
-      ${isOnline() ? 'Salvar e enviar relatório' : 'Salvar no dispositivo (offline)'}
+      ${isOnline() ? 'Salvar relatório no dispositivo' : 'Salvar no dispositivo (offline)'}
     </button>
-    ${!podeSalvar ? '<div style="font-size:11px;color:var(--text-dim); margin-top:6px; text-align:center;">Avalie o cumprimento de todas as metas para salvar</div>' : ''}
+    ${!podeSalvar ? '<div style="font-size:11px;color:var(--text-dim); margin-top:6px; text-align:center;">Avalie o cumprimento de todas as metas desta atividade para salvar</div>' : ''}
   </div>`;
 }

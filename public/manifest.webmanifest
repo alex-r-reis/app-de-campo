@@ -1,0 +1,10 @@
+{
+  "name": "ATER Cacau Campo",
+  "short_name": "ATER Cacau",
+  "description": "Aplicativo de campo para relatórios de visitas ATER.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#1C2118",
+  "theme_color": "#1C2118"
+}

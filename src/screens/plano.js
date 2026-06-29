@@ -1,9 +1,14 @@
-// src/screens/plano.js
-import { state, getFamilia } from '../state/store.js';
+import { VISITAS_PADRAO } from '../data/tecnicos.js';
+import { atividadePorNome } from '../data/atividades.js';
+import { state, getFamilia, objetivosAtivos } from '../state/store.js';
 
 export function screenPlano() {
   const fam = getFamilia(state.familiaId);
-  const objetivos = fam.plano.objetivos
+  const atividade = atividadePorNome(state.nomeVisita);
+  const visitaOpts = VISITAS_PADRAO.map(
+    (v) => `<option value="${v}" ${state.nomeVisita === v ? 'selected' : ''}>${v}</option>`
+  ).join('');
+  const objetivos = objetivosAtivos(fam)
     .map(
       (o) => `
     <div class="card">
@@ -19,15 +24,20 @@ export function screenPlano() {
   `
     )
     .join('');
+
   return `
   <div class="content">
     <span class="back-link" onclick="voltarFamilias()">‹ FAMÍLIAS</span>
     <h2 class="screen-title">${fam.chefeFamilia}</h2>
-    <div class="screen-sub">Plano já cadastrado na base do aplicativo</div>
+    <div class="screen-sub">Plano cadastrado na base offline do aplicativo</div>
 
     <div class="header-grid">
       <div class="mi"><div class="lbl">OSP</div><div class="val">${fam.osp}</div></div>
       <div class="mi"><div class="lbl">Cidade</div><div class="val">${fam.comunidade}</div></div>
+      <div class="mi full">
+        <div class="lbl">Atividade</div>
+        <select class="input-inline" onchange="alterarVisita(this.value)">${visitaOpts}</select>
+      </div>
       <div class="mi full">
         <div class="lbl">Área</div>
         <input class="mi-edit" type="text" value="${fam.area}" placeholder="Ex.: 4,2 ha" oninput="editarArea(this.value)">
@@ -35,6 +45,7 @@ export function screenPlano() {
     </div>
 
     <div class="section-label">Atividades programadas</div>
+    <div class="section-hint">${atividade.atividade}</div>
     ${objetivos}
 
     <button class="btn btn-primary" onclick="irParaVisita()">Iniciar relatório de visita</button>

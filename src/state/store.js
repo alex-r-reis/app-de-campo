@@ -1,10 +1,7 @@
-// src/state/store.js
-// Estado global da aplicação + helpers puros de leitura.
-// Mantido como um objeto simples (sem framework de estado) para ficar fiel
-// à lógica original do protótipo: qualquer tela lê/escreve direto em `state`
-// e chama `render()` (em src/render.js) para repintar a UI.
-
 import { FAMILIAS } from '../data/familias.js';
+import { objetivosDaAtividade } from '../data/atividades.js';
+
+const STORAGE_KEY = 'ater-cacau-campo:v2';
 
 export const state = {
   screen: 'login',
@@ -14,11 +11,12 @@ export const state = {
   familiaId: null,
   nomeVisita: '',
   resumoVisita: '',
-  respostas: {},          // {metaId: 'Integral'|'Parcial'|'Não realizada'}
-  riscos: [],             // [{descricao, mitigacao}]
-  conclusao: '',          // complemento de texto livre do(a) ATEC (resumo de cumprimento é automático)
-  gps: null,              // {lat,lng,acc,timestamp,simulado}
-  fotos: [],              // [{url, file, gps, legenda, timestamp}]
+  respostas: {},
+  riscos: [],
+  conclusao: '',
+  proximosPassos: '',
+  gps: null,
+  fotos: [],
   visitasSalvas: [],
   toast: null,
 };
@@ -60,8 +58,16 @@ export function todasMetas(fam) {
   return fam.plano.objetivos.flatMap((o) => o.metas);
 }
 
-export function totalRespondidas() {
-  return Object.keys(state.respostas).length;
+export function objetivosAtivos(fam, nomeVisita = state.nomeVisita) {
+  return objetivosDaAtividade(fam, nomeVisita);
+}
+
+export function metasAtivas(fam, nomeVisita = state.nomeVisita) {
+  return objetivosAtivos(fam, nomeVisita).flatMap((o) => o.metas);
+}
+
+export function totalRespondidas(metas = []) {
+  return metas.filter((m) => !!state.respostas[m.id]).length;
 }
 
 export function slug(str) {
@@ -70,4 +76,70 @@ export function slug(str) {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-zA-Z0-9]+/g, '_')
     .replace(/^_+|_+$/g, '');
+}
+
+function visitasParaPersistencia() {
+  return state.visitasSalvas.map((visita) => ({
+    ...visita,
+    docxBlob: null,
+    fotos: (visita.fotos || []).map((foto) => ({
+      gps: foto.gps || null,
+      legenda: foto.legenda || '',
+      timestamp: foto.timestamp,
+      dataUrl: foto.dataUrl || null,
+      nome: foto.nome || foto.file?.name || '',
+      tipo: foto.tipo || foto.file?.type || '',
+    })),
+  }));
+}
+
+function familiasParaPersistencia() {
+  return Object.values(FAMILIAS)
+    .flat()
+    .map((familia) => ({
+      id: familia.id,
+      area: familia.area,
+      status: familia.status,
+      proximaVisita: familia.proximaVisita,
+    }));
+}
+
+export function persistirEstadoLocal() {
+  if (typeof localStorage === 'undefined') return;
+  const payload = {
+    visitasSalvas: visitasParaPersistencia(),
+    familias: familiasParaPersistencia(),
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+}
+
+export function carregarEstadoLocal() {
+  if (typeof localStorage === 'undefined') return;
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return;
+
+  try {
+    const payload = JSON.parse(raw);
+    const familiasPorId = new Map(Object.values(FAMILIAS).flat().map((familia) => [familia.id, familia]));
+
+    (payload.familias || []).forEach((salva) => {
+      const familia = familiasPorId.get(salva.id);
+      if (!familia) return;
+      familia.area = salva.area ?? familia.area;
+      familia.status = salva.status ?? familia.status;
+      familia.proximaVisita = salva.proximaVisita ?? familia.proximaVisita;
+    });
+
+    state.visitasSalvas = (payload.visitasSalvas || []).map((visita) => ({
+      ...visita,
+      docxBlob: null,
+      fotos: (visita.fotos || []).map((foto) => ({
+        ...foto,
+        file: null,
+        url: foto.dataUrl || '',
+      })),
+    }));
+  } catch (err) {
+    console.warn('Nao foi possivel restaurar dados locais', err);
+  }
 }

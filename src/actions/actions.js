@@ -10,11 +10,30 @@ import {
   getFamilia,
   fmtDataHoje,
   isOnline,
+  objetivosAtivos,
+  metasAtivas,
+  persistirEstadoLocal,
 } from '../state/store.js';
 import { render } from '../render.js';
 import { gerarDocxVisita } from '../docx/gerarDocx.js';
 import { enviarVisitaParaServidor } from '../services/api.js';
 import { proximaEtapa } from '../utils/cronograma.js';
+
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+function respostasDasMetas(metas) {
+  return metas.reduce((acc, meta) => {
+    if (state.respostas[meta.id]) acc[meta.id] = state.respostas[meta.id];
+    return acc;
+  }, {});
+}
 
 export function showToast(msg) {
   state.toast = msg;
@@ -37,6 +56,7 @@ export function logout() {
     familiaId: null,
     respostas: {},
     observacoes: '',
+    proximosPassos: '',
     gps: null,
     fotos: [],
   });
@@ -47,6 +67,7 @@ export function abrirFamilia(id) {
   const fam = getFamilia(id);
   state.familiaId = id;
   state.nomeVisita = fam.proximaVisita || VISITAS_PADRAO[0];
+  state.proximosPassos = proximaEtapa(state.nomeVisita);
   state.resumoVisita = '';
   state.respostas = {};
   state.riscos = [];
@@ -57,6 +78,12 @@ export function abrirFamilia(id) {
   render();
 }
 
+export function alterarVisita(nomeVisita) {
+  state.nomeVisita = nomeVisita;
+  state.proximosPassos = proximaEtapa(nomeVisita);
+  render();
+}
+
 export function irParaVisita() {
   state.screen = 'visita';
   render();
@@ -64,6 +91,7 @@ export function irParaVisita() {
 
 export function editarArea(valor) {
   getFamilia(state.familiaId).area = valor;
+  persistirEstadoLocal();
 }
 
 export function voltarFamilias() {
@@ -125,18 +153,22 @@ export function capturarGPS() {
   }
 }
 
-export function onFotosSelecionadas(input) {
+export async function onFotosSelecionadas(input) {
   const files = Array.from(input.files || []);
-  files.forEach((file) => {
+  for (const file of files) {
     const url = URL.createObjectURL(file);
+    const dataUrl = await fileToDataUrl(file);
     state.fotos.push({
       url,
       file,
+      dataUrl,
+      nome: file.name || '',
+      tipo: file.type || '',
       legenda: '',
       gps: state.gps ? { lat: state.gps.lat, lng: state.gps.lng, simulado: state.gps.simulado } : null,
       timestamp: Date.now(),
     });
-  });
+  }
   render();
   input.value = '';
 }
@@ -166,6 +198,8 @@ export function alternarGpsFoto(idx) {
 
 export function salvarVisita() {
   const fam = getFamilia(state.familiaId);
+  const objetivosSnapshot = objetivosAtivos(fam, state.nomeVisita);
+  const metas = metasAtivas(fam, state.nomeVisita);
   const visita = {
     id: 'v' + Date.now(),
     familiaId: fam.id,
@@ -177,13 +211,22 @@ export function salvarVisita() {
     data: fmtDataHoje(),
     ts: Date.now(),
     resumoVisita: state.resumoVisita,
-    objetivosSnapshot: JSON.parse(JSON.stringify(fam.plano.objetivos)),
-    respostas: { ...state.respostas },
+    atividade: state.nomeVisita,
+    objetivosSnapshot: JSON.parse(JSON.stringify(objetivosSnapshot)),
+    respostas: respostasDasMetas(metas),
     riscos: [...state.riscos],
     conclusao: state.conclusao,
-    proximosPassos: proximaEtapa(state.nomeVisita),
+    proximosPassos: state.proximosPassos || proximaEtapa(state.nomeVisita),
     gps: state.gps,
-    fotos: state.fotos.map((f) => ({ file: f.file, gps: f.gps, legenda: f.legenda || '', timestamp: f.timestamp })),
+    fotos: state.fotos.map((f) => ({
+      file: f.file,
+      dataUrl: f.dataUrl || null,
+      nome: f.nome || f.file?.name || '',
+      tipo: f.tipo || f.file?.type || '',
+      gps: f.gps,
+      legenda: f.legenda || '',
+      timestamp: f.timestamp,
+    })),
     sincronizado: false,
     docxGerado: false,
     docxBlob: null,
@@ -191,12 +234,17 @@ export function salvarVisita() {
   };
   state.visitasSalvas.push(visita);
   fam.status = 'visitado';
+  if (VISITAS_PADRAO.includes(visita.proximosPassos)) {
+    fam.proximaVisita = visita.proximosPassos;
+  }
   state.screen = 'fila';
+  persistirEstadoLocal();
   render();
   showToast('Relatório de visita salvo no dispositivo');
   gerarDocxVisita(visita).then(({ blob }) => {
     visita.docxBlob = blob;
     visita.docxGerado = true;
+    persistirEstadoLocal();
     render();
   });
 }
@@ -220,6 +268,7 @@ export async function sincronizarTudo() {
       console.error('Falha ao sincronizar visita', visita.id, err);
       falha++;
     }
+    persistirEstadoLocal();
     render();
   }
 
