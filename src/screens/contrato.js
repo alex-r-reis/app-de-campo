@@ -16,7 +16,7 @@ export function screenContrato() {
   <div class="login-wrap">
     <div class="logo-block">
       <img class="logo-img" src="${logoUrl}" alt="Logo" style="width:180px; height:auto;">
-      <div class="tag"><h1 style="display:inline;font-family:Candara,sans-serif;font-size:48px;">MUIRAQUITÃƒ</h1><span style="display:inline;font-family:Candara,sans-serif;font-size:32px;"> Socioambiental</span></div>
+      <div class="tag"><h1 style="display:inline;font-family:Candara,sans-serif;font-size:48px;">MUIRAQUITÃ</h1><span style="display:inline;font-family:Candara,sans-serif;font-size:32px;"> Socioambiental</span></div>
       <h1>ATER CACAU</h1>
       <div class="sub">Selecione o contrato</div>
     </div>
