@@ -16,7 +16,7 @@ import {
 } from '../state/store.js';
 import { render } from '../render.js';
 import { gerarDocxVisita } from '../docx/gerarDocx.js';
-import { enviarVisitaParaServidor } from '../services/api.js';
+import { buscarDadosCampo, enviarVisitaParaServidor } from '../services/api.js';
 import { proximaEtapa } from '../utils/cronograma.js';
 
 function fileToDataUrl(file) {
@@ -35,6 +35,22 @@ function respostasDasMetas(metas) {
   }, {});
 }
 
+function atividadesAvaliadas(objetivos, respostas, nomeVisita) {
+  return objetivos.flatMap((objetivo) =>
+    objetivo.metas.map((meta) => ({
+      id: meta.id,
+      pratica: meta.texto,
+      nomeVisita,
+      objetivo: objetivo.texto || '',
+      meta: meta.meta || '',
+      status: respostas[meta.id] || '',
+      indicadores: meta.indicadores || '',
+      metodologia: meta.metodologia || '',
+      insumos: meta.insumos || '',
+    }))
+  );
+}
+
 export function showToast(msg) {
   state.toast = msg;
   render();
@@ -43,10 +59,26 @@ export function showToast(msg) {
   }, 2000);
 }
 
-export function doLogin(id) {
+export async function doLogin(id) {
   state.tecnico = TECNICOS.find((t) => t.id === id);
   state.screen = 'familias';
+  state.carregandoDadosCampo = true;
+  state.erroDadosCampo = '';
   render();
+
+  try {
+    const dados = await buscarDadosCampo();
+    state.familiasCampo = dados.familias || [];
+    state.dadosCampoAtualizadoEm = dados.atualizadoEm || new Date().toISOString();
+    persistirEstadoLocal();
+  } catch (err) {
+    state.erroDadosCampo = state.familiasCampo.length
+      ? 'Não foi possível atualizar a planilha agora. Usando o último cache local.'
+      : `Não foi possível carregar a planilha: ${err.message}`;
+  } finally {
+    state.carregandoDadosCampo = false;
+    render();
+  }
 }
 
 export function logout() {
@@ -59,6 +91,7 @@ export function logout() {
     proximosPassos: '',
     gps: null,
     fotos: [],
+    erroDadosCampo: '',
   });
   render();
 }
@@ -200,6 +233,7 @@ export function salvarVisita() {
   const fam = getFamilia(state.familiaId);
   const objetivosSnapshot = objetivosAtivos(fam, state.nomeVisita);
   const metas = metasAtivas(fam, state.nomeVisita);
+  const respostas = respostasDasMetas(metas);
   const visita = {
     id: 'v' + Date.now(),
     familiaId: fam.id,
@@ -213,7 +247,8 @@ export function salvarVisita() {
     resumoVisita: state.resumoVisita,
     atividade: state.nomeVisita,
     objetivosSnapshot: JSON.parse(JSON.stringify(objetivosSnapshot)),
-    respostas: respostasDasMetas(metas),
+    respostas,
+    atividadesAvaliadas: atividadesAvaliadas(objetivosSnapshot, respostas, state.nomeVisita),
     riscos: [...state.riscos],
     conclusao: state.conclusao,
     proximosPassos: state.proximosPassos || proximaEtapa(state.nomeVisita),

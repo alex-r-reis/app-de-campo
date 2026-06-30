@@ -1,16 +1,24 @@
-// src/admin.js
-// Painel de administração: mostra todas as visitas já sincronizadas (lidas
-// direto da planilha do Google Sheets pelo backend) e links rápidos para a
-// pasta no Drive e para a planilha. É uma página separada (admin.html),
-// independente do app de campo (index.html).
-
 import './styles/main.css';
 import { buscarConfigAdmin, buscarVisitasSincronizadas, setAdminToken } from './services/api.js';
 
 const COLUNAS = [
-  'Data', 'Hora', 'Técnico', 'Chefe de Família', 'OSP', 'Comunidade',
-  'Visita', 'Resumo', 'Metas', 'Conclusão', 'Próximos passos', 'Riscos',
-  'GPS', 'Relatório', 'Qtde Fotos', 'Pasta no Drive',
+  'Data',
+  'Hora',
+  'Técnico',
+  'Chefe de Família',
+  'OSP',
+  'Comunidade',
+  'Visita',
+  'Resumo',
+  'Metas',
+  'Conclusão',
+  'Próximos passos',
+  'Riscos',
+  'GPS',
+  'Relatório',
+  'Qtde Fotos',
+  'Pasta no Drive',
+  'Atividades detalhadas',
 ];
 
 const ROOT = document.getElementById('admin-app');
@@ -43,8 +51,7 @@ function telaErroConexao(mensagem) {
     <div class="content">
       <div class="empty-state">
         Não foi possível conectar ao servidor (${mensagem}).<br><br>
-        Verifique se o backend está rodando — veja <code>server/README</code> ou a seção
-        "Backend" do README principal (<code>cd server &amp;&amp; npm install &amp;&amp; npm run dev</code>).
+        Verifique se o backend está rodando.
       </div>
     </div>`;
 }
@@ -52,8 +59,8 @@ function telaErroConexao(mensagem) {
 function telaPainel(config, linhas) {
   const links = `
     <div class="card">
-      ${config.driveFolderUrl ? `<a class="btn btn-ghost" style="display:block;text-align:center;margin-bottom:8px;" href="${config.driveFolderUrl}" target="_blank">📁 Abrir pasta no Google Drive</a>` : '<div class="section-hint">Pasta do Drive ainda não configurada (GOOGLE_DRIVE_FOLDER_ID).</div>'}
-      ${config.sheetUrl ? `<a class="btn btn-ghost" style="display:block;text-align:center;" href="${config.sheetUrl}" target="_blank">📊 Abrir planilha no Google Sheets</a>` : '<div class="section-hint">Planilha ainda não configurada (GOOGLE_SHEET_ID).</div>'}
+      ${config.driveFolderUrl ? `<a class="btn btn-ghost" style="display:block;text-align:center;margin-bottom:8px;" href="${config.driveFolderUrl}" target="_blank">Abrir pasta no Google Drive</a>` : '<div class="section-hint">Pasta do Drive ainda não configurada.</div>'}
+      ${config.sheetUrl ? `<a class="btn btn-ghost" style="display:block;text-align:center;" href="${config.sheetUrl}" target="_blank">Abrir planilha no Google Sheets</a>` : '<div class="section-hint">Planilha ainda não configurada.</div>'}
     </div>`;
 
   const tabela = linhas.length === 0
@@ -74,7 +81,7 @@ function telaPainel(config, linhas) {
                   const valor = linha[i] || '';
                   const isLink = (i === 13 || i === 15) && valor.startsWith('http');
                   return `<td style="padding:8px 10px; max-width:220px; overflow:hidden; text-overflow:ellipsis;">${
-                    isLink ? `<a href="${valor}" target="_blank">abrir ↗</a>` : valor
+                    isLink ? `<a href="${valor}" target="_blank">abrir</a>` : valor
                   }</td>`;
                 }).join('')}
               </tr>`
@@ -96,7 +103,7 @@ function telaPainel(config, linhas) {
     </div>
     <div class="content">
       <h2 class="screen-title">Painel de administração</h2>
-      <div class="screen-sub">${linhas.length} visita(s) sincronizada(s) com o Drive e o Sheets</div>
+      <div class="screen-sub">${config.nome || 'ATER Cacau'} · ${linhas.length} visita(s) sincronizada(s)</div>
       ${links}
       ${tabela}
     </div>`;

@@ -1,0 +1,203 @@
+import { getAppConfig } from './appConfig.js';
+
+const COORDS_MUNICIPIO = {
+  altamira: { lat: -3.2033, lng: -52.2064 },
+  'brasil novo': { lat: -3.2979, lng: -52.5344 },
+  medicilandia: { lat: -3.4464, lng: -52.8889 },
+  'medicilândia': { lat: -3.4464, lng: -52.8889 },
+  tucuma: { lat: -6.7458, lng: -51.1531 },
+  'tucumã': { lat: -6.7458, lng: -51.1531 },
+  'sao felix do xingu': { lat: -6.6425, lng: -51.9904 },
+  'são félix do xingu': { lat: -6.6425, lng: -51.9904 },
+  'igarape-miri': { lat: -1.9809, lng: -48.9597 },
+  'igarapé-miri': { lat: -1.9809, lng: -48.9597 },
+};
+
+function normalizar(valor) {
+  return String(valor || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase();
+}
+
+function slug(valor) {
+  return normalizar(valor)
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+function parseCsv(texto) {
+  const linhas = [];
+  let linha = [];
+  let campo = '';
+  let aspas = false;
+
+  for (let i = 0; i < texto.length; i++) {
+    const ch = texto[i];
+    const next = texto[i + 1];
+
+    if (ch === '"') {
+      if (aspas && next === '"') {
+        campo += '"';
+        i++;
+      } else {
+        aspas = !aspas;
+      }
+    } else if (ch === ',' && !aspas) {
+      linha.push(campo);
+      campo = '';
+    } else if ((ch === '\n' || ch === '\r') && !aspas) {
+      if (ch === '\r' && next === '\n') i++;
+      linha.push(campo);
+      if (linha.some((valor) => String(valor).trim())) linhas.push(linha);
+      linha = [];
+      campo = '';
+    } else {
+      campo += ch;
+    }
+  }
+
+  linha.push(campo);
+  if (linha.some((valor) => String(valor).trim())) linhas.push(linha);
+  if (linhas.length === 0) return [];
+
+  const cabecalhos = linhas[0].map((h) => h.trim());
+  return linhas.slice(1).map((valores) => {
+    const obj = {};
+    cabecalhos.forEach((h, idx) => {
+      obj[h] = valores[idx] || '';
+    });
+    return obj;
+  });
+}
+
+async function buscarCsv({ spreadsheetId, sheetName, gid }) {
+  const query = gid ? `gid=${encodeURIComponent(gid)}` : `sheet=${encodeURIComponent(sheetName)}`;
+  const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&${query}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Falha ao buscar planilha (${res.status})`);
+  return res.text();
+}
+
+function listaPraticas(valor) {
+  return String(valor || '')
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function coordMunicipio(municipio) {
+  return COORDS_MUNICIPIO[normalizar(municipio)] || { lat: -3.5, lng: -52.0 };
+}
+
+function montarCatalogo(linhasCatalogo) {
+  const mapa = new Map();
+  linhasCatalogo.forEach((linha) => {
+    const nome = linha['Práticas / demandas das famílias'];
+    if (!nome) return;
+    mapa.set(normalizar(nome), {
+      eixo: linha.Eixo || '',
+      pratica: nome,
+      gargalos: linha.Gargalos || '',
+      situacaoIdeal: linha['Situação Ideal'] || '',
+      objetivo: linha.Objetivo || '',
+      meta: linha.Metas || '',
+      indicadores: linha.Indicadores || '',
+      metodologia: linha['Metodologia(s) e Ferramentas'] || '',
+      insumos: linha['Insumos e Materiais Necessários'] || '',
+      etapasAtividade: linha['Etapas da Atividade'] || '',
+      mobilizacao: linha['Mobilização e logística'] || '',
+    });
+  });
+  return mapa;
+}
+
+function detalhePratica(nome, catalogo) {
+  const detalhe = catalogo.get(normalizar(nome));
+  if (detalhe) return detalhe;
+  return {
+    eixo: 'Atividade coletiva',
+    pratica: nome,
+    gargalos: '',
+    situacaoIdeal: '',
+    objetivo: nome,
+    meta: 'Realizar atividade conforme programação técnica.',
+    indicadores: '',
+    metodologia: '',
+    insumos: '',
+    etapasAtividade: '',
+    mobilizacao: '',
+  };
+}
+
+function objetivosPorEtapa(row, config, catalogo) {
+  return config.etapas.reduce((acc, etapa) => {
+    const praticas = etapa.fixas || listaPraticas(row[etapa.coluna]);
+    acc[etapa.nome] = praticas.map((pratica, idx) => {
+      const detalhe = detalhePratica(pratica, catalogo);
+      return {
+        titulo: `Atividade ${idx + 1}`,
+        texto: detalhe.objetivo || detalhe.pratica,
+        metas: [
+          {
+            id: detalhe.pratica,
+            texto: detalhe.pratica,
+            meta: detalhe.meta,
+            indicadores: detalhe.indicadores,
+            metodologia: detalhe.metodologia,
+            insumos: detalhe.insumos,
+            etapasAtividade: detalhe.etapasAtividade,
+            eixo: detalhe.eixo,
+          },
+        ],
+      };
+    });
+    return acc;
+  }, {});
+}
+
+export async function carregarDadosCampo(variant) {
+  const config = getAppConfig(variant);
+  const [respostasCsv, catalogoCsv] = await Promise.all([
+    buscarCsv({
+      spreadsheetId: config.respostasSpreadsheetId,
+      sheetName: config.respostasSheetName,
+    }),
+    buscarCsv({
+      spreadsheetId: config.catalogoSpreadsheetId,
+      gid: config.catalogoGid,
+    }),
+  ]);
+
+  const respostas = parseCsv(respostasCsv);
+  const catalogo = montarCatalogo(parseCsv(catalogoCsv));
+
+  const familias = respostas
+    .filter((row) => row['Nome completo do chefe da família'])
+    .map((row, idx) => {
+      const chefeFamilia = row['Nome completo do chefe da família'];
+      const municipio = row.Município || '';
+      return {
+        id: `${config.id}_${idx + 1}_${slug(chefeFamilia)}`,
+        chefeFamilia,
+        tecnicoNome: row['ATEC responsável'] || '',
+        osp: row.OSP || '',
+        comunidade: municipio,
+        area: 'Não informada',
+        coordBase: coordMunicipio(municipio),
+        status: 'pendente',
+        proximaVisita: config.etapas[0]?.nome || '',
+        plano: { objetivos: [] },
+        atividadesPorVisita: objetivosPorEtapa(row, config, catalogo),
+      };
+    });
+
+  return {
+    variant: config.id,
+    nome: config.nome,
+    etapas: config.etapas.map((etapa) => etapa.nome),
+    familias,
+    atualizadoEm: new Date().toISOString(),
+  };
+}

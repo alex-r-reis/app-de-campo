@@ -5,6 +5,7 @@ import { state, getFamilia, objetivosAtivos } from '../state/store.js';
 export function screenPlano() {
   const fam = getFamilia(state.familiaId);
   const atividade = atividadePorNome(state.nomeVisita);
+  const atividadeLabel = fam.atividadesPorVisita?.[state.nomeVisita] ? state.nomeVisita : atividade.atividade;
   const visitaOpts = VISITAS_PADRAO.map(
     (v) => `<option value="${v}" ${state.nomeVisita === v ? 'selected' : ''}>${v}</option>`
   ).join('');
@@ -17,7 +18,7 @@ export function screenPlano() {
       ${o.metas
         .map(
           (m, i) =>
-            `<div class="goal-item"><span class="goal-num">${String(i + 1).padStart(2, '0')}</span><span>${m.texto}</span></div>`
+            `<div class="goal-item"><span class="goal-num">${String(i + 1).padStart(2, '0')}</span><span>${m.texto}${m.meta ? `<small class="goal-detail">${m.meta}</small>` : ''}</span></div>`
         )
         .join('')}
     </div>
@@ -45,7 +46,7 @@ export function screenPlano() {
     </div>
 
     <div class="section-label">Atividades programadas</div>
-    <div class="section-hint">${atividade.atividade}</div>
+    <div class="section-hint">${atividadeLabel}</div>
     ${objetivos}
 
     <button class="btn btn-primary" onclick="irParaVisita()">Iniciar relatório de visita</button>

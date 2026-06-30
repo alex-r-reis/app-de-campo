@@ -4,6 +4,7 @@
 // do Google, só envia os dados/arquivos via multipart/form-data.
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+const APP_VARIANT = import.meta.env.VITE_APP_VARIANT || 'cacau_i';
 
 function getAdminToken() {
   return sessionStorage.getItem('admin_token') || '';
@@ -37,6 +38,15 @@ export async function buscarVisitasSincronizadas() {
   return res.json();
 }
 
+export async function buscarDadosCampo() {
+  const res = await fetch(`${API_BASE}/api/campo/dados?variant=${encodeURIComponent(APP_VARIANT)}`);
+  if (!res.ok) {
+    const erro = await res.json().catch(() => ({}));
+    throw new Error(erro.erro || 'Falha ao buscar dados de campo');
+  }
+  return res.json();
+}
+
 /**
  * Envia uma visita salva (com o .docx já gerado e as fotos) para o backend,
  * que sobe tudo para o Drive e registra a linha no Sheets.
@@ -45,6 +55,9 @@ export async function buscarVisitasSincronizadas() {
  */
 export async function enviarVisitaParaServidor(visita, docxBlob) {
   const metasResumo = Object.values(visita.respostas).join(' | ');
+  const atividadesDetalhadas = (visita.atividadesAvaliadas || [])
+    .map((a) => `${a.nomeVisita || visita.nomeVisita} | ${a.id} | ${a.status} | ${a.objetivo || ''} | ${a.meta || ''}`)
+    .join(' ; ');
   const riscosResumo = (visita.riscos || [])
     .map((r) => `${r.descricao || ''} → ${r.mitigacao || ''}`)
     .join(' ; ');
@@ -68,6 +81,7 @@ export async function enviarVisitaParaServidor(visita, docxBlob) {
       proximosPassos: visita.proximosPassos,
       riscosResumo,
       gpsTexto,
+      atividadesDetalhadas,
     })
   );
 

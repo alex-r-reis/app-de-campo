@@ -131,6 +131,11 @@ function fotoSrc(foto) {
   return foto.dataUrl || '';
 }
 
+function textoMetaRelatorio(meta) {
+  if (!meta?.meta) return meta?.texto || '';
+  return `${meta.texto} - Meta: ${meta.meta}`;
+}
+
 /**
  * Gera o .docx da visita, dispara o download no navegador e devolve o blob
  * (usado por src/actions/actions.js para depois enviar ao backend/Drive).
@@ -209,7 +214,7 @@ export async function gerarDocxVisita(visita) {
                 ? celula(`Meta ${mi + 1}`, { width: wLabel, merge: VerticalMergeType.RESTART })
                 : celula('', { width: wLabel, merge: VerticalMergeType.CONTINUE }),
               oidx === 0
-                ? celula(m.texto, { width: wTexto, merge: VerticalMergeType.RESTART })
+                ? celula(textoMetaRelatorio(m), { width: wTexto, merge: VerticalMergeType.RESTART })
                 : celula('', { width: wTexto, merge: VerticalMergeType.CONTINUE }),
               celula(marcado ? 'x' : '', { width: wMark, center: true, bold: true }),
               celula(op, { width: wCump }),

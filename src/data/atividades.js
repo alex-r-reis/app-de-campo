@@ -138,10 +138,22 @@ export function atividadesProgramadas() {
 }
 
 export function atividadePorNome(nome) {
-  return ATIVIDADES_CAMPO.find((atividade) => atividade.nome === nome) || ATIVIDADES_CAMPO[0];
+  return (
+    ATIVIDADES_CAMPO.find((atividade) => atividade.nome === nome) || {
+      id: nome,
+      nome,
+      atividade: nome,
+      objetivos: [],
+      proximasEtapas: ['Encerramento do ciclo de acompanhamento'],
+    }
+  );
 }
 
 export function objetivosDaAtividade(familia, nomeVisita) {
+  if (familia?.atividadesPorVisita?.[nomeVisita]) {
+    return familia.atividadesPorVisita[nomeVisita];
+  }
+
   const atividade = atividadePorNome(nomeVisita);
   if (!atividade) return familia?.plano?.objetivos || [];
 
@@ -156,5 +168,7 @@ export function objetivosDaAtividade(familia, nomeVisita) {
 }
 
 export function opcoesProximaEtapa(nomeVisita) {
-  return atividadePorNome(nomeVisita).proximasEtapas;
+  const idx = VISITAS_PADRAO.indexOf(nomeVisita);
+  if (idx === -1 || idx === VISITAS_PADRAO.length - 1) return ['Encerramento do ciclo de acompanhamento'];
+  return [VISITAS_PADRAO[idx + 1], 'Atendimento técnico complementar', 'Reagendar etapa atual'];
 }

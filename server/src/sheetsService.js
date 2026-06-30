@@ -4,8 +4,10 @@
 // só faz "append" (adiciona linha no final), nunca sobrescreve nada.
 
 import { getSheets } from './google.js';
+import { getAppConfig } from './appConfig.js';
 
-const SHEET_ID = process.env.GOOGLE_SHEET_ID;
+const CONFIG = getAppConfig();
+const SHEET_ID = process.env.GOOGLE_SHEET_ID || CONFIG.destinoSheetId;
 const ABA = process.env.GOOGLE_SHEET_TAB_NAME || 'Visitas';
 
 function exigirSheetId() {

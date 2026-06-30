@@ -5,6 +5,8 @@ import cors from 'cors';
 import multer from 'multer';
 import { criarPasta, enviarArquivo } from './driveService.js';
 import { adicionarLinha, listarLinhas } from './sheetsService.js';
+import { carregarDadosCampo } from './campoService.js';
+import { getAppConfig, getAppVariant } from './appConfig.js';
 
 const app = express();
 app.use(cors());
@@ -15,7 +17,8 @@ const upload = multer({
   limits: { fileSize: 25 * 1024 * 1024 }, // 25MB por arquivo
 });
 
-const PASTA_RAIZ_ID = process.env.GOOGLE_DRIVE_FOLDER_ID;
+const CONFIG = getAppConfig();
+const PASTA_RAIZ_ID = process.env.GOOGLE_DRIVE_FOLDER_ID || CONFIG.destinoDriveFolderId;
 const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '';
 
 /** Middleware simples de proteção do painel de administração.
@@ -31,18 +34,30 @@ function exigirAdmin(req, res, next) {
 }
 
 app.get('/api/health', (req, res) => {
-  res.json({ ok: true, mensagem: 'Servidor ATER Cacau Campo no ar.' });
+  res.json({ ok: true, variant: getAppVariant(), mensagem: 'Servidor ATER Cacau Campo no ar.' });
 });
 
 // Configuração pública usada pelo painel de administração (links do Drive/Sheets)
 app.get('/api/config', (req, res) => {
   res.json({
+    variant: CONFIG.id,
+    nome: CONFIG.nome,
     driveFolderUrl: PASTA_RAIZ_ID ? `https://drive.google.com/drive/folders/${PASTA_RAIZ_ID}` : null,
-    sheetUrl: process.env.GOOGLE_SHEET_ID
-      ? `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEET_ID}`
+    sheetUrl: process.env.GOOGLE_SHEET_ID || CONFIG.destinoSheetId
+      ? `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEET_ID || CONFIG.destinoSheetId}`
       : null,
     exigeToken: Boolean(ADMIN_TOKEN),
   });
+});
+
+app.get('/api/campo/dados', async (req, res) => {
+  try {
+    const dados = await carregarDadosCampo(req.query.variant || getAppVariant());
+    res.json(dados);
+  } catch (err) {
+    console.error('Erro ao carregar dados de campo:', err.message);
+    res.status(500).json({ erro: err.message });
+  }
 });
 
 // Lista as visitas já sincronizadas (lidas direto da planilha) — usado pelo painel de admin
@@ -113,6 +128,7 @@ app.post(
         linkDocx,
         String(linksFotos.length),
         pasta.webViewLink || '',
+        dados.atividadesDetalhadas || '',
       ]);
 
       res.json({ ok: true, pastaUrl: pasta.webViewLink, docxUrl: linkDocx, fotosUrls: linksFotos });

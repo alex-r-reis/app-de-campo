@@ -17,6 +17,7 @@ import { proximaEtapa } from '../utils/cronograma.js';
 export function screenVisita() {
   const fam = getFamilia(state.familiaId);
   const atividade = atividadePorNome(state.nomeVisita);
+  const atividadeLabel = fam.atividadesPorVisita?.[state.nomeVisita] ? state.nomeVisita : atividade.atividade;
   const objetivos = objetivosAtivos(fam);
   const metas = metasAtivas(fam);
 
@@ -35,7 +36,7 @@ export function screenVisita() {
               return `<button class="opt ${sel ? 'sel ' + cls : ''}" onclick="responder('${m.id}','${op}')">${op}</button>`;
             })
             .join('');
-          return `<div class="meta-row"><div class="meta-text">${m.texto}</div><div class="opts">${opts}</div></div>`;
+          return `<div class="meta-row"><div class="meta-text">${m.texto}${m.meta ? `<small class="goal-detail">${m.meta}</small>` : ''}</div><div class="opts">${opts}</div></div>`;
         })
         .join('')}
     </div>
@@ -121,7 +122,7 @@ export function screenVisita() {
     <textarea class="obs" oninput="state.resumoVisita=this.value" placeholder="Descreva as orientações repassadas e indicadores observados">${state.resumoVisita}</textarea>
 
     <div class="section-label" style="margin-top:18px;">Atividades programadas</div>
-    <div class="section-hint">${atividade.atividade}</div>
+    <div class="section-hint">${atividadeLabel}</div>
     ${objetivosForm}
 
     <div class="section-label" style="margin-top:18px;">Riscos e problemas</div>

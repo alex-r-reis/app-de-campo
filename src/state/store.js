@@ -18,6 +18,10 @@ export const state = {
   gps: null,
   fotos: [],
   visitasSalvas: [],
+  familiasCampo: [],
+  dadosCampoAtualizadoEm: '',
+  carregandoDadosCampo: false,
+  erroDadosCampo: '',
   toast: null,
 };
 
@@ -26,11 +30,21 @@ export function isOnline() {
 }
 
 export function getFamilias() {
-  return FAMILIAS[state.tecnico.id];
+  const dinamicas = state.familiasCampo.filter((familia) => normalizar(familia.tecnicoNome) === normalizar(state.tecnico.nome));
+  if (dinamicas.length) return dinamicas;
+  return FAMILIAS[state.tecnico.id] || [];
 }
 
 export function getFamilia(id) {
   return getFamilias().find((f) => f.id === id);
+}
+
+function normalizar(valor) {
+  return String(valor || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .toLowerCase();
 }
 
 export function fmtCoord(n) {
@@ -109,6 +123,8 @@ export function persistirEstadoLocal() {
   const payload = {
     visitasSalvas: visitasParaPersistencia(),
     familias: familiasParaPersistencia(),
+    familiasCampo: state.familiasCampo,
+    dadosCampoAtualizadoEm: state.dadosCampoAtualizadoEm,
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 }
@@ -139,6 +155,8 @@ export function carregarEstadoLocal() {
         url: foto.dataUrl || '',
       })),
     }));
+    state.familiasCampo = payload.familiasCampo || [];
+    state.dadosCampoAtualizadoEm = payload.dadosCampoAtualizadoEm || '';
   } catch (err) {
     console.warn('Nao foi possivel restaurar dados locais', err);
   }

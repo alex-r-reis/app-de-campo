@@ -1,4 +1,5 @@
 // src/data/tecnicos.js
+import { visitasPadrao } from './appConfig.js';
 // Lista real dos ATECs e seus polos de atuação.
 // Gerado a partir da planilha de campo fornecida (323 famílias / 16 técnicos).
 
@@ -21,12 +22,6 @@ const TECNICOS = [
   {id:'t16', nome:'Pablo Henrique Schmidt Amaral', registro:'ATEC-1016', regiao:'Tucumã'}
 ];
 
-const VISITAS_PADRAO = [
-  'Visita Técnica I - Diagnóstico',
-  'Visita Técnica II - Acompanhamento',
-  'Visita Técnica III - Implementação/melhoria de Práticas Sustentáveis',
-  'Dia de Campo - Controle Integrado de Pragas e Doenças (MIPD)',
-  'Visita Técnica IV - Monitoramento de Resultados'
-];
+const VISITAS_PADRAO = visitasPadrao();
 
 export { TECNICOS, VISITAS_PADRAO };

@@ -1,8 +1,17 @@
-// src/screens/familias.js
 import { state, getFamilias } from '../state/store.js';
 
 export function screenFamilias() {
   const familias = getFamilias();
+  const origem = state.familiasCampo.length ? 'Planilha em tempo real' : 'Base local';
+  const atualizacao = state.dadosCampoAtualizadoEm
+    ? ` · atualizado em ${new Date(state.dadosCampoAtualizadoEm).toLocaleString('pt-BR')}`
+    : '';
+  const statusDados = state.carregandoDadosCampo
+    ? '<div class="info-box"><span class="info-lbl">Dados</span>Atualizando famílias e atividades da planilha...</div>'
+    : state.erroDadosCampo
+      ? `<div class="gps-warn" style="margin-bottom:10px;">${state.erroDadosCampo}</div>`
+      : '';
+
   const rows = familias
     .map((f) => {
       const stamp =
@@ -21,10 +30,12 @@ export function screenFamilias() {
     </div>`;
     })
     .join('');
+
   return `
   <div class="content">
     <h2 class="screen-title">Famílias atendidas</h2>
-    <div class="screen-sub">${state.tecnico.regiao} · ${familias.length} famílias</div>
-    ${rows}
+    <div class="screen-sub">${state.tecnico.regiao} · ${familias.length} famílias · ${origem}${atualizacao}</div>
+    ${statusDados}
+    ${rows || '<div class="empty-state">Nenhuma família encontrada para este técnico.</div>'}
   </div>`;
 }
