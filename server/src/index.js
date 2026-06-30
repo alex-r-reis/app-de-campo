@@ -63,7 +63,7 @@ app.get('/api/campo/dados', async (req, res) => {
 // Lista as visitas já sincronizadas (lidas direto da planilha) — usado pelo painel de admin
 app.get('/api/visitas', exigirAdmin, async (req, res) => {
   try {
-    const linhas = await listarLinhas();
+    const linhas = await listarLinhas(req.query.variant || getAppVariant());
     res.json({ linhas });
   } catch (err) {
     console.error('Erro ao listar visitas:', err.message);
@@ -82,11 +82,14 @@ app.post(
   async (req, res) => {
     try {
       const dados = JSON.parse(req.body.dados || '{}');
+      const variant = req.query.variant || dados.appVariant || getAppVariant();
+      const config = getAppConfig(variant);
+      const pastaRaizId = process.env.GOOGLE_DRIVE_FOLDER_ID || config.destinoDriveFolderId;
 
       const nomePasta = [dados.data, dados.chefeFamilia, dados.nomeVisita]
         .filter(Boolean)
         .join(' - ');
-      const pasta = await criarPasta(nomePasta || `Visita ${Date.now()}`, PASTA_RAIZ_ID);
+      const pasta = await criarPasta(nomePasta || `Visita ${Date.now()}`, pastaRaizId);
 
       let linkDocx = '';
       const arquivoDocx = req.files?.docx?.[0];
@@ -129,7 +132,7 @@ app.post(
         String(linksFotos.length),
         pasta.webViewLink || '',
         dados.atividadesDetalhadas || '',
-      ]);
+      ], variant);
 
       res.json({ ok: true, pastaUrl: pasta.webViewLink, docxUrl: linkDocx, fotosUrls: linksFotos });
     } catch (err) {

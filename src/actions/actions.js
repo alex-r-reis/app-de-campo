@@ -3,8 +3,8 @@
 // a tela. São essas funções que os atributos onclick/oninput do HTML chamam
 // (expostas em window pelo src/main.js).
 
-import { TECNICOS } from '../data/tecnicos.js';
-import { VISITAS_PADRAO } from '../data/tecnicos.js';
+import { TECNICOS, validarSenhaTecnico } from '../data/tecnicos.js';
+import { appConfig } from '../data/appConfig.js';
 import {
   state,
   getFamilia,
@@ -13,6 +13,7 @@ import {
   objetivosAtivos,
   metasAtivas,
   persistirEstadoLocal,
+  aplicarContrato,
 } from '../state/store.js';
 import { render } from '../render.js';
 import { gerarDocxVisita } from '../docx/gerarDocx.js';
@@ -60,16 +61,50 @@ export function showToast(msg) {
   }, 2000);
 }
 
-export async function doLogin(id) {
-  state.tecnico = TECNICOS.find((t) => t.id === id);
+export function selecionarContrato(variant) {
+  const config = appConfig(variant);
+  aplicarContrato(config.id, config.nome);
+  state.screen = 'login';
+  state.erroDadosCampo = '';
+  render();
+}
+
+export function voltarContrato() {
+  Object.assign(state, {
+    screen: 'contrato',
+    tecnico: null,
+    appVariant: '',
+    appNome: '',
+    visitasPadrao: [],
+    erroDadosCampo: '',
+  });
+  render();
+}
+
+export async function doLogin(id, senha) {
+  const tecnico = TECNICOS.find((t) => t.id === id);
+  if (!state.appVariant) {
+    showToast('Selecione o contrato antes de entrar');
+    state.screen = 'contrato';
+    render();
+    return;
+  }
+  if (!validarSenhaTecnico(tecnico, senha)) {
+    showToast('Senha inválida. Use o registro ATEC do técnico.');
+    return;
+  }
+
+  state.tecnico = tecnico;
   state.screen = 'familias';
   state.carregandoDadosCampo = true;
   state.erroDadosCampo = '';
   render();
 
   try {
-    const dados = await buscarDadosCampo();
+    const dados = await buscarDadosCampo(state.appVariant);
     state.familiasCampo = dados.familias || [];
+    state.dadosCampoVariant = dados.variant || state.appVariant;
+    state.visitasPadrao = dados.etapas || state.visitasPadrao;
     state.dadosCampoAtualizadoEm = dados.atualizadoEm || new Date().toISOString();
     persistirEstadoLocal();
   } catch (err) {
@@ -84,8 +119,11 @@ export async function doLogin(id) {
 
 export function logout() {
   Object.assign(state, {
-    screen: 'login',
+    screen: 'contrato',
     tecnico: null,
+    appVariant: '',
+    appNome: '',
+    visitasPadrao: [],
     familiaId: null,
     respostas: {},
     observacoes: '',
@@ -100,8 +138,8 @@ export function logout() {
 export function abrirFamilia(id) {
   const fam = getFamilia(id);
   state.familiaId = id;
-  state.nomeVisita = fam.proximaVisita || VISITAS_PADRAO[0];
-  state.proximosPassos = proximaEtapa(state.nomeVisita);
+  state.nomeVisita = fam.proximaVisita || state.visitasPadrao[0];
+  state.proximosPassos = proximaEtapa(state.nomeVisita, state.visitasPadrao);
   state.resumoVisita = '';
   state.respostas = {};
   state.riscos = [];
@@ -114,7 +152,7 @@ export function abrirFamilia(id) {
 
 export function alterarVisita(nomeVisita) {
   state.nomeVisita = nomeVisita;
-  state.proximosPassos = proximaEtapa(nomeVisita);
+  state.proximosPassos = proximaEtapa(nomeVisita, state.visitasPadrao);
   render();
 }
 
@@ -242,6 +280,8 @@ export function salvarVisita() {
     osp: fam.osp,
     comunidade: fam.comunidade,
     tecnicoNome: state.tecnico.nome,
+    appVariant: state.appVariant,
+    appNome: state.appNome,
     nomeVisita: state.nomeVisita,
     data: fmtDataHoje(),
     ts: Date.now(),
@@ -252,7 +292,7 @@ export function salvarVisita() {
     atividadesAvaliadas: atividadesAvaliadas(objetivosSnapshot, respostas, state.nomeVisita),
     riscos: [...state.riscos],
     conclusao: state.conclusao,
-    proximosPassos: state.proximosPassos || proximaEtapa(state.nomeVisita),
+    proximosPassos: state.proximosPassos || proximaEtapa(state.nomeVisita, state.visitasPadrao),
     gps: state.gps,
     fotos: state.fotos.map((f) => ({
       file: f.file,
@@ -270,7 +310,7 @@ export function salvarVisita() {
   };
   state.visitasSalvas.push(visita);
   fam.status = 'visitado';
-  if (VISITAS_PADRAO.includes(visita.proximosPassos)) {
+  if (state.visitasPadrao.includes(visita.proximosPassos)) {
     fam.proximaVisita = visita.proximosPassos;
   }
   state.screen = 'fila';

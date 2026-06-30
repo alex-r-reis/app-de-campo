@@ -208,6 +208,8 @@ export async function carregarDadosCampo(variant) {
       const municipio = row.Município || '';
       return {
         id: `${config.id}_${idx + 1}_${slug(chefeFamilia)}`,
+        variant: config.id,
+        contratoNome: config.nome,
         chefeFamilia,
         tecnicoNome: row['ATEC responsável'] || '',
         osp: row.OSP || '',

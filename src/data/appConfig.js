@@ -1,4 +1,4 @@
-const VARIANTES = {
+export const VARIANTES = {
   cacau_i: {
     id: 'cacau_i',
     nome: 'Cacau I',
@@ -43,12 +43,16 @@ const VARIANTES = {
   },
 };
 
-export const APP_VARIANT = import.meta.env?.VITE_APP_VARIANT || 'cacau_i';
+export const APP_VARIANT = import.meta.env?.VITE_APP_VARIANT || '';
 
-export function appConfig() {
-  return VARIANTES[APP_VARIANT] || VARIANTES.cacau_i;
+export function contratosDisponiveis() {
+  return Object.values(VARIANTES).map(({ id, nome }) => ({ id, nome }));
 }
 
-export function visitasPadrao() {
-  return appConfig().etapas.map((etapa) => etapa.nome);
+export function appConfig(variant = APP_VARIANT || 'cacau_i') {
+  return VARIANTES[variant] || VARIANTES.cacau_i;
+}
+
+export function visitasPadrao(variant = APP_VARIANT || 'cacau_i') {
+  return appConfig(variant).etapas.map((etapa) => etapa.nome);
 }

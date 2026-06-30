@@ -34,7 +34,7 @@ export function screenFamilias() {
   return `
   <div class="content">
     <h2 class="screen-title">Famílias atendidas</h2>
-    <div class="screen-sub">${state.tecnico.regiao} · ${familias.length} famílias · ${origem}${atualizacao}</div>
+    <div class="screen-sub">${state.appNome} · ${state.tecnico.regiao} · ${familias.length} famílias · ${origem}${atualizacao}</div>
     ${statusDados}
     ${rows || '<div class="empty-state">Nenhuma família encontrada para este técnico.</div>'}
   </div>`;

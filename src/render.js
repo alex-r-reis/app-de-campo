@@ -4,6 +4,7 @@
 
 import { state } from './state/store.js';
 import { topbar, steps } from './screens/topbar.js';
+import { screenContrato } from './screens/contrato.js';
 import { screenLogin } from './screens/login.js';
 import { screenFamilias } from './screens/familias.js';
 import { screenPlano } from './screens/plano.js';
@@ -12,7 +13,8 @@ import { screenFila } from './screens/fila.js';
 
 export function render() {
   let body = '';
-  if (state.screen === 'login') body = screenLogin();
+  if (state.screen === 'contrato') body = screenContrato();
+  else if (state.screen === 'login') body = screenLogin();
   else if (state.screen === 'familias') body = topbar() + steps() + screenFamilias();
   else if (state.screen === 'plano') body = topbar() + steps() + screenPlano();
   else if (state.screen === 'visita') body = topbar() + steps() + screenVisita();

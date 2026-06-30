@@ -40,16 +40,16 @@ export async function buscarVisitasSincronizadas() {
   return res.json();
 }
 
-export async function buscarDadosCampo() {
+export async function buscarDadosCampo(variant = APP_VARIANT || 'cacau_i') {
   try {
-    const res = await fetch(`${API_BASE}/api/campo/dados?variant=${encodeURIComponent(APP_VARIANT)}`);
+    const res = await fetch(`${API_BASE}/api/campo/dados?variant=${encodeURIComponent(variant)}`);
     if (!res.ok) {
       const erro = await res.json().catch(() => ({}));
       throw new Error(erro.erro || 'Falha ao buscar dados de campo');
     }
     return res.json();
   } catch (err) {
-    return carregarDadosCampoDireto();
+    return carregarDadosCampoDireto(variant);
   }
 }
 
@@ -60,6 +60,7 @@ export async function buscarDadosCampo() {
  * @param {Blob|null} docxBlob - blob do relatório .docx já gerado
  */
 export async function enviarVisitaParaServidor(visita, docxBlob) {
+  const variant = visita.appVariant || APP_VARIANT || 'cacau_i';
   const metasResumo = Object.values(visita.respostas).join(' | ');
   const atividadesDetalhadas = (visita.atividadesAvaliadas || [])
     .map((a) => `${a.nomeVisita || visita.nomeVisita} | ${a.atividadeId || a.id} | ${a.status} | ${a.objetivo || ''} | ${a.meta || ''}`)
@@ -77,6 +78,8 @@ export async function enviarVisitaParaServidor(visita, docxBlob) {
     JSON.stringify({
       data: visita.data,
       tecnicoNome: visita.tecnicoNome,
+      appVariant: visita.appVariant || '',
+      appNome: visita.appNome || '',
       chefeFamilia: visita.chefeFamilia,
       osp: visita.osp,
       comunidade: visita.comunidade || '',
@@ -104,7 +107,7 @@ export async function enviarVisitaParaServidor(visita, docxBlob) {
     }
   }
 
-  const res = await fetch(`${API_BASE}/api/visitas`, { method: 'POST', body: form });
+  const res = await fetch(`${API_BASE}/api/visitas?variant=${encodeURIComponent(variant)}`, { method: 'POST', body: form });
   if (!res.ok) {
     const erro = await res.json().catch(() => ({}));
     throw new Error(erro.erro || 'Falha ao enviar visita ao servidor');

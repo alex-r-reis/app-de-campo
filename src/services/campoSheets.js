@@ -180,8 +180,8 @@ function objetivosPorEtapa(row, config, catalogo) {
   }, {});
 }
 
-export async function carregarDadosCampoDireto() {
-  const config = appConfig();
+export async function carregarDadosCampoDireto(variant) {
+  const config = appConfig(variant);
   const [respostasTable, catalogoTable] = await Promise.all([
     carregarGviz({
       spreadsheetId: config.respostasSpreadsheetId,
@@ -203,6 +203,8 @@ export async function carregarDadosCampoDireto() {
       const municipio = row.Município || '';
       return {
         id: `${config.id}_${idx + 1}_${slug(chefeFamilia)}`,
+        variant: config.id,
+        contratoNome: config.nome,
         chefeFamilia,
         tecnicoNome: row['ATEC responsável'] || '',
         osp: row.OSP || '',

@@ -1,12 +1,16 @@
 import { FAMILIAS } from '../data/familias.js';
 import { objetivosDaAtividade } from '../data/atividades.js';
+import { visitasPadrao } from '../data/appConfig.js';
 
 const STORAGE_KEY = 'ater-cacau-campo:v2';
 
 export const state = {
-  screen: 'login',
+  screen: 'contrato',
   online: typeof navigator !== 'undefined' ? navigator.onLine : true,
   forcedOffline: false,
+  appVariant: '',
+  appNome: '',
+  visitasPadrao: [],
   tecnico: null,
   familiaId: null,
   nomeVisita: '',
@@ -19,6 +23,7 @@ export const state = {
   fotos: [],
   visitasSalvas: [],
   familiasCampo: [],
+  dadosCampoVariant: '',
   dadosCampoAtualizadoEm: '',
   carregandoDadosCampo: false,
   erroDadosCampo: '',
@@ -30,8 +35,12 @@ export function isOnline() {
 }
 
 export function getFamilias() {
-  const dinamicas = state.familiasCampo.filter((familia) => normalizar(familia.tecnicoNome) === normalizar(state.tecnico.nome));
+  const cacheCompativel = !state.dadosCampoVariant || state.dadosCampoVariant === state.appVariant;
+  const dinamicas = cacheCompativel
+    ? state.familiasCampo.filter((familia) => normalizar(familia.tecnicoNome) === normalizar(state.tecnico.nome))
+    : [];
   if (dinamicas.length) return dinamicas;
+  if (state.appVariant && state.appVariant !== 'cacau_i') return [];
   return FAMILIAS[state.tecnico.id] || [];
 }
 
@@ -124,6 +133,7 @@ export function persistirEstadoLocal() {
     visitasSalvas: visitasParaPersistencia(),
     familias: familiasParaPersistencia(),
     familiasCampo: state.familiasCampo,
+    dadosCampoVariant: state.dadosCampoVariant,
     dadosCampoAtualizadoEm: state.dadosCampoAtualizadoEm,
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
@@ -156,8 +166,15 @@ export function carregarEstadoLocal() {
       })),
     }));
     state.familiasCampo = payload.familiasCampo || [];
+    state.dadosCampoVariant = payload.dadosCampoVariant || '';
     state.dadosCampoAtualizadoEm = payload.dadosCampoAtualizadoEm || '';
   } catch (err) {
     console.warn('Nao foi possivel restaurar dados locais', err);
   }
+}
+
+export function aplicarContrato(variant, nome = '') {
+  state.appVariant = variant;
+  state.appNome = nome;
+  state.visitasPadrao = visitasPadrao(variant);
 }

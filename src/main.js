@@ -12,6 +12,8 @@ import { state, visitaPorId, carregarEstadoLocal } from './state/store.js';
 import { render } from './render.js';
 import { gerarDocxVisita } from './docx/gerarDocx.js';
 import {
+  selecionarContrato,
+  voltarContrato,
   doLogin,
   logout,
   abrirFamilia,
@@ -38,6 +40,8 @@ window.visitaPorId = visitaPorId;
 window.gerarDocxVisita = gerarDocxVisita;
 
 // Ações
+window.selecionarContrato = selecionarContrato;
+window.voltarContrato = voltarContrato;
 window.doLogin = doLogin;
 window.logout = logout;
 window.abrirFamilia = abrirFamilia;

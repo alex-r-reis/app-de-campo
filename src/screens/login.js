@@ -1,5 +1,6 @@
 // src/screens/login.js
 import { TECNICOS } from '../data/tecnicos.js';
+import { state } from '../state/store.js';
 import logoUrl from '../assets/logo.png';
 
 export function screenLogin() {
@@ -10,7 +11,7 @@ export function screenLogin() {
       <img class="logo-img" src="${logoUrl}" alt="Logo" style="width:180px; height:auto;">
       <div class="tag"><h1 style="display:inline;font-family:Candara,sans-serif;font-size:48px;">MUIRAQUITÃ</h1><span style="display:inline;font-family:Candara,sans-serif;font-size:32px;"> Socioambiental</span></div>
       <h1>ATER CACAU</h1>
-      <div class="sub">Visita de campo</div>
+      <div class="sub">${state.appNome || 'Visita de campo'}</div>
     </div>
     <div class="field">
       <label class="field-label">Técnico(a)</label>
@@ -18,9 +19,10 @@ export function screenLogin() {
     </div>
     <div class="field">
       <label class="field-label">Senha</label>
-      <input class="input" type="password" placeholder="••••••••" value="demo">
+      <input class="input" id="senha-tecnico" type="password" placeholder="Digite sua senha">
     </div>
-    <button class="btn btn-primary" onclick="doLogin(document.getElementById('sel-tecnico').value)">Entrar</button>
-    <div style="text-align:center; margin-top:20px; font-size:15px; color:var(--text-dim);"></div>
+    <button class="btn btn-primary" onclick="doLogin(document.getElementById('sel-tecnico').value, document.getElementById('senha-tecnico').value)">Entrar</button>
+    <button class="btn btn-ghost" style="margin-top:10px;" onclick="voltarContrato()">Trocar contrato</button>
+    <div style="text-align:center; margin-top:20px; font-size:15px; color:var(--text-dim);">Senha inicial: registro ATEC do técnico</div>
   </div>`;
 }

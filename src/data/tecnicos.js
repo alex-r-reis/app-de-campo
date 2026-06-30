@@ -24,4 +24,13 @@ const TECNICOS = [
 
 const VISITAS_PADRAO = visitasPadrao();
 
-export { TECNICOS, VISITAS_PADRAO };
+function normalizarSenha(valor) {
+  return String(valor || '').trim().toUpperCase();
+}
+
+function validarSenhaTecnico(tecnico, senha) {
+  if (!tecnico) return false;
+  return normalizarSenha(senha) === normalizarSenha(tecnico.registro);
+}
+
+export { TECNICOS, VISITAS_PADRAO, validarSenhaTecnico };

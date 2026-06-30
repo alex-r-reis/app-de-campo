@@ -1,17 +1,18 @@
 // server/src/sheetsService.js
 // Cada visita sincronizada vira uma linha na planilha (aba "Visitas").
-// A primeira linha da aba deve conter os cabeçalhos (ver README) — o backend
-// só faz "append" (adiciona linha no final), nunca sobrescreve nada.
 
 import { getSheets } from './google.js';
 import { getAppConfig } from './appConfig.js';
 
-const CONFIG = getAppConfig();
-const SHEET_ID = process.env.GOOGLE_SHEET_ID || CONFIG.destinoSheetId;
 const ABA = process.env.GOOGLE_SHEET_TAB_NAME || 'Visitas';
 
-function exigirSheetId() {
-  if (!SHEET_ID) {
+function sheetIdParaVariant(variant) {
+  const config = getAppConfig(variant);
+  return process.env.GOOGLE_SHEET_ID || config.destinoSheetId;
+}
+
+function exigirSheetId(sheetId) {
+  if (!sheetId) {
     throw new Error('GOOGLE_SHEET_ID não configurado em server/.env');
   }
 }
@@ -19,12 +20,14 @@ function exigirSheetId() {
 /**
  * Adiciona uma linha ao final da planilha.
  * @param {Array<string>} valores
+ * @param {string} variant
  */
-export async function adicionarLinha(valores) {
-  exigirSheetId();
+export async function adicionarLinha(valores, variant) {
+  const sheetId = sheetIdParaVariant(variant);
+  exigirSheetId(sheetId);
   const sheets = getSheets();
   await sheets.spreadsheets.values.append({
-    spreadsheetId: SHEET_ID,
+    spreadsheetId: sheetId,
     range: `${ABA}!A:A`,
     valueInputOption: 'USER_ENTERED',
     insertDataOption: 'INSERT_ROWS',
@@ -35,12 +38,14 @@ export async function adicionarLinha(valores) {
 /**
  * Lê todas as linhas de dados (a partir da linha 2, pulando o cabeçalho).
  * Usado pelo painel de administração.
+ * @param {string} variant
  */
-export async function listarLinhas() {
-  exigirSheetId();
+export async function listarLinhas(variant) {
+  const sheetId = sheetIdParaVariant(variant);
+  exigirSheetId(sheetId);
   const sheets = getSheets();
   const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: SHEET_ID,
+    spreadsheetId: sheetId,
     range: `${ABA}!A2:Z`,
   });
   return res.data.values || [];

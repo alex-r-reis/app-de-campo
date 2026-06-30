@@ -186,8 +186,8 @@ export function objetivosDaAtividade(familia, nomeVisita) {
   return objetivosDeCatalogo(familia, nomeVisita);
 }
 
-export function opcoesProximaEtapa(nomeVisita) {
-  const idx = VISITAS_PADRAO.indexOf(nomeVisita);
-  if (idx === -1 || idx === VISITAS_PADRAO.length - 1) return ['Encerramento do ciclo de acompanhamento'];
-  return [VISITAS_PADRAO[idx + 1], 'Atendimento técnico complementar', 'Reagendar etapa atual'];
+export function opcoesProximaEtapa(nomeVisita, visitas = VISITAS_PADRAO) {
+  const idx = visitas.indexOf(nomeVisita);
+  if (idx === -1 || idx === visitas.length - 1) return ['Encerramento do ciclo de acompanhamento'];
+  return [visitas[idx + 1], 'Atendimento técnico complementar', 'Reagendar etapa atual'];
 }

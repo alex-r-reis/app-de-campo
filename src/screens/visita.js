@@ -1,4 +1,3 @@
-import { VISITAS_PADRAO } from '../data/tecnicos.js';
 import { atividadePorNome, opcoesProximaEtapa } from '../data/atividades.js';
 import {
   state,
@@ -91,13 +90,13 @@ export function screenVisita() {
   const total = metas.length;
   const podeSalvar = respondidas === total;
 
-  const visitaOpts = VISITAS_PADRAO.map(
+  const visitaOpts = state.visitasPadrao.map(
     (v) => `<option value="${v}" ${state.nomeVisita === v ? 'selected' : ''}>${v}</option>`
   ).join('');
 
   const resumoAutomatico = gerarResumoCumprimento(objetivos, state.respostas);
-  const proximaSelecionada = state.proximosPassos || proximaEtapa(state.nomeVisita);
-  const proximasOpts = opcoesProximaEtapa(state.nomeVisita)
+  const proximaSelecionada = state.proximosPassos || proximaEtapa(state.nomeVisita, state.visitasPadrao);
+  const proximasOpts = opcoesProximaEtapa(state.nomeVisita, state.visitasPadrao)
     .map((op) => `<option value="${op}" ${proximaSelecionada === op ? 'selected' : ''}>${op}</option>`)
     .join('');
 
