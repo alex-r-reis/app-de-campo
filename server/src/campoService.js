@@ -96,13 +96,19 @@ function montarCatalogo(linhasCatalogo) {
   linhasCatalogo.forEach((linha) => {
     const nome = linha['Práticas / demandas das famílias'];
     if (!nome) return;
+    const metas = [linha['Meta 1'], linha['Meta 2']]
+      .map((meta) => String(meta || '').trim())
+      .filter(Boolean);
+    if (metas.length === 0 && linha.Metas) {
+      metas.push(String(linha.Metas).trim());
+    }
     mapa.set(normalizar(nome), {
       eixo: linha.Eixo || '',
       pratica: nome,
       gargalos: linha.Gargalos || '',
       situacaoIdeal: linha['Situação Ideal'] || '',
       objetivo: linha.Objetivo || '',
-      meta: linha.Metas || '',
+      metas,
       indicadores: linha.Indicadores || '',
       metodologia: linha['Metodologia(s) e Ferramentas'] || '',
       insumos: linha['Insumos e Materiais Necessários'] || '',
@@ -122,7 +128,7 @@ function detalhePratica(nome, catalogo) {
     gargalos: '',
     situacaoIdeal: '',
     objetivo: nome,
-    meta: 'Realizar atividade conforme programação técnica.',
+    metas: ['Realizar atividade conforme programação técnica.'],
     indicadores: '',
     metodologia: '',
     insumos: '',
@@ -139,18 +145,18 @@ function objetivosPorEtapa(row, config, catalogo) {
       return {
         titulo: `Atividade ${idx + 1}`,
         texto: detalhe.objetivo || detalhe.pratica,
-        metas: [
-          {
-            id: detalhe.pratica,
-            texto: detalhe.pratica,
-            meta: detalhe.meta,
+        atividade: detalhe.pratica,
+        metas: (detalhe.metas.length ? detalhe.metas : ['Realizar atividade conforme programação técnica.']).map((meta, metaIdx) => ({
+            id: `${detalhe.pratica}::meta_${metaIdx + 1}`,
+            atividadeId: detalhe.pratica,
+            pratica: detalhe.pratica,
+            texto: meta,
             indicadores: detalhe.indicadores,
             metodologia: detalhe.metodologia,
             insumos: detalhe.insumos,
             etapasAtividade: detalhe.etapasAtividade,
             eixo: detalhe.eixo,
-          },
-        ],
+          })),
       };
     });
     return acc;

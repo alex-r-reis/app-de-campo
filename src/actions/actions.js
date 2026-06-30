@@ -39,10 +39,11 @@ function atividadesAvaliadas(objetivos, respostas, nomeVisita) {
   return objetivos.flatMap((objetivo) =>
     objetivo.metas.map((meta) => ({
       id: meta.id,
+      atividadeId: meta.atividadeId || meta.pratica || meta.id,
       pratica: meta.texto,
       nomeVisita,
       objetivo: objetivo.texto || '',
-      meta: meta.meta || '',
+      meta: meta.texto || '',
       status: respostas[meta.id] || '',
       indicadores: meta.indicadores || '',
       metodologia: meta.metodologia || '',

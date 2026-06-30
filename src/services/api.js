@@ -56,7 +56,7 @@ export async function buscarDadosCampo() {
 export async function enviarVisitaParaServidor(visita, docxBlob) {
   const metasResumo = Object.values(visita.respostas).join(' | ');
   const atividadesDetalhadas = (visita.atividadesAvaliadas || [])
-    .map((a) => `${a.nomeVisita || visita.nomeVisita} | ${a.id} | ${a.status} | ${a.objetivo || ''} | ${a.meta || ''}`)
+    .map((a) => `${a.nomeVisita || visita.nomeVisita} | ${a.atividadeId || a.id} | ${a.status} | ${a.objetivo || ''} | ${a.meta || ''}`)
     .join(' ; ');
   const riscosResumo = (visita.riscos || [])
     .map((r) => `${r.descricao || ''} → ${r.mitigacao || ''}`)
