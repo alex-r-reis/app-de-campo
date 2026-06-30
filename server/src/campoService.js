@@ -13,6 +13,21 @@ const COORDS_MUNICIPIO = {
   'igarapé-miri': { lat: -1.9809, lng: -48.9597 },
 };
 
+const METAS_MULTIPLAS_FIXAS = new Map([
+  [
+    'capacitacao em poda',
+    ['Capacitar ≥1 membro da família', 'Realizar poda em ≥25% das plantas da área acompanhada'],
+  ],
+  [
+    'capacitacao em renovacao de areas',
+    ['Capacitar ≥1 membro da família', 'Renovar ≥25% das plantas improdutivas identificadas no diagnóstico no ciclo.'],
+  ],
+  [
+    'gestao da producao',
+    ['Implantar ≥1 instrumento de gestão com ≥2 tipos de registros (produção e preço).', 'Capacitar ≥ 2 membros da família capacitados em seu uso.'],
+  ],
+]);
+
 function normalizar(valor) {
   return String(valor || '')
     .normalize('NFD')
@@ -96,11 +111,18 @@ function montarCatalogo(linhasCatalogo) {
   linhasCatalogo.forEach((linha) => {
     const nome = linha['Práticas / demandas das famílias'];
     if (!nome) return;
-    const metas = [linha['Meta 1'], linha['Meta 2']]
-      .map((meta) => String(meta || '').trim())
-      .filter(Boolean);
+    const metasFixas = METAS_MULTIPLAS_FIXAS.get(normalizar(nome));
+    const metas = metasFixas
+      ? [...metasFixas]
+      : [linha['Meta 1'], linha['Meta 2']]
+          .map((meta) => String(meta || '').trim())
+          .filter(Boolean);
     if (metas.length === 0 && linha.Metas) {
-      metas.push(String(linha.Metas).trim());
+      String(linha.Metas)
+        .split(';')
+        .map((meta) => meta.trim())
+        .filter(Boolean)
+        .forEach((meta) => metas.push(meta));
     }
     mapa.set(normalizar(nome), {
       eixo: linha.Eixo || '',
@@ -143,7 +165,7 @@ function objetivosPorEtapa(row, config, catalogo) {
     acc[etapa.nome] = praticas.map((pratica, idx) => {
       const detalhe = detalhePratica(pratica, catalogo);
       return {
-        titulo: `Atividade ${idx + 1}`,
+        titulo: `Objetivo ${idx + 1}`,
         texto: detalhe.objetivo || detalhe.pratica,
         atividade: detalhe.pratica,
         metas: (detalhe.metas.length ? detalhe.metas : ['Realizar atividade conforme programação técnica.']).map((meta, metaIdx) => ({

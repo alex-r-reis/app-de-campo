@@ -31,7 +31,7 @@ const VARIANTES = {
   },
 };
 
-export const APP_VARIANT = import.meta.env.VITE_APP_VARIANT || 'cacau_i';
+export const APP_VARIANT = import.meta.env?.VITE_APP_VARIANT || 'cacau_i';
 
 export function appConfig() {
   return VARIANTES[APP_VARIANT] || VARIANTES.cacau_i;
