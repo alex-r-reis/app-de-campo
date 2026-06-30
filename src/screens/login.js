@@ -1,10 +1,13 @@
 // src/screens/login.js
-import { TECNICOS } from '../data/tecnicos.js';
+import { tecnicosPorContrato } from '../data/tecnicos.js';
 import { state } from '../state/store.js';
 import logoUrl from '../assets/logo.png';
 
 export function screenLogin() {
-  const opts = TECNICOS.map((t) => `<option value="${t.id}">${t.nome} — ${t.registro}</option>`).join('');
+  const tecnicos = tecnicosPorContrato(state.appVariant);
+  const opts = tecnicos.map((t) => `<option value="${t.id}">${t.nome} — ${t.registro}</option>`).join('');
+  const vazio = '<option value="">Nenhum técnico cadastrado para este contrato</option>';
+
   return `
   <div class="login-wrap">
     <div class="logo-block">
@@ -15,7 +18,7 @@ export function screenLogin() {
     </div>
     <div class="field">
       <label class="field-label">Técnico(a)</label>
-      <select class="input" id="sel-tecnico">${opts}</select>
+      <select class="input" id="sel-tecnico">${opts || vazio}</select>
     </div>
     <div class="field">
       <label class="field-label">Senha</label>

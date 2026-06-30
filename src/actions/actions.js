@@ -3,7 +3,7 @@
 // a tela. São essas funções que os atributos onclick/oninput do HTML chamam
 // (expostas em window pelo src/main.js).
 
-import { TECNICOS, validarSenhaTecnico } from '../data/tecnicos.js';
+import { validarSenhaTecnico, tecnicoPorId } from '../data/tecnicos.js';
 import { appConfig } from '../data/appConfig.js';
 import {
   state,
@@ -82,7 +82,7 @@ export function voltarContrato() {
 }
 
 export async function doLogin(id, senha) {
-  const tecnico = TECNICOS.find((t) => t.id === id);
+  const tecnico = tecnicoPorId(id, state.appVariant);
   if (!state.appVariant) {
     showToast('Selecione o contrato antes de entrar');
     state.screen = 'contrato';
@@ -90,7 +90,7 @@ export async function doLogin(id, senha) {
     return;
   }
   if (!validarSenhaTecnico(tecnico, senha)) {
-    showToast('Senha inválida. Use o registro ATEC do técnico.');
+    showToast(tecnico ? 'Senha inválida. Use o registro ATEC do técnico.' : 'Técnico não cadastrado neste contrato.');
     return;
   }
 
