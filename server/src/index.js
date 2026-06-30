@@ -10,6 +10,10 @@ import { getAppConfig, getAppVariant } from './appConfig.js';
 
 const app = express();
 app.use(cors());
+app.use('/api', (req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  next();
+});
 app.use(express.json({ limit: '2mb' }));
 
 const upload = multer({
@@ -50,7 +54,7 @@ app.get('/api/config', (req, res) => {
   });
 });
 
-app.get('/api/campo/dados', async (req, res) => {
+async function responderDadosCampo(req, res) {
   try {
     const dados = await carregarDadosCampo(req.query.variant || getAppVariant());
     res.json(dados);
@@ -58,7 +62,9 @@ app.get('/api/campo/dados', async (req, res) => {
     console.error('Erro ao carregar dados de campo:', err.message);
     res.status(500).json({ erro: err.message });
   }
-});
+}
+
+app.get(['/api/campo/dados', '/api/campo/dados/'], responderDadosCampo);
 
 // Lista as visitas já sincronizadas (lidas direto da planilha) — usado pelo painel de admin
 app.get('/api/visitas', exigirAdmin, async (req, res) => {

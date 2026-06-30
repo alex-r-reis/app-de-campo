@@ -42,7 +42,13 @@ export async function buscarVisitasSincronizadas() {
 
 export async function buscarDadosCampo(variant = APP_VARIANT || 'cacau_i') {
   try {
-    const res = await fetch(`${API_BASE}/api/campo/dados?variant=${encodeURIComponent(variant)}`);
+    const params = new URLSearchParams({
+      variant,
+      t: String(Date.now()),
+    });
+    const res = await fetch(`${API_BASE}/api/campo/dados/?${params.toString()}`, {
+      cache: 'no-store',
+    });
     if (!res.ok) {
       const erro = await res.json().catch(() => ({}));
       throw new Error(erro.erro || 'Falha ao buscar dados de campo');
