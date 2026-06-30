@@ -3,8 +3,10 @@
 // fala com o Google Drive e o Google Sheets — o frontend nunca tem credenciais
 // do Google, só envia os dados/arquivos via multipart/form-data.
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
-const APP_VARIANT = import.meta.env.VITE_APP_VARIANT || 'cacau_i';
+import { carregarDadosCampoDireto } from './campoSheets.js';
+
+const API_BASE = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:3001';
+const APP_VARIANT = import.meta.env?.VITE_APP_VARIANT || 'cacau_i';
 
 function getAdminToken() {
   return sessionStorage.getItem('admin_token') || '';
@@ -39,12 +41,16 @@ export async function buscarVisitasSincronizadas() {
 }
 
 export async function buscarDadosCampo() {
-  const res = await fetch(`${API_BASE}/api/campo/dados?variant=${encodeURIComponent(APP_VARIANT)}`);
-  if (!res.ok) {
-    const erro = await res.json().catch(() => ({}));
-    throw new Error(erro.erro || 'Falha ao buscar dados de campo');
+  try {
+    const res = await fetch(`${API_BASE}/api/campo/dados?variant=${encodeURIComponent(APP_VARIANT)}`);
+    if (!res.ok) {
+      const erro = await res.json().catch(() => ({}));
+      throw new Error(erro.erro || 'Falha ao buscar dados de campo');
+    }
+    return res.json();
+  } catch (err) {
+    return carregarDadosCampoDireto();
   }
-  return res.json();
 }
 
 /**

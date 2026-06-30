@@ -7,9 +7,12 @@ const VARIANTES = {
     catalogoSpreadsheetId: '1EksAOYswZ4MozlrGHnwA5zVyH0xAsVYWi_5f_I1Rzls',
     catalogoGid: '142660285',
     etapas: [
-      'Visita Técnica III',
-      'Visita Técnica IV',
-      'Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)',
+      { nome: 'Visita Técnica III', coluna: 'Quais práticas serão realizadas (III)' },
+      { nome: 'Visita Técnica IV', coluna: 'Quais práticas serão realizadas IV' },
+      {
+        nome: 'Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)',
+        fixas: ['Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)'],
+      },
     ],
   },
   cacau_ii: {
@@ -20,13 +23,22 @@ const VARIANTES = {
     catalogoSpreadsheetId: '1ZH_agLukxYtnKCRdWXYR19Qehr7wCUzL2P50-hWNvPk',
     catalogoGid: '1277230255',
     etapas: [
-      'Visita Técnica I',
-      'Visita Técnica II',
-      'Visita Técnica III',
-      'Visita Técnica IV',
-      'Dia de Campo I - Controle Integrado de Pragas e Doenças (MIPD)',
-      'Dia de Campo II - Adubação e Manejo da Fertilidade do Solo com Uso de Alternativas Locais',
-      'Dia de Campo III - Poda (Formação e Produção)',
+      { nome: 'Visita Técnica I', coluna: 'Quais práticas serão realizadas (I)' },
+      { nome: 'Visita Técnica II', coluna: 'Quais práticas serão realizadas (II)' },
+      { nome: 'Visita Técnica III', coluna: 'Quais práticas serão realizadas (III)' },
+      { nome: 'Visita Técnica IV', coluna: 'Quais práticas serão realizadas IV' },
+      {
+        nome: 'Dia de Campo I - Controle Integrado de Pragas e Doenças (MIPD)',
+        fixas: ['Dia de Campo I - Controle Integrado de Pragas e Doenças (MIPD)'],
+      },
+      {
+        nome: 'Dia de Campo II - Adubação e Manejo da Fertilidade do Solo com Uso de Alternativas Locais',
+        fixas: ['Dia de Campo II - Adubação e Manejo da Fertilidade do Solo com Uso de Alternativas Locais'],
+      },
+      {
+        nome: 'Dia de Campo III - Poda (Formação e Produção)',
+        fixas: ['Dia de Campo III - Poda (Formação e Produção)'],
+      },
     ],
   },
 };
@@ -38,5 +50,5 @@ export function appConfig() {
 }
 
 export function visitasPadrao() {
-  return appConfig().etapas;
+  return appConfig().etapas.map((etapa) => etapa.nome);
 }
