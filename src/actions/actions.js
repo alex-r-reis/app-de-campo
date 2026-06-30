@@ -137,8 +137,11 @@ export function logout() {
 
 export function abrirFamilia(id) {
   const fam = getFamilia(id);
+  const visitaInicial = state.visitasPadrao.includes(fam.proximaVisita)
+    ? fam.proximaVisita
+    : state.visitasPadrao[0] || fam.proximaVisita || '';
   state.familiaId = id;
-  state.nomeVisita = fam.proximaVisita || state.visitasPadrao[0];
+  state.nomeVisita = visitaInicial;
   state.proximosPassos = proximaEtapa(state.nomeVisita, state.visitasPadrao);
   state.resumoVisita = '';
   state.respostas = {};
