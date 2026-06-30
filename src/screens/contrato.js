@@ -7,7 +7,7 @@ export function screenContrato() {
       (contrato) => `
     <button class="card clickable contract-card" onclick="selecionarContrato('${contrato.id}')">
       <div class="obj-title">${contrato.nome}</div>
-      <div class="obj-texto">Entrar no aplicativo de campo deste contrato</div>
+      <div class="obj-texto">Entrar no aplicativo de campo</div>
     </button>`
     )
     .join('');
