@@ -82,12 +82,24 @@ function carregarGviz({ spreadsheetId, sheetName, gid }) {
   });
 }
 
+function valorCelula(cell) {
+  return cell?.v ?? cell?.f ?? '';
+}
+
 function tabelaParaObjetos(table) {
-  const headers = (table.cols || []).map((col) => col.label || col.id || '');
-  return (table.rows || []).map((row) => {
+  const labels = (table.cols || []).map((col) => col.label || '');
+  let rows = table.rows || [];
+  let headers = labels;
+
+  if (!headers.some((header) => String(header).trim()) && rows.length > 0) {
+    headers = (rows[0].c || []).map(valorCelula);
+    rows = rows.slice(1);
+  }
+
+  return rows.map((row) => {
     const obj = {};
     headers.forEach((header, idx) => {
-      obj[header] = row.c?.[idx]?.v ?? '';
+      obj[header] = valorCelula(row.c?.[idx]);
     });
     return obj;
   });
