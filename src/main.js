@@ -8,7 +8,7 @@
 
 import './styles/main.css';
 
-import { state, visitaPorId, carregarEstadoLocal } from './state/store.js';
+import { state, visitaPorId, carregarEstadoLocal, persistirEstadoLocal, temRascunhoAtivo } from './state/store.js';
 import { render } from './render.js';
 import { gerarDocxVisita } from './docx/gerarDocx.js';
 import {
@@ -31,6 +31,7 @@ import {
   removerFoto,
   alternarGpsFoto,
   salvarVisita,
+  removerVisitaSalva,
   sincronizarTudo,
   toggleOffline,
 } from './actions/actions.js';
@@ -60,16 +61,37 @@ window.onFotosSelecionadas = onFotosSelecionadas;
 window.removerFoto = removerFoto;
 window.alternarGpsFoto = alternarGpsFoto;
 window.salvarVisita = salvarVisita;
+window.removerVisitaSalva = removerVisitaSalva;
 window.sincronizarTudo = sincronizarTudo;
 window.toggleOffline = toggleOffline;
+
+let persistTimer = null;
+function agendarPersistenciaLocal() {
+  clearTimeout(persistTimer);
+  persistTimer = setTimeout(() => {
+    persistirEstadoLocal();
+  }, 120);
+}
+
+window.addEventListener('beforeunload', (event) => {
+  if (!temRascunhoAtivo()) return;
+  persistirEstadoLocal();
+  event.preventDefault();
+  event.returnValue = '';
+});
+
+document.addEventListener('input', agendarPersistenciaLocal);
+document.addEventListener('change', agendarPersistenciaLocal);
 
 // Mantém o indicador online/offline sincronizado com o navegador
 window.addEventListener('online', () => {
   state.online = true;
+  persistirEstadoLocal();
   render();
 });
 window.addEventListener('offline', () => {
   state.online = false;
+  persistirEstadoLocal();
   render();
 });
 

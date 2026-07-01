@@ -66,6 +66,7 @@ export function selecionarContrato(variant) {
   aplicarContrato(config.id, config.nome);
   state.screen = 'login';
   state.erroDadosCampo = '';
+  persistirEstadoLocal();
   render();
 }
 
@@ -78,6 +79,7 @@ export function voltarContrato() {
     visitasPadrao: [],
     erroDadosCampo: '',
   });
+  persistirEstadoLocal();
   render();
 }
 
@@ -113,6 +115,7 @@ export async function doLogin(id, senha) {
       : `Não foi possível carregar a planilha: ${err.message}`;
   } finally {
     state.carregandoDadosCampo = false;
+    persistirEstadoLocal();
     render();
   }
 }
@@ -125,13 +128,17 @@ export function logout() {
     appNome: '',
     visitasPadrao: [],
     familiaId: null,
+    nomeVisita: '',
+    resumoVisita: '',
     respostas: {},
-    observacoes: '',
+    riscos: [],
+    conclusao: '',
     proximosPassos: '',
     gps: null,
     fotos: [],
     erroDadosCampo: '',
   });
+  persistirEstadoLocal();
   render();
 }
 
@@ -150,22 +157,26 @@ export function abrirFamilia(id) {
   state.gps = null;
   state.fotos = [];
   state.screen = 'plano';
+  persistirEstadoLocal();
   render();
 }
 
 export function alterarVisita(nomeVisita) {
   state.nomeVisita = nomeVisita;
   state.proximosPassos = proximaEtapa(nomeVisita, state.visitasPadrao);
+  persistirEstadoLocal();
   render();
 }
 
 export function irParaVisita() {
   state.screen = 'visita';
+  persistirEstadoLocal();
   render();
 }
 
 export function irParaFila() {
   state.screen = 'fila';
+  persistirEstadoLocal();
   render();
 }
 
@@ -176,26 +187,31 @@ export function editarArea(valor) {
 
 export function voltarFamilias() {
   state.screen = 'familias';
+  persistirEstadoLocal();
   render();
 }
 
 export function voltarPlano() {
   state.screen = 'plano';
+  persistirEstadoLocal();
   render();
 }
 
 export function responder(mid, valor) {
   state.respostas[mid] = valor;
+  persistirEstadoLocal();
   render();
 }
 
 export function adicionarRisco() {
   state.riscos.push({ descricao: '', mitigacao: '' });
+  persistirEstadoLocal();
   render();
 }
 
 export function removerRisco(idx) {
   state.riscos.splice(idx, 1);
+  persistirEstadoLocal();
   render();
 }
 
@@ -209,6 +225,7 @@ export function capturarGPS() {
       timestamp: Date.now(),
       simulado: true,
     };
+    persistirEstadoLocal();
     render();
   };
   if (navigator.geolocation) {
@@ -221,6 +238,7 @@ export function capturarGPS() {
           timestamp: Date.now(),
           simulado: false,
         };
+        persistirEstadoLocal();
         render();
       },
       () => {
@@ -249,12 +267,14 @@ export async function onFotosSelecionadas(input) {
       timestamp: Date.now(),
     });
   }
+  persistirEstadoLocal();
   render();
   input.value = '';
 }
 
 export function removerFoto(idx) {
   state.fotos.splice(idx, 1);
+  persistirEstadoLocal();
   render();
 }
 
@@ -273,6 +293,7 @@ export function alternarGpsFoto(idx) {
     showToast('Capture a localização GPS antes de marcar a coordenada da foto');
     return;
   }
+  persistirEstadoLocal();
   render();
 }
 
@@ -322,6 +343,15 @@ export function salvarVisita() {
   if (state.visitasPadrao.includes(visita.proximosPassos)) {
     fam.proximaVisita = visita.proximosPassos;
   }
+  state.familiaId = null;
+  state.nomeVisita = '';
+  state.resumoVisita = '';
+  state.respostas = {};
+  state.riscos = [];
+  state.conclusao = '';
+  state.proximosPassos = '';
+  state.gps = null;
+  state.fotos = [];
   state.screen = 'fila';
   persistirEstadoLocal();
   render();
@@ -332,6 +362,17 @@ export function salvarVisita() {
     persistirEstadoLocal();
     render();
   });
+}
+
+export function removerVisitaSalva(id) {
+  const visita = state.visitasSalvas.find((item) => item.id === id);
+  if (!visita) return;
+  const ok = window.confirm(`Retirar o relatorio de ${visita.chefeFamilia} deste aparelho?`);
+  if (!ok) return;
+  state.visitasSalvas = state.visitasSalvas.filter((item) => item.id !== id);
+  persistirEstadoLocal();
+  render();
+  showToast('Relatorio retirado do dispositivo');
 }
 
 export async function sincronizarTudo() {
@@ -385,5 +426,6 @@ export async function sincronizarTudo() {
 
 export function toggleOffline() {
   state.forcedOffline = !state.forcedOffline;
+  persistirEstadoLocal();
   render();
 }

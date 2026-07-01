@@ -24,6 +24,7 @@ export function screenFila() {
         ${stamp}
       </div>
       <button class="btn btn-ghost" style="margin-top:10px;" onclick="gerarDocxVisita(visitaPorId('${v.id}'))">Baixar relat\u00f3rio (.docx)</button>
+      <button class="btn btn-danger" style="margin-top:8px;" onclick="removerVisitaSalva('${v.id}')">Retirar relat\u00f3rio do aparelho</button>
       ${v.syncError ? `<div class="gps-warn sync-error">Erro: ${v.syncError}</div>` : ''}
       ${v.driveUrl ? `<a class="btn btn-ghost" style="display:block;text-align:center;margin-top:8px;" href="${v.driveUrl}" target="_blank">Ver pasta no Drive</a>` : ''}
     </div>`;

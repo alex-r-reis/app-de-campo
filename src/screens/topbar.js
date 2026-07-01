@@ -18,8 +18,11 @@ export function topbar() {
         <div class="reg">${state.tecnico.registro}</div>
       </div>
     </div>
-    <div class="conn ${online ? 'online' : 'offline'}" onclick="toggleOffline()" title="Clique para simular modo offline">
-      <span class="dot"></span>${online ? 'ONLINE' : 'OFFLINE'}
+    <div class="top-actions">
+      <div class="conn ${online ? 'online' : 'offline'}" onclick="toggleOffline()" title="Clique para simular modo offline">
+        <span class="dot"></span>${online ? 'ONLINE' : 'OFFLINE'}
+      </div>
+      <button class="logout-btn" onclick="logout()" title="Sair do técnico atual">Sair</button>
     </div>
   </div>
   ${pendingStrip()}

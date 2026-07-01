@@ -51,6 +51,7 @@
     border-bottom:1px solid var(--line);
   }
   .topbar .who{display:flex; align-items:center; gap:10px;}
+  .top-actions{display:flex; align-items:center; gap:7px; flex-shrink:0;}
   .avatar{
     width:34px;height:34px;border-radius:50%;
     background:var(--accent); color:#1C2118;
@@ -68,6 +69,15 @@
   .conn.online{color:var(--ok); border-color:var(--ok);}
   .conn.offline{color:var(--pending); border-color:var(--pending);}
   .dot{width:7px;height:7px;border-radius:50%;background:currentColor;}
+  .logout-btn{
+    background:none;
+    border:1px solid var(--line);
+    color:var(--text-dim);
+    border-radius:20px;
+    padding:5px 9px;
+    font-size:11px;
+    font-weight:700;
+  }
 
   .pending-strip{
     background:var(--surface-2);
@@ -246,6 +256,7 @@
   .btn-primary:active{background:var(--accent-dim);}
   .btn-primary:disabled{background:var(--line); color:var(--text-dim);}
   .btn-ghost{background:none; border:1.5px solid var(--line); color:var(--text);}
+  .btn-danger{background:none; border:1.5px solid rgba(199,85,58,0.65); color:var(--danger);}
 
   .login-wrap{flex:1; display:flex; flex-direction:column; justify-content:center; padding:24px;}
   .contract-list{display:grid; gap:12px;}
