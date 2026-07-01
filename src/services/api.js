@@ -8,6 +8,10 @@ import { carregarDadosCampoDireto } from './campoSheets.js';
 const API_BASE = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:3001';
 const APP_VARIANT = import.meta.env?.VITE_APP_VARIANT || 'cacau_i';
 
+function aguardar(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function getAdminToken() {
   return sessionStorage.getItem('admin_token') || '';
 }
@@ -19,6 +23,28 @@ async function dataUrlToBlob(dataUrl) {
 
 export function setAdminToken(token) {
   sessionStorage.setItem('admin_token', token || '');
+}
+
+export async function verificarServidorDisponivel() {
+  let ultimoErro = null;
+
+  for (let tentativa = 1; tentativa <= 3; tentativa++) {
+    try {
+      const res = await fetch(`${API_BASE}/api/health?t=${Date.now()}`, {
+        cache: 'no-store',
+      });
+      if (res.ok) return true;
+      ultimoErro = new Error(`Servidor respondeu ${res.status}`);
+    } catch (err) {
+      ultimoErro = err;
+    }
+
+    await aguardar(tentativa * 3000);
+  }
+
+  throw new Error(
+    `Nao foi possivel conectar ao servidor. Verifique a internet e tente novamente. ${ultimoErro?.message || ''}`.trim()
+  );
 }
 
 export async function buscarConfigAdmin() {
@@ -113,7 +139,15 @@ export async function enviarVisitaParaServidor(visita, docxBlob) {
     }
   }
 
-  const res = await fetch(`${API_BASE}/api/visitas?variant=${encodeURIComponent(variant)}`, { method: 'POST', body: form });
+  let res;
+  try {
+    res = await fetch(`${API_BASE}/api/visitas?variant=${encodeURIComponent(variant)}`, { method: 'POST', body: form });
+  } catch (err) {
+    throw new Error(
+      `Nao foi possivel conectar ao servidor. Verifique a internet e tente sincronizar novamente. ${err?.message || ''}`.trim()
+    );
+  }
+
   if (!res.ok) {
     const erro = await res.json().catch(() => ({}));
     throw new Error(erro.erro || 'Falha ao enviar visita ao servidor');

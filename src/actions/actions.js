@@ -17,7 +17,7 @@ import {
 } from '../state/store.js';
 import { render } from '../render.js';
 import { gerarDocxVisita } from '../docx/gerarDocx.js';
-import { buscarDadosCampo, enviarVisitaParaServidor } from '../services/api.js';
+import { buscarDadosCampo, enviarVisitaParaServidor, verificarServidorDisponivel } from '../services/api.js';
 import { proximaEtapa } from '../utils/cronograma.js';
 
 function fileToDataUrl(file) {
@@ -342,6 +342,18 @@ export async function sincronizarTudo() {
   showToast(`Sincronizando ${pendentes.length} relatório(s)...`);
   let sucesso = 0;
   let falha = 0;
+
+  try {
+    await verificarServidorDisponivel();
+  } catch (err) {
+    pendentes.forEach((visita) => {
+      visita.syncError = err?.message || 'Servidor indisponivel';
+    });
+    persistirEstadoLocal();
+    render();
+    showToast('Servidor indisponivel para sincronizacao. Tente novamente em alguns instantes.');
+    return;
+  }
 
   for (const visita of pendentes) {
     try {
