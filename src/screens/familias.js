@@ -2,6 +2,7 @@ import { state, getFamilias } from '../state/store.js';
 
 export function screenFamilias() {
   const familias = getFamilias();
+  const totalRelatorios = state.visitasSalvas.length;
   const origem = state.familiasCampo.length ? 'Planilha em tempo real' : 'Base local';
   const atualizacao = state.dadosCampoAtualizadoEm
     ? ` · atualizado em ${new Date(state.dadosCampoAtualizadoEm).toLocaleString('pt-BR')}`
@@ -36,6 +37,7 @@ export function screenFamilias() {
     <h2 class="screen-title">Famílias atendidas</h2>
     <div class="screen-sub">${state.appNome} · ${state.tecnico.regiao} · ${familias.length} famílias · ${origem}${atualizacao}</div>
     ${statusDados}
+    ${totalRelatorios ? `<button class="btn btn-ghost" style="margin-bottom:12px;" onclick="irParaFila()">Ver relat\u00f3rios realizados (${totalRelatorios})</button>` : ''}
     ${rows || '<div class="empty-state">Nenhuma família encontrada para este técnico.</div>'}
   </div>`;
 }

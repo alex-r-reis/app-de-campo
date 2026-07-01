@@ -32,15 +32,18 @@ export function pendingStrip() {
   const online = isOnline();
   return `
   <div class="pending-strip">
-    <span>${n} relatório${n > 1 ? 's' : ''} pendente${n > 1 ? 's' : ''} de sincronização</span>
-    <button onclick="sincronizarTudo()" ${online ? '' : 'disabled'}>${online ? 'Sincronizar' : 'Sem conexão'}</button>
+    <span>${n} relat\u00f3rio${n > 1 ? 's' : ''} pendente${n > 1 ? 's' : ''} de sincroniza\u00e7\u00e3o</span>
+    <div class="pending-actions">
+      <button onclick="irParaFila()">Ver relat\u00f3rios</button>
+      <button onclick="sincronizarTudo()" ${online ? '' : 'disabled'}>${online ? 'Sincronizar' : 'Sem conex\u00e3o'}</button>
+    </div>
   </div>`;
 }
 
 export function steps() {
   if (!['plano', 'visita', 'fila'].includes(state.screen)) return '';
   const order = ['familias', 'plano', 'visita', 'fila'];
-  const labels = ['01 FAMÍLIA', '02 PLANO', '03 VISITA', '04 ENVIO'];
+  const labels = ['01 FAM\u00cdLIA', '02 PLANO', '03 VISITA', '04 ENVIO'];
   const idx = order.indexOf(state.screen);
   return `<div class="steps">${labels
     .map((l, i) => {

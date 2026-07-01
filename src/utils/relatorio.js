@@ -1,14 +1,24 @@
 // src/utils/relatorio.js
-// Gera o texto-resumo da Conclusão a partir do cumprimento de cada meta
-// (Integral / Parcial / Não realizada), agrupando e unificando as metas que
-// tiveram a mesma resposta — em vez de repetir uma frase por meta.
+// Gera o texto-resumo da conclusao a partir do cumprimento de cada meta,
+// agrupando metas com a mesma resposta para evitar repeticao desnecessaria.
 
-const ORDEM_STATUS = ['Integral', 'Parcial', 'Não realizada'];
+const ORDEM_STATUS = ['Integral', 'Parcial', 'Nao realizada'];
 
-const VERBOS = {
-  Integral: { singular: 'foi cumprida integralmente', plural: 'foram cumpridas integralmente' },
-  Parcial: { singular: 'foi cumprida parcialmente', plural: 'foram cumpridas parcialmente' },
-  'Não realizada': { singular: 'não foi realizada', plural: 'não foram realizadas' },
+const TEXTOS_PADRAO = {
+  Integral:
+    'foram cumpridas integralmente, conforme o planejamento estabelecido, com a execu\u00e7\u00e3o de todas as atividades previstas.',
+  Parcial:
+    'foram cumpridas parcialmente, com a execu\u00e7\u00e3o de parte das atividades previstas, permanecendo as a\u00e7\u00f5es remanescentes programadas para as pr\u00f3ximas etapas.',
+  'Nao realizada':
+    'n\u00e3o foram realizadas, tendo sua execu\u00e7\u00e3o sido reprogramada para as pr\u00f3ximas etapas ou canceladas.',
+};
+
+const STATUS_NORMALIZADO = {
+  Integral: 'Integral',
+  Parcial: 'Parcial',
+  'Nao realizada': 'Nao realizada',
+  'Não realizada': 'Nao realizada',
+  'NÃ£o realizada': 'Nao realizada',
 };
 
 function formatarLista(itens) {
@@ -19,17 +29,17 @@ function formatarLista(itens) {
 
 /**
  * @param {Array} objetivosSnapshot - fam.plano.objetivos (ou snapshot salvo na visita)
- * @param {object} respostas - {metaId: 'Integral'|'Parcial'|'Não realizada'}
+ * @param {object} respostas - {metaId: 'Integral'|'Parcial'|'Nao realizada'}
  * @returns {string}
  */
 export function gerarResumoCumprimento(objetivosSnapshot, respostas) {
   const metas = (objetivosSnapshot || []).flatMap((o) => o.metas);
   if (metas.length === 0) return 'Nenhuma meta cadastrada para esta visita.';
 
-  const grupos = { Integral: [], Parcial: [], 'Não realizada': [] };
+  const grupos = { Integral: [], Parcial: [], 'Nao realizada': [] };
   metas.forEach((m, idx) => {
-    const status = respostas?.[m.id] || 'Não realizada';
-    (grupos[status] || grupos['Não realizada']).push(idx + 1);
+    const status = STATUS_NORMALIZADO[respostas?.[m.id]] || 'Nao realizada';
+    grupos[status].push(idx + 1);
   });
 
   const frases = [];
@@ -37,8 +47,7 @@ export function gerarResumoCumprimento(objetivosSnapshot, respostas) {
     const numeros = grupos[status];
     if (!numeros || numeros.length === 0) return;
     const lista = formatarLista(numeros.map((n) => `Meta ${n}`));
-    const verbo = numeros.length === 1 ? VERBOS[status].singular : VERBOS[status].plural;
-    frases.push(`${lista} ${verbo}.`);
+    frases.push(`${lista} ${TEXTOS_PADRAO[status]}`);
   });
 
   if (frases.length === 0) return 'Nenhuma meta avaliada nesta visita.';

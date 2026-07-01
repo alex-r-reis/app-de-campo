@@ -164,6 +164,11 @@ export function irParaVisita() {
   render();
 }
 
+export function irParaFila() {
+  state.screen = 'fila';
+  render();
+}
+
 export function editarArea(valor) {
   getFamilia(state.familiaId).area = valor;
   persistirEstadoLocal();
@@ -310,6 +315,7 @@ export function salvarVisita() {
     docxGerado: false,
     docxBlob: null,
     driveUrl: null,
+    syncError: '',
   };
   state.visitasSalvas.push(visita);
   fam.status = 'visitado';
@@ -339,12 +345,19 @@ export async function sincronizarTudo() {
 
   for (const visita of pendentes) {
     try {
+      if (!visita.docxBlob) {
+        const { blob } = await gerarDocxVisita(visita, { baixar: false });
+        visita.docxBlob = blob;
+        visita.docxGerado = true;
+      }
       const resultado = await enviarVisitaParaServidor(visita, visita.docxBlob);
       visita.sincronizado = true;
       visita.driveUrl = resultado.pastaUrl || null;
+      visita.syncError = '';
       sucesso++;
     } catch (err) {
       console.error('Falha ao sincronizar visita', visita.id, err);
+      visita.syncError = err?.message || 'Falha desconhecida ao sincronizar';
       falha++;
     }
     persistirEstadoLocal();

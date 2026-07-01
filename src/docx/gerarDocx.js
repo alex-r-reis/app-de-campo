@@ -140,10 +140,13 @@ function textoMetaRelatorio(meta) {
  * Gera o .docx da visita, dispara o download no navegador e devolve o blob
  * (usado por src/actions/actions.js para depois enviar ao backend/Drive).
  * @param {object} visita - objeto de visita salvo em state.visitasSalvas
+ * @param {object} opts
+ * @param {boolean} opts.baixar - quando falso, gera o blob sem disparar download
  * @returns {Promise<{blob: Blob, nomeArq: string}>}
  */
-export async function gerarDocxVisita(visita) {
+export async function gerarDocxVisita(visita, opts = {}) {
   if (!visita) return;
+  const { baixar = true } = opts;
 
   // ---------- Cabeçalho ----------
   const wHead = Math.floor(LARGURA / 5);
@@ -362,16 +365,18 @@ export async function gerarDocxVisita(visita) {
 
   const blob = await Packer.toBlob(doc);
   const nomeArq = `Relatorio_ATER_${slug(visita.chefeFamilia)}_${slug(visita.nomeVisita)}.docx`;
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = nomeArq;
-  document.body.appendChild(a);
-  a.click();
-  setTimeout(() => {
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, 1000);
+  if (baixar) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nomeArq;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 1000);
+  }
 
   return { blob, nomeArq };
 }
