@@ -13,6 +13,7 @@ import { getDrive } from './google.js';
 export async function criarPasta(nome, pastaPaiId) {
   const drive = getDrive();
   const res = await drive.files.create({
+    supportsAllDrives: true,
     requestBody: {
       name: nome,
       mimeType: 'application/vnd.google-apps.folder',
@@ -30,6 +31,7 @@ export async function criarPasta(nome, pastaPaiId) {
 export async function enviarArquivo({ nome, mimeType, buffer, pastaId }) {
   const drive = getDrive();
   const res = await drive.files.create({
+    supportsAllDrives: true,
     requestBody: {
       name: nome,
       parents: pastaId ? [pastaId] : undefined,

@@ -1,40 +1,56 @@
 // server/src/google.js
-// Autenticação via Service Account (conta de serviço) do Google Cloud.
-// Não usa OAuth interativo: o backend autentica direto com a chave privada
-// da conta de serviço, então cada técnico não precisa logar com Google.
+// Autenticacao Google para Drive/Sheets.
 //
-// Pré-requisito: a pasta do Drive e a planilha do Sheets precisam estar
-// COMPARTILHADAS com o e-mail da conta de serviço (GOOGLE_SERVICE_ACCOUNT_EMAIL),
-// com permissão de "Editor". Veja o passo a passo no README principal.
+// Preferimos OAuth de usuario quando configurado, pois Service Accounts nao
+// possuem cota de armazenamento no "Meu Drive" e falham ao criar arquivos.
+// A Service Account fica como fallback para ambientes com Shared Drives.
 
 import { google } from 'googleapis';
+
+const SCOPES = [
+  'https://www.googleapis.com/auth/drive',
+  'https://www.googleapis.com/auth/spreadsheets',
+];
 
 let cachedAuth = null;
 
 export function getAuth() {
   if (cachedAuth) return cachedAuth;
 
+  const oauthClientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
+  const oauthClientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
+  const oauthRefreshToken = process.env.GOOGLE_OAUTH_REFRESH_TOKEN;
+
+  if (oauthClientId || oauthClientSecret || oauthRefreshToken) {
+    if (!oauthClientId || !oauthClientSecret || !oauthRefreshToken) {
+      throw new Error(
+        'Credenciais OAuth incompletas. Defina GOOGLE_OAUTH_CLIENT_ID, ' +
+          'GOOGLE_OAUTH_CLIENT_SECRET e GOOGLE_OAUTH_REFRESH_TOKEN.'
+      );
+    }
+
+    const oauth = new google.auth.OAuth2(oauthClientId, oauthClientSecret);
+    oauth.setCredentials({ refresh_token: oauthRefreshToken });
+    cachedAuth = oauth;
+    return cachedAuth;
+  }
+
   const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
   const rawKey = process.env.GOOGLE_PRIVATE_KEY;
 
   if (!email || !rawKey) {
     throw new Error(
-      'Credenciais do Google não configuradas. Defina GOOGLE_SERVICE_ACCOUNT_EMAIL e ' +
-        'GOOGLE_PRIVATE_KEY em server/.env (veja server/.env.example).'
+      'Credenciais do Google nao configuradas. Defina credenciais OAuth ou ' +
+        'GOOGLE_SERVICE_ACCOUNT_EMAIL e GOOGLE_PRIVATE_KEY.'
     );
   }
 
-  // No .env, quebras de linha da chave privada vêm escritas como "\n" literal —
-  // aqui convertemos de volta para quebras de linha reais.
   const key = rawKey.replace(/\\n/g, '\n');
 
   cachedAuth = new google.auth.JWT({
     email,
     key,
-    scopes: [
-      'https://www.googleapis.com/auth/drive',
-      'https://www.googleapis.com/auth/spreadsheets',
-    ],
+    scopes: SCOPES,
   });
 
   return cachedAuth;
