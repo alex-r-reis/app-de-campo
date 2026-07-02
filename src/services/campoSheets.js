@@ -1,5 +1,5 @@
 import { appConfig } from '../data/appConfig.js';
-import { aplicarPraticasFamiliasCacauII } from '../data/praticasFamiliasCacauII.js';
+import { completarPraticasFamiliasCacauII } from '../data/praticasFamiliasCacauII.js';
 import { aplicarPraticasFamiliasPrioritarias } from '../data/praticasFamiliasPrioritarias.js';
 
 const COORDS_MUNICIPIO = {
@@ -195,10 +195,8 @@ export async function carregarDadosCampoDireto(variant) {
     }),
   ]);
 
-  const respostas = tabelaParaObjetos(respostasTable).map((row) => {
-    const atualizada = aplicarPraticasFamiliasPrioritarias(row);
-    return config.id === 'cacau_ii' ? aplicarPraticasFamiliasCacauII(atualizada) : atualizada;
-  });
+  const respostasBase = tabelaParaObjetos(respostasTable).map(aplicarPraticasFamiliasPrioritarias);
+  const respostas = config.id === 'cacau_ii' ? completarPraticasFamiliasCacauII(respostasBase) : respostasBase;
   const catalogo = montarCatalogo(tabelaParaObjetos(catalogoTable));
 
   const familias = respostas

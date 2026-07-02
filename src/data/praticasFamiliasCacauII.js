@@ -1026,6 +1026,19 @@ const ATUALIZACOES_POR_FAMILIA = new Map(
   ATUALIZACOES_CACAU_II.map((item) => [chave(item.tecnico, item.familia), item])
 );
 
+function linhaDaAtualizacao(item) {
+  return {
+    [COLUNA_TECNICO]: item.tecnico,
+    [COLUNA_FAMILIA]: item.familia,
+    OSP: item.osp,
+    [COLUNA_MUNICIPIO]: item.municipio,
+    [COLUNA_VISITA_I]: item.visitaI,
+    [COLUNA_VISITA_II]: item.visitaII,
+    [COLUNA_VISITA_III]: item.visitaIII,
+    [COLUNA_VISITA_IV]: item.visitaIV,
+  };
+}
+
 export function aplicarPraticasFamiliasCacauII(row) {
   const atualizacao = ATUALIZACOES_POR_FAMILIA.get(chave(row[COLUNA_TECNICO], row[COLUNA_FAMILIA]));
   if (!atualizacao) return row;
@@ -1039,6 +1052,23 @@ export function aplicarPraticasFamiliasCacauII(row) {
     [COLUNA_VISITA_III]: atualizacao.visitaIII,
     [COLUNA_VISITA_IV]: atualizacao.visitaIV,
   };
+}
+
+export function completarPraticasFamiliasCacauII(rows) {
+  const vistos = new Set();
+  const atualizadas = rows.map((row) => {
+    vistos.add(chave(row[COLUNA_TECNICO], row[COLUNA_FAMILIA]));
+    return aplicarPraticasFamiliasCacauII(row);
+  });
+
+  ATUALIZACOES_CACAU_II.forEach((item) => {
+    const itemChave = chave(item.tecnico, item.familia);
+    if (vistos.has(itemChave)) return;
+    vistos.add(itemChave);
+    atualizadas.push(linhaDaAtualizacao(item));
+  });
+
+  return atualizadas;
 }
 
 export function totalPraticasFamiliasCacauII() {
