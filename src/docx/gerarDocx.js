@@ -147,6 +147,7 @@ function textoMetaRelatorio(meta) {
 export async function gerarDocxVisita(visita, opts = {}) {
   if (!visita) return;
   const { baixar = true } = opts;
+  const municipioVisita = visita.comunidade || 'Município não informado';
 
   // ---------- Cabeçalho ----------
   const wHead = Math.floor(LARGURA / 5);
@@ -321,7 +322,7 @@ export async function gerarDocxVisita(visita, opts = {}) {
       new Paragraph({
         alignment: AlignmentType.CENTER,
         children: [
-          new TextRun({ text: `${coordTxt} · ${new Date(f.timestamp).toLocaleString('pt-BR')}`, size: 16, italics: true, color: '555555' }),
+          new TextRun({ text: `${coordTxt} · ${new Date(f.timestamp).toLocaleString('pt-BR')} · ${municipioVisita}`, size: 16, italics: true, color: '555555' }),
         ],
       })
     );

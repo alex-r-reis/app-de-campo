@@ -16,6 +16,10 @@ function getAdminToken() {
   return sessionStorage.getItem('admin_token') || '';
 }
 
+function formatarDataHora(ts) {
+  return ts ? new Date(ts).toLocaleString('pt-BR') : '';
+}
+
 async function dataUrlToBlob(dataUrl) {
   const res = await fetch(dataUrl);
   return res.blob();
@@ -101,7 +105,7 @@ export async function enviarVisitaParaServidor(visita, docxBlob) {
     .map((r) => `${r.descricao || ''} → ${r.mitigacao || ''}`)
     .join(' ; ');
   const gpsTexto = visita.gps
-    ? `${visita.gps.lat.toFixed(5)}, ${visita.gps.lng.toFixed(5)}${visita.gps.simulado ? ' (simulado)' : ''}`
+    ? `${visita.gps.lat.toFixed(5)}, ${visita.gps.lng.toFixed(5)}${visita.gps.simulado ? ' (simulado)' : ''} | ${formatarDataHora(visita.gps.timestamp || visita.ts)} | ${visita.comunidade || 'Município não informado'}`
     : '';
 
   const form = new FormData();

@@ -4,7 +4,6 @@ import {
   getFamilia,
   isOnline,
   fmtCoord,
-  fmtHora,
   fmtDataHoje,
   objetivosAtivos,
   metasAtivas,
@@ -19,6 +18,8 @@ export function screenVisita() {
   const atividadeLabel = fam.atividadesPorVisita?.[state.nomeVisita] ? state.nomeVisita : atividade.atividade;
   const objetivos = objetivosAtivos(fam);
   const metas = metasAtivas(fam);
+  const municipioVisita = fam.comunidade || 'Município não informado';
+  const fmtDataHora = (ts) => new Date(ts).toLocaleString('pt-BR');
 
   const objetivosForm = objetivos
     .map(
@@ -61,7 +62,7 @@ export function screenVisita() {
     ? `
     <div class="gps-readout">
       LAT ${fmtCoord(state.gps.lat)}  LNG ${fmtCoord(state.gps.lng)}<br>
-      precisão ±${state.gps.acc}m · ${fmtHora(state.gps.timestamp)}
+      precisão ±${state.gps.acc}m · ${fmtDataHora(state.gps.timestamp)} · ${municipioVisita}
     </div>
     ${state.gps.simulado ? '<div class="gps-warn">Coordenada simulada - permissão de localização indisponível neste navegador</div>' : ''}
   `
@@ -78,7 +79,7 @@ export function screenVisita() {
       <div class="photo-item-body">
         <input class="photo-legenda" type="text" value="${f.legenda || ''}" placeholder="Legenda da foto (opcional)" oninput="state.fotos[${i}].legenda=this.value">
         <div class="photo-meta-row">
-          <span class="photo-coord ${temGps ? 'com-gps' : ''}">${coordTxt} · ${fmtHora(f.timestamp)}</span>
+          <span class="photo-coord ${temGps ? 'com-gps' : ''}">${coordTxt} · ${fmtDataHora(f.timestamp)} · ${municipioVisita}</span>
           <button class="photo-gps-btn ${temGps ? 'ativo' : ''}" onclick="alternarGpsFoto(${i})">${temGps ? 'Remover coordenada' : 'Usar coordenada atual'}</button>
         </div>
       </div>
