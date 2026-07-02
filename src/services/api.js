@@ -4,6 +4,7 @@
 // do Google, só envia os dados/arquivos via multipart/form-data.
 
 import { carregarDadosCampoDireto } from './campoSheets.js';
+import { municipioDoPonto } from '../utils/geo.js';
 
 const API_BASE = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:3001';
 const APP_VARIANT = import.meta.env?.VITE_APP_VARIANT || 'cacau_i';
@@ -105,7 +106,7 @@ export async function enviarVisitaParaServidor(visita, docxBlob) {
     .map((r) => `${r.descricao || ''} → ${r.mitigacao || ''}`)
     .join(' ; ');
   const gpsTexto = visita.gps
-    ? `${visita.gps.lat.toFixed(5)}, ${visita.gps.lng.toFixed(5)}${visita.gps.simulado ? ' (simulado)' : ''} | ${formatarDataHora(visita.gps.timestamp || visita.ts)} | ${visita.comunidade || 'Município não informado'}`
+    ? `${visita.gps.lat.toFixed(5)}, ${visita.gps.lng.toFixed(5)}${visita.gps.simulado ? ' (simulado)' : ''} | ${formatarDataHora(visita.gps.timestamp || visita.ts)} | ${municipioDoPonto(visita.gps)}`
     : '';
 
   const form = new FormData();

@@ -24,6 +24,7 @@ import {
 } from 'docx';
 import { slug } from '../state/store.js';
 import { gerarResumoCumprimento } from '../utils/relatorio.js';
+import { municipioDoPonto } from '../utils/geo.js';
 
 const COR_FAIXA = 'F2A93B';   // laranja do modelo
 const COR_TITULO = '1E4D2B';  // verde escuro do modelo
@@ -147,7 +148,6 @@ function textoMetaRelatorio(meta) {
 export async function gerarDocxVisita(visita, opts = {}) {
   if (!visita) return;
   const { baixar = true } = opts;
-  const municipioVisita = visita.comunidade || 'Município não informado';
 
   // ---------- Cabeçalho ----------
   const wHead = Math.floor(LARGURA / 5);
@@ -318,11 +318,12 @@ export async function gerarDocxVisita(visita, opts = {}) {
     const coordTxt = f.gps
       ? `Lat ${f.gps.lat.toFixed(5)}, Lng ${f.gps.lng.toFixed(5)}${f.gps.simulado ? ' (simulado)' : ''}`
       : 'Sem coordenada';
+    const cidadeFoto = f.gps ? ` · ${municipioDoPonto(f.gps)}` : '';
     blocosFotos.push(
       new Paragraph({
         alignment: AlignmentType.CENTER,
         children: [
-          new TextRun({ text: `${coordTxt} · ${new Date(f.timestamp).toLocaleString('pt-BR')} · ${municipioVisita}`, size: 16, italics: true, color: '555555' }),
+          new TextRun({ text: `${coordTxt} · ${new Date(f.timestamp).toLocaleString('pt-BR')}${cidadeFoto}`, size: 16, italics: true, color: '555555' }),
         ],
       })
     );

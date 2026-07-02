@@ -11,6 +11,7 @@ import {
 } from '../state/store.js';
 import { gerarResumoCumprimento } from '../utils/relatorio.js';
 import { proximaEtapa } from '../utils/cronograma.js';
+import { municipioDoPonto } from '../utils/geo.js';
 
 export function screenVisita() {
   const fam = getFamilia(state.familiaId);
@@ -18,7 +19,6 @@ export function screenVisita() {
   const atividadeLabel = fam.atividadesPorVisita?.[state.nomeVisita] ? state.nomeVisita : atividade.atividade;
   const objetivos = objetivosAtivos(fam);
   const metas = metasAtivas(fam);
-  const municipioVisita = fam.comunidade || 'Município não informado';
   const fmtDataHora = (ts) => new Date(ts).toLocaleString('pt-BR');
 
   const objetivosForm = objetivos
@@ -62,7 +62,7 @@ export function screenVisita() {
     ? `
     <div class="gps-readout">
       LAT ${fmtCoord(state.gps.lat)}  LNG ${fmtCoord(state.gps.lng)}<br>
-      precisão ±${state.gps.acc}m · ${fmtDataHora(state.gps.timestamp)} · ${municipioVisita}
+      precisão ±${state.gps.acc}m · ${fmtDataHora(state.gps.timestamp)} · ${municipioDoPonto(state.gps)}
     </div>
     ${state.gps.simulado ? '<div class="gps-warn">Coordenada simulada - permissão de localização indisponível neste navegador</div>' : ''}
   `
@@ -72,6 +72,7 @@ export function screenVisita() {
     .map((f, i) => {
       const temGps = !!f.gps;
       const coordTxt = temGps ? `${fmtCoord(f.gps.lat)}, ${fmtCoord(f.gps.lng)}${f.gps.simulado ? ' (simulado)' : ''}` : 'sem coordenada';
+      const cidadeFoto = temGps ? ` · ${municipioDoPonto(f.gps)}` : '';
       return `
     <div class="photo-item">
       <button class="photo-remove" onclick="removerFoto(${i})">×</button>
@@ -79,7 +80,7 @@ export function screenVisita() {
       <div class="photo-item-body">
         <input class="photo-legenda" type="text" value="${f.legenda || ''}" placeholder="Legenda da foto (opcional)" oninput="state.fotos[${i}].legenda=this.value">
         <div class="photo-meta-row">
-          <span class="photo-coord ${temGps ? 'com-gps' : ''}">${coordTxt} · ${fmtDataHora(f.timestamp)} · ${municipioVisita}</span>
+          <span class="photo-coord ${temGps ? 'com-gps' : ''}">${coordTxt} · ${fmtDataHora(f.timestamp)}${cidadeFoto}</span>
           <button class="photo-gps-btn ${temGps ? 'ativo' : ''}" onclick="alternarGpsFoto(${i})">${temGps ? 'Remover coordenada' : 'Usar coordenada atual'}</button>
         </div>
       </div>
