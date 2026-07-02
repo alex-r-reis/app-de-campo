@@ -1,4 +1,5 @@
 import { getAppConfig } from './appConfig.js';
+import { aplicarPraticasFamiliasPrioritarias } from './praticasFamiliasPrioritarias.js';
 
 const COORDS_MUNICIPIO = {
   altamira: { lat: -3.2033, lng: -52.2064 },
@@ -198,7 +199,7 @@ export async function carregarDadosCampo(variant) {
     }),
   ]);
 
-  const respostas = parseCsv(respostasCsv);
+  const respostas = parseCsv(respostasCsv).map(aplicarPraticasFamiliasPrioritarias);
   const catalogo = montarCatalogo(parseCsv(catalogoCsv));
 
   const familias = respostas
