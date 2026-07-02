@@ -1056,9 +1056,13 @@ export function aplicarPraticasFamiliasCacauII(row) {
 
 export function completarPraticasFamiliasCacauII(rows) {
   const vistos = new Set();
-  const atualizadas = rows.map((row) => {
-    vistos.add(chave(row[COLUNA_TECNICO], row[COLUNA_FAMILIA]));
-    return aplicarPraticasFamiliasCacauII(row);
+  const atualizadas = [];
+
+  rows.forEach((row) => {
+    const rowChave = chave(row[COLUNA_TECNICO], row[COLUNA_FAMILIA]);
+    if (vistos.has(rowChave)) return;
+    vistos.add(rowChave);
+    atualizadas.push(aplicarPraticasFamiliasCacauII(row));
   });
 
   ATUALIZACOES_CACAU_II.forEach((item) => {

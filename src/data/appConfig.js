@@ -18,9 +18,9 @@ export const VARIANTES = {
   cacau_ii: {
     id: 'cacau_ii',
     nome: 'Cacau II',
-    respostasSpreadsheetId: '1ZH_agLukxYtnKCRdWXYR19Qehr7wCUzL2P50-hWNvPk',
+    respostasSpreadsheetId: '1aGw29AO-CNsJrRFbSAAQS89c-wDsNWDj_kcTmZUSB8Q',
     respostasSheetName: 'Respostas ao formulário 1',
-    catalogoSpreadsheetId: '1ZH_agLukxYtnKCRdWXYR19Qehr7wCUzL2P50-hWNvPk',
+    catalogoSpreadsheetId: '1aGw29AO-CNsJrRFbSAAQS89c-wDsNWDj_kcTmZUSB8Q',
     catalogoGid: '1277230255',
     etapas: [
       { nome: 'Visita Técnica I', coluna: 'Quais práticas serão realizadas (I)' },
