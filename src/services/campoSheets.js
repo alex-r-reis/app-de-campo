@@ -1,4 +1,5 @@
 import { appConfig } from '../data/appConfig.js';
+import { aplicarPraticasFamiliasCacauII } from '../data/praticasFamiliasCacauII.js';
 import { aplicarPraticasFamiliasPrioritarias } from '../data/praticasFamiliasPrioritarias.js';
 
 const COORDS_MUNICIPIO = {
@@ -194,7 +195,10 @@ export async function carregarDadosCampoDireto(variant) {
     }),
   ]);
 
-  const respostas = tabelaParaObjetos(respostasTable).map(aplicarPraticasFamiliasPrioritarias);
+  const respostas = tabelaParaObjetos(respostasTable).map((row) => {
+    const atualizada = aplicarPraticasFamiliasPrioritarias(row);
+    return config.id === 'cacau_ii' ? aplicarPraticasFamiliasCacauII(atualizada) : atualizada;
+  });
   const catalogo = montarCatalogo(tabelaParaObjetos(catalogoTable));
 
   const familias = respostas

@@ -1,4 +1,5 @@
 import { getAppConfig } from './appConfig.js';
+import { aplicarPraticasFamiliasCacauII } from './praticasFamiliasCacauII.js';
 import { aplicarPraticasFamiliasPrioritarias } from './praticasFamiliasPrioritarias.js';
 
 const COORDS_MUNICIPIO = {
@@ -199,7 +200,10 @@ export async function carregarDadosCampo(variant) {
     }),
   ]);
 
-  const respostas = parseCsv(respostasCsv).map(aplicarPraticasFamiliasPrioritarias);
+  const respostas = parseCsv(respostasCsv).map((row) => {
+    const atualizada = aplicarPraticasFamiliasPrioritarias(row);
+    return config.id === 'cacau_ii' ? aplicarPraticasFamiliasCacauII(atualizada) : atualizada;
+  });
   const catalogo = montarCatalogo(parseCsv(catalogoCsv));
 
   const familias = respostas
