@@ -1220,13 +1220,6 @@ export function completarPraticasFamiliasPrioritarias(rows) {
   const vistos = new Set();
   const atualizadas = [];
 
-  rows.forEach((row) => {
-    const rowChave = chave(row[COLUNA_TECNICO], row[COLUNA_FAMILIA]);
-    if (vistos.has(rowChave)) return;
-    vistos.add(rowChave);
-    atualizadas.push(aplicarPraticasFamiliasPrioritarias(row));
-  });
-
   ATUALIZACOES_CACAU_I.forEach((item) => {
     const itemChave = chave(item.tecnico, item.familia);
     if (vistos.has(itemChave)) return;
