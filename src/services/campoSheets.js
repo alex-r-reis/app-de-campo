@@ -1,6 +1,6 @@
 import { appConfig } from '../data/appConfig.js';
 import { completarPraticasFamiliasCacauII } from '../data/praticasFamiliasCacauII.js';
-import { aplicarPraticasFamiliasPrioritarias } from '../data/praticasFamiliasPrioritarias.js';
+import { completarPraticasFamiliasPrioritarias } from '../data/praticasFamiliasPrioritarias.js';
 
 const COORDS_MUNICIPIO = {
   altamira: { lat: -3.2033, lng: -52.2064 },
@@ -195,8 +195,13 @@ export async function carregarDadosCampoDireto(variant) {
     }),
   ]);
 
-  const respostasBase = tabelaParaObjetos(respostasTable).map(aplicarPraticasFamiliasPrioritarias);
-  const respostas = config.id === 'cacau_ii' ? completarPraticasFamiliasCacauII(respostasBase) : respostasBase;
+  const respostasBase = tabelaParaObjetos(respostasTable);
+  const respostas =
+    config.id === 'cacau_ii'
+      ? completarPraticasFamiliasCacauII(respostasBase)
+      : config.id === 'cacau_i'
+        ? completarPraticasFamiliasPrioritarias(respostasBase)
+        : respostasBase;
   const catalogo = montarCatalogo(tabelaParaObjetos(catalogoTable));
 
   const familias = respostas
