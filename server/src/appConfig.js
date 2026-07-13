@@ -9,12 +9,12 @@ const VARIANTES = {
     destinoDriveFolderId: '1TR9AD40zh5AJr8DL9R5PGqLzLzp70CC3',
     destinoSheetId: '11DvDXRJy7MwV0WIeYWafrBGiQJNqA8Mxk08S7khDMRs',
     etapas: [
-      { nome: 'Visita Técnica III', coluna: 'Quais práticas serão realizadas (III)' },
-      { nome: 'Visita Técnica IV', coluna: 'Quais práticas serão realizadas IV' },
       {
         nome: 'Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)',
         fixas: ['Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)'],
       },
+      { nome: 'Visita Técnica III', coluna: 'Quais práticas serão realizadas (III)' },
+      { nome: 'Visita Técnica IV', coluna: 'Quais práticas serão realizadas IV' },
     ],
   },
   cacau_ii: {
@@ -28,21 +28,21 @@ const VARIANTES = {
     destinoSheetId: '1gS1tk6N_R9Onsi9FOoP8-I5VvdgBnn5La7c9mSa4WWk',
     etapas: [
       { nome: 'Visita Técnica I', coluna: 'Quais práticas serão realizadas (I)' },
-      { nome: 'Visita Técnica II', coluna: 'Quais práticas serão realizadas (II)' },
-      { nome: 'Visita Técnica III', coluna: 'Quais práticas serão realizadas (III)' },
-      { nome: 'Visita Técnica IV', coluna: 'Quais práticas serão realizadas IV' },
       {
         nome: 'Dia de Campo I - Controle Integrado de Pragas e Doenças (MIPD)',
         fixas: ['Dia de Campo I - Controle Integrado de Pragas e Doenças (MIPD)'],
       },
+      { nome: 'Visita Técnica II', coluna: 'Quais práticas serão realizadas (II)' },
       {
         nome: 'Dia de Campo II - Adubação e Manejo da Fertilidade do Solo com Uso de Alternativas Locais',
         fixas: ['Dia de Campo II - Adubação e Manejo da Fertilidade do Solo com Uso de Alternativas Locais'],
       },
+      { nome: 'Visita Técnica III', coluna: 'Quais práticas serão realizadas (III)' },
       {
         nome: 'Dia de Campo III - Poda (Formação e Produção)',
         fixas: ['Dia de Campo III - Poda (Formação e Produção)'],
       },
+      { nome: 'Visita Técnica IV', coluna: 'Quais práticas serão realizadas IV' },
     ],
   },
 };

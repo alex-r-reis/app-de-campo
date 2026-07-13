@@ -7,12 +7,12 @@ export const VARIANTES = {
     catalogoSpreadsheetId: '1EksAOYswZ4MozlrGHnwA5zVyH0xAsVYWi_5f_I1Rzls',
     catalogoGid: '142660285',
     etapas: [
-      { nome: 'Visita Técnica III', coluna: 'Quais práticas serão realizadas (III)' },
-      { nome: 'Visita Técnica IV', coluna: 'Quais práticas serão realizadas IV' },
       {
         nome: 'Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)',
         fixas: ['Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)'],
       },
+      { nome: 'Visita Técnica III', coluna: 'Quais práticas serão realizadas (III)' },
+      { nome: 'Visita Técnica IV', coluna: 'Quais práticas serão realizadas IV' },
     ],
   },
   cacau_ii: {
@@ -24,21 +24,21 @@ export const VARIANTES = {
     catalogoGid: '1277230255',
     etapas: [
       { nome: 'Visita Técnica I', coluna: 'Quais práticas serão realizadas (I)' },
-      { nome: 'Visita Técnica II', coluna: 'Quais práticas serão realizadas (II)' },
-      { nome: 'Visita Técnica III', coluna: 'Quais práticas serão realizadas (III)' },
-      { nome: 'Visita Técnica IV', coluna: 'Quais práticas serão realizadas IV' },
       {
         nome: 'Dia de Campo I - Controle Integrado de Pragas e Doenças (MIPD)',
         fixas: ['Dia de Campo I - Controle Integrado de Pragas e Doenças (MIPD)'],
       },
+      { nome: 'Visita Técnica II', coluna: 'Quais práticas serão realizadas (II)' },
       {
         nome: 'Dia de Campo II - Adubação e Manejo da Fertilidade do Solo com Uso de Alternativas Locais',
         fixas: ['Dia de Campo II - Adubação e Manejo da Fertilidade do Solo com Uso de Alternativas Locais'],
       },
+      { nome: 'Visita Técnica III', coluna: 'Quais práticas serão realizadas (III)' },
       {
         nome: 'Dia de Campo III - Poda (Formação e Produção)',
         fixas: ['Dia de Campo III - Poda (Formação e Produção)'],
       },
+      { nome: 'Visita Técnica IV', coluna: 'Quais práticas serão realizadas IV' },
     ],
   },
 };
