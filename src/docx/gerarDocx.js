@@ -197,12 +197,12 @@ export async function gerarDocxVisita(visita, opts = {}) {
   const linhasAtividades = [];
 
   visita.objetivosSnapshot.forEach((obj, oi) => {
-    const tituloObjetivo = obj.atividade ? `Objetivo ${oi + 1} - ${obj.atividade}` : `Objetivo ${oi + 1}`;
+    const praticaObjetivo = obj.atividade || obj.texto;
     linhasAtividades.push(
       new TableRow({
         children: [
-          celula(tituloObjetivo, { width: wLabel, bold: true }),
-          celula(obj.texto, { width: wTexto, bold: true }),
+          celula(`Objetivo ${oi + 1}`, { width: wLabel, bold: true }),
+          celula(praticaObjetivo, { width: wTexto, bold: true }),
           celula('Cumprimento da Meta', { width: wMark + wCump, colSpan: 2, bold: true, center: true }),
         ],
       })
