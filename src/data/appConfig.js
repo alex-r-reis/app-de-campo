@@ -11,7 +11,7 @@ export const VARIANTES = {
       { nome: 'Visita Técnica IV', coluna: 'Quais práticas serão realizadas IV' },
       {
         nome: 'Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)',
-        fixas: ['Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)'],
+        fixas: ['Produção de defensivos naturais'],
       },
     ],
   },
@@ -29,15 +29,15 @@ export const VARIANTES = {
       { nome: 'Visita Técnica IV', coluna: 'Quais práticas serão realizadas IV' },
       {
         nome: 'Dia de Campo I - Controle Integrado de Pragas e Doenças (MIPD)',
-        fixas: ['Dia de Campo I - Controle Integrado de Pragas e Doenças (MIPD)'],
+        fixas: ['Produção de defensivos naturais'],
       },
       {
         nome: 'Dia de Campo II - Adubação e Manejo da Fertilidade do Solo com Uso de Alternativas Locais',
-        fixas: ['Dia de Campo II - Adubação e Manejo da Fertilidade do Solo com Uso de Alternativas Locais'],
+        fixas: ['Adubação de cova/cobertura'],
       },
       {
         nome: 'Dia de Campo III - Poda (Formação e Produção)',
-        fixas: ['Dia de Campo III - Poda (Formação e Produção)'],
+        fixas: ['Capacitação em poda'],
       },
     ],
   },

@@ -1,4 +1,5 @@
 import { appConfig } from '../data/appConfig.js';
+import { CATALOGO_PRATICAS_ANTIGO } from '../data/catalogoPraticasAntigo.js';
 import { completarPraticasFamiliasCacauII } from '../data/praticasFamiliasCacauII.js';
 import { completarPraticasFamiliasPrioritarias } from '../data/praticasFamiliasPrioritarias.js';
 
@@ -110,12 +111,12 @@ function tabelaParaObjetos(table) {
 function montarCatalogo(linhasCatalogo) {
   const mapa = new Map();
   linhasCatalogo.forEach((linha) => {
-    const nome = linha['Práticas / demandas das famílias'];
+    const nome = linha['Práticas / demandas das famílias'] || linha.pratica;
     if (!nome) return;
     const metasFixas = METAS_MULTIPLAS_FIXAS.get(normalizar(nome));
     const metas = metasFixas
       ? [...metasFixas]
-      : [linha['Meta 1'], linha['Meta 2']]
+      : [...(linha.metas || []), linha['Meta 1'], linha['Meta 2']]
           .map((meta) => String(meta || '').trim())
           .filter(Boolean);
 
@@ -128,9 +129,9 @@ function montarCatalogo(linhasCatalogo) {
     }
 
     mapa.set(normalizar(nome), {
-      eixo: linha.Eixo || '',
-      pratica: nome,
-      objetivo: linha.Objetivo || '',
+      eixo: linha.Eixo || linha.eixo || '',
+      pratica: linha.pratica || nome,
+      objetivo: linha.Objetivo || linha.objetivo || '',
       metas,
       indicadores: linha.Indicadores || '',
       metodologia: linha['Metodologia(s) e Ferramentas'] || '',
@@ -202,7 +203,7 @@ export async function carregarDadosCampoDireto(variant) {
       : config.id === 'cacau_i'
         ? completarPraticasFamiliasPrioritarias(respostasBase)
         : respostasBase;
-  const catalogo = montarCatalogo(tabelaParaObjetos(catalogoTable));
+  const catalogo = montarCatalogo([...tabelaParaObjetos(catalogoTable), ...CATALOGO_PRATICAS_ANTIGO]);
 
   const familias = respostas
     .filter((row) => row['Nome completo do chefe da família'])

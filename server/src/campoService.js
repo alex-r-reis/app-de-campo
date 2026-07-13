@@ -1,4 +1,5 @@
 import { getAppConfig } from './appConfig.js';
+import { CATALOGO_PRATICAS_ANTIGO } from './catalogoPraticasAntigo.js';
 import { completarPraticasFamiliasCacauII } from './praticasFamiliasCacauII.js';
 import { completarPraticasFamiliasPrioritarias } from './praticasFamiliasPrioritarias.js';
 
@@ -111,12 +112,12 @@ function coordMunicipio(municipio) {
 function montarCatalogo(linhasCatalogo) {
   const mapa = new Map();
   linhasCatalogo.forEach((linha) => {
-    const nome = linha['Práticas / demandas das famílias'];
+    const nome = linha['Práticas / demandas das famílias'] || linha.pratica;
     if (!nome) return;
     const metasFixas = METAS_MULTIPLAS_FIXAS.get(normalizar(nome));
     const metas = metasFixas
       ? [...metasFixas]
-      : [linha['Meta 1'], linha['Meta 2']]
+      : [...(linha.metas || []), linha['Meta 1'], linha['Meta 2']]
           .map((meta) => String(meta || '').trim())
           .filter(Boolean);
     if (metas.length === 0 && linha.Metas) {
@@ -127,11 +128,11 @@ function montarCatalogo(linhasCatalogo) {
         .forEach((meta) => metas.push(meta));
     }
     mapa.set(normalizar(nome), {
-      eixo: linha.Eixo || '',
-      pratica: nome,
+      eixo: linha.Eixo || linha.eixo || '',
+      pratica: linha.pratica || nome,
       gargalos: linha.Gargalos || '',
       situacaoIdeal: linha['Situação Ideal'] || '',
-      objetivo: linha.Objetivo || '',
+      objetivo: linha.Objetivo || linha.objetivo || '',
       metas,
       indicadores: linha.Indicadores || '',
       metodologia: linha['Metodologia(s) e Ferramentas'] || '',
@@ -207,7 +208,7 @@ export async function carregarDadosCampo(variant) {
       : config.id === 'cacau_i'
         ? completarPraticasFamiliasPrioritarias(respostasBase)
         : respostasBase;
-  const catalogo = montarCatalogo(parseCsv(catalogoCsv));
+  const catalogo = montarCatalogo([...parseCsv(catalogoCsv), ...CATALOGO_PRATICAS_ANTIGO]);
 
   const familias = respostas
     .filter((row) => row['Nome completo do chefe da família'])
