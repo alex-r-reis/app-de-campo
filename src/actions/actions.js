@@ -302,6 +302,9 @@ export function salvarVisita() {
   const objetivosSnapshot = objetivosAtivos(fam, state.nomeVisita);
   const metas = metasAtivas(fam, state.nomeVisita);
   const respostas = respostasDasMetas(metas);
+  const proximaProgramada = state.visitasPadrao.includes(state.proximosPassos)
+    ? state.proximosPassos
+    : proximaEtapa(state.nomeVisita, state.visitasPadrao);
   const visita = {
     id: 'v' + Date.now(),
     familiaId: fam.id,
@@ -321,7 +324,7 @@ export function salvarVisita() {
     atividadesAvaliadas: atividadesAvaliadas(objetivosSnapshot, respostas, state.nomeVisita),
     riscos: [...state.riscos],
     conclusao: state.conclusao,
-    proximosPassos: state.proximosPassos || proximaEtapa(state.nomeVisita, state.visitasPadrao),
+    proximosPassos: proximaProgramada,
     gps: state.gps,
     fotos: state.fotos.map((f) => ({
       file: f.file,

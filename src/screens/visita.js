@@ -98,8 +98,10 @@ export function screenVisita() {
   ).join('');
 
   const resumoAutomatico = gerarResumoCumprimento(objetivos, state.respostas);
-  const proximaSelecionada = state.proximosPassos || proximaEtapa(state.nomeVisita, state.visitasPadrao);
-  const proximasOpts = opcoesProximaEtapa(state.nomeVisita, state.visitasPadrao)
+  const proximasEtapas = opcoesProximaEtapa(state.nomeVisita, state.visitasPadrao);
+  const proximaBase = state.proximosPassos || proximaEtapa(state.nomeVisita, state.visitasPadrao);
+  const proximaSelecionada = proximasEtapas.includes(proximaBase) ? proximaBase : '';
+  const proximasOpts = proximasEtapas
     .map((op) => `<option value="${op}" ${proximaSelecionada === op ? 'selected' : ''}>${op}</option>`)
     .join('');
 
@@ -141,7 +143,7 @@ export function screenVisita() {
     <div class="section-label" style="margin-top:18px;">Próximos passos</div>
     <div class="info-box">
       <span class="info-lbl">Selecione a próxima etapa</span>
-      <select class="input-inline" onchange="state.proximosPassos=this.value">${proximasOpts}</select>
+      <select class="input-inline" onchange="state.proximosPassos=this.value" ${proximasEtapas.length ? '' : 'disabled'}>${proximasOpts}</select>
     </div>
 
     <div class="section-label" style="margin-top:18px;">Localização GPS</div>

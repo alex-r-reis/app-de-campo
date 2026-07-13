@@ -188,6 +188,6 @@ export function objetivosDaAtividade(familia, nomeVisita) {
 
 export function opcoesProximaEtapa(nomeVisita, visitas = VISITAS_PADRAO) {
   const idx = visitas.indexOf(nomeVisita);
-  if (idx === -1 || idx === visitas.length - 1) return ['Encerramento do ciclo de acompanhamento'];
+  if (idx === -1 || idx === visitas.length - 1) return [];
   return visitas.slice(idx + 1);
 }
