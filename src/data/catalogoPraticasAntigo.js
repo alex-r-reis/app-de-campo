@@ -1,138 +1,116 @@
 export const CATALOGO_PRATICAS_ANTIGO = [
   {
-    "pratica": "Adubação de cova/cobertura",
-    "objetivo": "Orientar a realização da adubação de cova e de cobertura nas áreas produtivas, visando melhorar a fertilidade do solo e o desenvolvimento das plantas.",
-    "metas": [
-      "Realizar adubação em 100% da área planejada, conforme análise de solo (se houver)"
-    ]
+    eixo: 'Manejo do Cacau',
+    pratica: 'Adubação de cova/cobertura',
+    objetivo: 'Orientar a realização da adubação de cova e de cobertura nas áreas produtivas, visando melhorar a fertilidade do solo e o desenvolvimento das plantas.',
+    metas: ['Realizar adubação em 100% da área planejada, conforme análise de solo (se houver)'],
   },
   {
-    "pratica": "Capacitação em poda",
-    "objetivo": "Capacitar os(as) agricultores(as) em técnicas de poda de formação e produção, visando aprimorar o manejo das plantas, aumentando a produtividade, a sanidade e a longevidade dos cultivos",
-    "metas": [
-      "Capacitar ≥1 membro da família",
-      "Realizar poda em ≥25% das plantas da área acompanhada"
-    ]
+    eixo: 'Manejo do Cacau',
+    pratica: 'Capacitação em poda',
+    objetivo: 'Capacitar os(as) agricultores(as) em técnicas de poda de formação e produção, visando aprimorar o manejo das plantas, aumentando a produtividade, a sanidade e a longevidade dos cultivos',
+    metas: ['Capacitar ≥1 membro da família', 'Realizar poda em ≥25% das plantas da área acompanhada'],
   },
   {
-    "pratica": "Capacitação em renovação de áreas",
-    "objetivo": "Renovar áreas improdutivas e aumentar a produtividade do sistema",
-    "metas": [
-      "Capacitar ≥1 membro da família",
-      "Renovar ≥25% das plantas improdutivas identificadas no diagnóstico no ciclo."
-    ]
+    eixo: 'Manejo do Cacau',
+    pratica: 'Capacitação em renovação de áreas',
+    objetivo: 'Renovar áreas improdutivas e aumentar a produtividade do sistema',
+    metas: ['Capacitar ≥1 membro da família', 'Renovar ≥25% das plantas improdutivas identificadas no diagnóstico no ciclo.'],
   },
   {
-    "pratica": "Classificação e armazenamento",
-    "objetivo": "Melhorar a qualidade e conservação da produção",
-    "metas": [
-      "Classificar e armazenar 100% da produção em estrutura adequada, mantendo perdas pós-armazenamento ≤5%."
-    ]
+    eixo: 'Comercialização do Cacau',
+    pratica: 'Classificação e armazenamento',
+    objetivo: 'Melhorar a qualidade e conservação da produção',
+    metas: ['Classificar e armazenar 100% da produção em estrutura adequada, mantendo perdas pós-armazenamento ≤5%.'],
   },
   {
-    "pratica": "Colheita e pós-colheita",
-    "objetivo": "Reduzir perdas pós-colheita e garantir a qualidade do produto",
-    "metas": [
-      "Aplicar protocolo de colheita e pós-colheita em 100% da produção, com perdas ≤10% em relação à produção colhida."
-    ]
+    eixo: 'Comercialização do Cacau',
+    pratica: 'Colheita e pós-colheita',
+    objetivo: 'Reduzir perdas pós-colheita e garantir a qualidade do produto',
+    metas: ['Aplicar protocolo de colheita e pós-colheita em 100% da produção, com perdas ≤10% em relação à produção colhida.'],
   },
   {
-    "pratica": "Compostagem",
-    "objetivo": "Produzir adubo orgânico com materiais disponíveis na propriedade",
-    "metas": [
-      "Construir e manejar ≥1 leira ativa"
-    ]
+    eixo: 'Gestão e Sustentabilidade',
+    pratica: 'Compostagem',
+    objetivo: 'Produzir adubo orgânico com materiais disponíveis na propriedade',
+    metas: ['Construir e manejar ≥1 leira ativa'],
   },
   {
-    "pratica": "Construção de viveiro",
-    "objetivo": "Implementar a construção de viveiro familiar",
-    "metas": [
-      "Construir ≥1 viveiro com capacidade ≥200 mudas/ciclo, dimensionado conforme plano de produção da propriedade."
-    ]
+    eixo: 'Planejamento Agroflorestal',
+    pratica: 'Construção de viveiro',
+    objetivo: 'Implementar a construção de viveiro familiar',
+    metas: ['Construir ≥1 viveiro com capacidade ≥200 mudas/ciclo, dimensionado conforme plano de produção da propriedade.'],
   },
   {
-    "pratica": "Controle de plantas espontâneas",
-    "objetivo": "Promover o manejo das plantas espontâneas visando reduzir a competição com as culturas produtivas por água, luz e nutrientes",
-    "metas": [
-      "Realizar ≥1 manejos por ciclo, mantendo cobertura controlada em 100% da área produtiva acompanhada."
-    ]
+    eixo: 'Manejo do Cacau',
+    pratica: 'Controle de plantas espontâneas',
+    objetivo: 'Promover o manejo das plantas espontâneas visando reduzir a competição com as culturas produtivas por água, luz e nutrientes',
+    metas: ['Realizar ≥1 manejos por ciclo, mantendo cobertura controlada em 100% da área produtiva acompanhada.'],
   },
   {
-    "pratica": "Fermentação de cacau",
-    "objetivo": "Melhorar a qualidade das amêndoas de cacau por meio da adequada condução do processo de fermentação",
-    "metas": [
-      "Realizar fermentação em 100% da produção conforme protocolo técnico, com ≥80% das amêndoas classificadas como qualidade comercial."
-    ]
+    eixo: 'Comercialização do Cacau',
+    pratica: 'Fermentação de cacau',
+    objetivo: 'Melhorar a qualidade das amêndoas de cacau por meio da adequada condução do processo de fermentação',
+    metas: ['Realizar fermentação em 100% da produção conforme protocolo técnico, com ≥80% das amêndoas classificadas como qualidade comercial.'],
   },
   {
-    "pratica": "Gestão da produção",
-    "objetivo": "Fortalecer o planejamento e a organização produtiva",
-    "metas": [
-      "Implantar ≥1 instrumento de gestão com ≥2 tipos de registros (produção e preço).",
-      "Capacitar ≥ 2 membros da família capacitados em seu uso."
-    ]
+    eixo: 'Gestão e Sustentabilidade',
+    pratica: 'Gestão da produção',
+    objetivo: 'Fortalecer o planejamento e a organização produtiva',
+    metas: ['Implantar ≥1 instrumento de gestão com ≥2 tipos de registros (produção e preço).', 'Capacitar ≥ 2 membros da família capacitados em seu uso.'],
   },
   {
-    "pratica": "Implantação de SAF",
-    "objetivo": "Diversificar a produção e promover sustentabilidade ambiental",
-    "metas": [
-      "Implantar ou ampliar ≥0,06 ha de SAF por unidade familiar, com ≥4 espécies consorciadas."
-    ]
+    eixo: 'Planejamento Agroflorestal',
+    pratica: 'Implantação de SAF',
+    objetivo: 'Diversificar a produção e promover sustentabilidade ambiental',
+    metas: ['Implantar ou ampliar ≥0,06 ha de SAF por unidade familiar, com ≥4 espécies consorciadas.'],
   },
   {
-    "pratica": "Instalação de cochos de fermentação",
-    "objetivo": "Melhorar a infraestrutura de beneficiamento do cacau por meio da implantação de estruturas adequadas para fermentação das amêndoas",
-    "metas": [
-      "Instalar ≥1 cocho, com uso em pelo menos 1 ciclo de fermentação."
-    ]
+    eixo: 'Comercialização do Cacau',
+    pratica: 'Instalação de cochos de fermentação',
+    objetivo: 'Melhorar a infraestrutura de beneficiamento do cacau por meio da implantação de estruturas adequadas para fermentação das amêndoas',
+    metas: ['Instalar ≥1 cocho, com uso em pelo menos 1 ciclo de fermentação.'],
   },
   {
-    "pratica": "Irrigação simples",
-    "objetivo": "Melhorar a disponibilidade hídrica para as culturas por meio da implantação de sistema simples de irrigação na área produtiva",
-    "metas": [
-      "Instalar e operar sistema simples em ≥25% da área crítica, com manutenção registrada mensalmente."
-    ]
+    eixo: 'Planejamento Agroflorestal',
+    pratica: 'Irrigação simples',
+    objetivo: 'Melhorar a disponibilidade hídrica para as culturas por meio da implantação de sistema simples de irrigação na área produtiva',
+    metas: ['Instalar e operar sistema simples em ≥25% da área crítica, com manutenção registrada mensalmente.'],
   },
   {
-    "pratica": "Plantio de culturas",
-    "objetivo": "Ampliar e/ou renovar áreas produtivas por meio da implantação de culturas agrícolas conforme planejamento técnico",
-    "metas": [
-      "Implantar ou renovar ≥0,06 ha de culturas agrícolas conforme planejamento da unidade produtiva."
-    ]
+    eixo: 'Planejamento Agroflorestal',
+    pratica: 'Plantio de culturas',
+    objetivo: 'Ampliar e/ou renovar áreas produtivas por meio da implantação de culturas agrícolas conforme planejamento técnico',
+    metas: ['Implantar ou renovar ≥0,06 ha de culturas agrícolas conforme planejamento da unidade produtiva.'],
   },
   {
-    "pratica": "Produção de biofertilizante líquido",
-    "objetivo": "Produzir insumo orgânico (biofertilizante líquido) para melhoria da nutrição e desenvolvimento das plantas",
-    "metas": [
-      "Produzir ≥1 lote de biofertilizante para aplicação na área acompanhada."
-    ]
+    eixo: 'Manejo do Cacau',
+    pratica: 'Produção de biofertilizante líquido',
+    objetivo: 'Produzir insumo orgânico (biofertilizante líquido) para melhoria da nutrição e desenvolvimento das plantas',
+    metas: ['Produzir ≥1 lote de biofertilizante para aplicação na área acompanhada.'],
   },
   {
-    "pratica": "Produção de defensivos naturais",
-    "objetivo": "Promover o controle sustentável de pragas e doenças",
-    "metas": [
-      "Produzir e aplicar ≥1 tipo de defensivo natural em 100% da área acompanhada, com redução de ≥20% na incidência de pragas/doenças em relação à linha de base."
-    ]
+    eixo: 'Manejo do Cacau',
+    pratica: 'Produção de defensivos naturais',
+    objetivo: 'Promover o controle sustentável de pragas e doenças',
+    metas: ['Produzir e aplicar ≥1 tipo de defensivo natural em 100% da área acompanhada, com redução de ≥20% na incidência de pragas/doenças em relação à linha de base.'],
   },
   {
-    "pratica": "Produção de mudas",
-    "objetivo": "Produzir mudas de qualidade para implantação e/ou renovação de áreas produtivas.",
-    "metas": [
-      "Produzir ≥25 mudas de qualidade, com taxa de germinação ≥70% e sobrevivência ≥80%."
-    ]
+    eixo: 'Planejamento Agroflorestal',
+    pratica: 'Produção de mudas',
+    objetivo: 'Produzir mudas de qualidade para implantação e/ou renovação de áreas produtivas.',
+    metas: ['Produzir ≥25 mudas de qualidade, com taxa de germinação ≥70% e sobrevivência ≥80%.'],
   },
   {
-    "pratica": "Secagem de amêndoas",
-    "objetivo": "Garantir a qualidade final das amêndoas de cacau por meio da adequada condução do processo de secagem",
-    "metas": [
-      "Realizar secagem em 100% da produção conforme protocolo técnico, com umidade final entre 6–8% e ≥80% das amêndoas em padrão comercial."
-    ]
+    eixo: 'Comercialização do Cacau',
+    pratica: 'Secagem de amêndoas',
+    objetivo: 'Garantir a qualidade final das amêndoas de cacau por meio da adequada condução do processo de secagem',
+    metas: ['Realizar secagem em 100% da produção conforme protocolo técnico, com umidade final entre 6–8% e ≥80% das amêndoas em padrão comercial.'],
   },
   {
-    "pratica": "Seleção de sementes/mudas",
-    "objetivo": "Melhorar a qualidade genética e sanitária das culturas por meio da seleção de sementes e/ou mudas adequadas para implantação",
-    "metas": [
-      "Selecionar 100% do material propagativo conforme critérios técnicos definidos (sanidade, vigor, procedência), com registro por lote."
-    ]
-  }
+    eixo: 'Planejamento Agroflorestal',
+    pratica: 'Seleção de sementes/mudas',
+    objetivo: 'Melhorar a qualidade genética e sanitária das culturas por meio da seleção de sementes e/ou mudas adequadas para implantação',
+    metas: ['Selecionar 100% do material propagativo conforme critérios técnicos definidos (sanidade, vigor, procedência), com registro por lote.'],
+  },
 ];
