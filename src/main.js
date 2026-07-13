@@ -99,7 +99,7 @@ carregarEstadoLocal();
 
 async function aquecerCacheOffline() {
   if (!('caches' in window)) return;
-  const cache = await caches.open('ater-cacau-campo-v3');
+  const cache = await caches.open('ater-cacau-campo-v4');
   const urls = new Set([
     `${location.origin}/`,
     `${location.origin}/index.html`,

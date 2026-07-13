@@ -4,6 +4,9 @@ import { visitasPadrao } from '../data/appConfig.js';
 import { tecnicoPorId } from '../data/tecnicos.js';
 
 const STORAGE_KEY = 'ater-cacau-campo:v2';
+const CACAU_I_DIA_CAMPO_II_PADRAO = 'Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)';
+const CACAU_I_DIA_CAMPO_II_CAEPIM = 'DC II - Capacitação em Gestão Produtiva e Comercialização';
+const CACAU_I_PRATICA_CAEPIM = 'DC II A1 - Capacitação em Gestão Produtiva e Comercialização';
 
 export const state = {
   screen: 'contrato',
@@ -38,7 +41,9 @@ export function isOnline() {
 export function getFamilias() {
   const cacheCompativel = !state.dadosCampoVariant || state.dadosCampoVariant === state.appVariant;
   const dinamicas = cacheCompativel
-    ? state.familiasCampo.filter((familia) => normalizar(familia.tecnicoNome) === normalizar(state.tecnico.nome))
+    ? state.familiasCampo
+        .map(normalizarFamiliaCampo)
+        .filter((familia) => normalizar(familia.tecnicoNome) === normalizar(state.tecnico.nome))
     : [];
   if (dinamicas.length) return dinamicas;
   if (state.appVariant && state.appVariant !== 'cacau_i') return [];
@@ -59,6 +64,46 @@ function normalizar(valor) {
     .replace(/[\u0300-\u036f]/g, '')
     .trim()
     .toLowerCase();
+}
+
+function objetivoDiaCampoCaepim() {
+  return [
+    {
+      titulo: 'Objetivo 1',
+      texto: CACAU_I_PRATICA_CAEPIM,
+      atividade: CACAU_I_PRATICA_CAEPIM,
+      metas: [
+        {
+          id: `${CACAU_I_PRATICA_CAEPIM}::meta_1`,
+          atividadeId: CACAU_I_PRATICA_CAEPIM,
+          pratica: CACAU_I_PRATICA_CAEPIM,
+          texto: 'Realizar atividade conforme programação técnica.',
+          indicadores: '',
+          metodologia: '',
+          insumos: '',
+          etapasAtividade: '',
+          eixo: 'Atividade coletiva',
+        },
+      ],
+    },
+  ];
+}
+
+function normalizarFamiliaCampo(familia) {
+  if (normalizar(familia?.variant) !== 'cacau_i' || normalizar(familia?.osp) !== 'caepim') {
+    return familia;
+  }
+
+  const atividadesPorVisita = { ...(familia.atividadesPorVisita || {}) };
+  atividadesPorVisita[CACAU_I_DIA_CAMPO_II_CAEPIM] = objetivoDiaCampoCaepim();
+  delete atividadesPorVisita[CACAU_I_DIA_CAMPO_II_PADRAO];
+
+  familia.visitasPadrao = ['Visita Técnica III', CACAU_I_DIA_CAMPO_II_CAEPIM, 'Visita Técnica IV'];
+  familia.atividadesPorVisita = atividadesPorVisita;
+  if (familia.proximaVisita === CACAU_I_DIA_CAMPO_II_PADRAO) {
+    familia.proximaVisita = CACAU_I_DIA_CAMPO_II_CAEPIM;
+  }
+  return familia;
 }
 
 export function fmtCoord(n) {
@@ -209,7 +254,7 @@ export function carregarEstadoLocal() {
         url: foto.dataUrl || '',
       })),
     }));
-    state.familiasCampo = payload.familiasCampo || [];
+    state.familiasCampo = (payload.familiasCampo || []).map(normalizarFamiliaCampo);
     state.dadosCampoVariant = payload.dadosCampoVariant || '';
     state.dadosCampoAtualizadoEm = payload.dadosCampoAtualizadoEm || '';
     state.forcedOffline = Boolean(payload.forcedOffline);
