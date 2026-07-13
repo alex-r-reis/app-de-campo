@@ -31,6 +31,10 @@ const METAS_MULTIPLAS_FIXAS = new Map([
   ],
 ]);
 
+const CACAU_I_DIA_CAMPO_II_PADRAO = 'Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)';
+const CACAU_I_DIA_CAMPO_II_CAEPIM = 'DC II - Capacitação em Gestão Produtiva e Comercialização';
+const CACAU_I_PRATICA_CAEPIM = 'DC II A1 - Capacitação em Gestão Produtiva e Comercialização';
+
 function normalizar(valor) {
   return String(valor || '')
     .normalize('NFD')
@@ -157,8 +161,20 @@ function detalhePratica(nome, catalogo) {
   };
 }
 
-function objetivosPorEtapa(row, config, catalogo) {
-  return config.etapas.reduce((acc, etapa) => {
+function etapasDaFamilia(row, config) {
+  if (config.id !== 'cacau_i' || normalizar(row.OSP) !== 'caepim') return config.etapas;
+  return config.etapas.map((etapa) => {
+    if (etapa.nome !== CACAU_I_DIA_CAMPO_II_PADRAO) return etapa;
+    return {
+      ...etapa,
+      nome: CACAU_I_DIA_CAMPO_II_CAEPIM,
+      fixas: [CACAU_I_PRATICA_CAEPIM],
+    };
+  });
+}
+
+function objetivosPorEtapa(row, etapas, catalogo) {
+  return etapas.reduce((acc, etapa) => {
     const praticas = etapa.fixas || listaPraticas(row[etapa.coluna]);
     acc[etapa.nome] = praticas.map((pratica, idx) => {
       const detalhe = detalhePratica(pratica, catalogo);
@@ -210,6 +226,7 @@ export async function carregarDadosCampoDireto(variant) {
     .map((row, idx) => {
       const chefeFamilia = row['Nome completo do chefe da família'];
       const municipio = row.Município || '';
+      const etapasFamilia = etapasDaFamilia(row, config);
       return {
         id: `${config.id}_${idx + 1}_${slug(chefeFamilia)}`,
         variant: config.id,
@@ -221,9 +238,10 @@ export async function carregarDadosCampoDireto(variant) {
         area: 'Não informada',
         coordBase: coordMunicipio(municipio),
         status: 'pendente',
-        proximaVisita: config.etapas[0]?.nome || '',
+        proximaVisita: etapasFamilia[0]?.nome || '',
+        visitasPadrao: etapasFamilia.map((etapa) => etapa.nome),
         plano: { objetivos: [] },
-        atividadesPorVisita: objetivosPorEtapa(row, config, catalogo),
+        atividadesPorVisita: objetivosPorEtapa(row, etapasFamilia, catalogo),
       };
     });
 

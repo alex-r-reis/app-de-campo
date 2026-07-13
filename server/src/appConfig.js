@@ -9,11 +9,11 @@ const VARIANTES = {
     destinoDriveFolderId: '1TR9AD40zh5AJr8DL9R5PGqLzLzp70CC3',
     destinoSheetId: '11DvDXRJy7MwV0WIeYWafrBGiQJNqA8Mxk08S7khDMRs',
     etapas: [
+      { nome: 'Visita Técnica III', coluna: 'Quais práticas serão realizadas (III)' },
       {
         nome: 'Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)',
         fixas: ['Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)'],
       },
-      { nome: 'Visita Técnica III', coluna: 'Quais práticas serão realizadas (III)' },
       { nome: 'Visita Técnica IV', coluna: 'Quais práticas serão realizadas IV' },
     ],
   },

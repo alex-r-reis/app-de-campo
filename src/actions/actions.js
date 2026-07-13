@@ -12,6 +12,7 @@ import {
   isOnline,
   objetivosAtivos,
   metasAtivas,
+  visitasDaFamilia,
   persistirEstadoLocal,
   aplicarContrato,
 } from '../state/store.js';
@@ -144,12 +145,13 @@ export function logout() {
 
 export function abrirFamilia(id) {
   const fam = getFamilia(id);
-  const visitaInicial = state.visitasPadrao.includes(fam.proximaVisita)
+  const visitas = visitasDaFamilia(fam);
+  const visitaInicial = visitas.includes(fam.proximaVisita)
     ? fam.proximaVisita
-    : state.visitasPadrao[0] || fam.proximaVisita || '';
+    : visitas[0] || fam.proximaVisita || '';
   state.familiaId = id;
   state.nomeVisita = visitaInicial;
-  state.proximosPassos = proximaEtapa(state.nomeVisita, state.visitasPadrao);
+  state.proximosPassos = proximaEtapa(state.nomeVisita, visitas);
   state.resumoVisita = '';
   state.respostas = {};
   state.riscos = [];
@@ -162,8 +164,10 @@ export function abrirFamilia(id) {
 }
 
 export function alterarVisita(nomeVisita) {
+  const fam = getFamilia(state.familiaId);
+  const visitas = visitasDaFamilia(fam);
   state.nomeVisita = nomeVisita;
-  state.proximosPassos = proximaEtapa(nomeVisita, state.visitasPadrao);
+  state.proximosPassos = proximaEtapa(nomeVisita, visitas);
   persistirEstadoLocal();
   render();
 }
@@ -299,12 +303,13 @@ export function alternarGpsFoto(idx) {
 
 export function salvarVisita() {
   const fam = getFamilia(state.familiaId);
+  const visitas = visitasDaFamilia(fam);
   const objetivosSnapshot = objetivosAtivos(fam, state.nomeVisita);
   const metas = metasAtivas(fam, state.nomeVisita);
   const respostas = respostasDasMetas(metas);
-  const proximaProgramada = state.visitasPadrao.includes(state.proximosPassos)
+  const proximaProgramada = visitas.includes(state.proximosPassos)
     ? state.proximosPassos
-    : proximaEtapa(state.nomeVisita, state.visitasPadrao);
+    : proximaEtapa(state.nomeVisita, visitas);
   const visita = {
     id: 'v' + Date.now(),
     familiaId: fam.id,
@@ -343,7 +348,7 @@ export function salvarVisita() {
   };
   state.visitasSalvas.push(visita);
   fam.status = 'visitado';
-  if (state.visitasPadrao.includes(visita.proximosPassos)) {
+  if (visitas.includes(visita.proximosPassos)) {
     fam.proximaVisita = visita.proximosPassos;
   }
   state.familiaId = null;

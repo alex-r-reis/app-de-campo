@@ -49,6 +49,10 @@ export function getFamilia(id) {
   return getFamilias().find((f) => f.id === id);
 }
 
+export function visitasDaFamilia(familia) {
+  return familia?.visitasPadrao?.length ? familia.visitasPadrao : state.visitasPadrao;
+}
+
 function normalizar(valor) {
   return String(valor || '')
     .normalize('NFD')

@@ -8,12 +8,14 @@ import {
   objetivosAtivos,
   metasAtivas,
   totalRespondidas,
+  visitasDaFamilia,
 } from '../state/store.js';
 import { gerarResumoCumprimento } from '../utils/relatorio.js';
 import { proximaEtapa } from '../utils/cronograma.js';
 
 export function screenVisita() {
   const fam = getFamilia(state.familiaId);
+  const visitas = visitasDaFamilia(fam);
   const atividade = atividadePorNome(state.nomeVisita);
   const atividadeLabel = fam.atividadesPorVisita?.[state.nomeVisita] ? state.nomeVisita : atividade.atividade;
   const objetivos = objetivosAtivos(fam);
@@ -93,13 +95,13 @@ export function screenVisita() {
   const total = metas.length;
   const podeSalvar = respondidas === total;
 
-  const visitaOpts = state.visitasPadrao.map(
+  const visitaOpts = visitas.map(
     (v) => `<option value="${v}" ${state.nomeVisita === v ? 'selected' : ''}>${v}</option>`
   ).join('');
 
   const resumoAutomatico = gerarResumoCumprimento(objetivos, state.respostas);
-  const proximasEtapas = opcoesProximaEtapa(state.nomeVisita, state.visitasPadrao);
-  const proximaBase = state.proximosPassos || proximaEtapa(state.nomeVisita, state.visitasPadrao);
+  const proximasEtapas = opcoesProximaEtapa(state.nomeVisita, visitas);
+  const proximaBase = state.proximosPassos || proximaEtapa(state.nomeVisita, visitas);
   const proximaSelecionada = proximasEtapas.includes(proximaBase) ? proximaBase : '';
   const proximasOpts = proximasEtapas
     .map((op) => `<option value="${op}" ${proximaSelecionada === op ? 'selected' : ''}>${op}</option>`)

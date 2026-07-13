@@ -1,11 +1,12 @@
 import { atividadePorNome } from '../data/atividades.js';
-import { state, getFamilia, objetivosAtivos } from '../state/store.js';
+import { state, getFamilia, objetivosAtivos, visitasDaFamilia } from '../state/store.js';
 
 export function screenPlano() {
   const fam = getFamilia(state.familiaId);
   const atividade = atividadePorNome(state.nomeVisita);
   const atividadeLabel = fam.atividadesPorVisita?.[state.nomeVisita] ? state.nomeVisita : atividade.atividade;
-  const visitaOpts = state.visitasPadrao.map(
+  const visitas = visitasDaFamilia(fam);
+  const visitaOpts = visitas.map(
     (v) => `<option value="${v}" ${state.nomeVisita === v ? 'selected' : ''}>${v}</option>`
   ).join('');
   const objetivos = objetivosAtivos(fam)
