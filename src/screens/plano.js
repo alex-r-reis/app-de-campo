@@ -10,9 +10,11 @@ export function screenPlano() {
   ).join('');
   const objetivos = objetivosAtivos(fam)
     .map(
-      (o) => `
+      (o) => {
+        const tituloObjetivo = o.atividade ? `${o.titulo} - ${o.atividade}` : o.titulo;
+        return `
     <div class="card">
-      <div class="obj-title">${o.titulo}</div>
+      <div class="obj-title">${tituloObjetivo}</div>
       <div class="obj-texto">${o.texto}</div>
       ${o.metas
         .map(
@@ -21,7 +23,8 @@ export function screenPlano() {
         )
         .join('')}
     </div>
-  `
+  `;
+      }
     )
     .join('');
 
