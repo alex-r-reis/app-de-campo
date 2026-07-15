@@ -18,11 +18,12 @@ const TECNICOS = [
   { id: 't14', nome: 'Kheiliany Luara Souza Barbosa', registro: 'ATEC-1014', regiao: 'Tucumã' },
   { id: 't15', nome: 'Lucas Morais Silva', registro: 'ATEC-1015', regiao: 'Tucumã' },
   { id: 't16', nome: 'Pablo Henrique Schmidt Amaral', registro: 'ATEC-1016', regiao: 'Tucumã' },
+  { id: 't17', nome: 'Vitor', registro: 'ATEC-1017', regiao: 'Tucumã' },
 ];
 
 const TECNICOS_POR_CONTRATO = {
   cacau_i: ['t1', 't2', 't3', 't4', 't6', 't7', 't8', 't9'],
-  cacau_ii: ['t10', 't11', 't12', 't13', 't14', 't15', 't16'],
+  cacau_ii: ['t6', 't10', 't11', 't12', 't14', 't15', 't16', 't17'],
 };
 
 const VISITAS_PADRAO = visitasPadrao();

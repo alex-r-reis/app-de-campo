@@ -448,16 +448,6 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Irrigação simples"
   },
   {
-    "tecnico": "Francisco Romildo Xavier Idelfonso",
-    "familia": "Jesus Oliveira Lopes",
-    "osp": "ASPROFERRO",
-    "municipio": "Tucumã",
-    "visitaI": "Gestão da produção, Adubação de cova/cobertura, Controle de plantas espontâneas",
-    "visitaII": "Gestão da produção, Capacitação em poda, Irrigação simples",
-    "visitaIII": "Compostagem, Gestão da produção, Adubação de cova/cobertura",
-    "visitaIV": "Gestão da produção, Capacitação em poda, Produção de defensivos naturais, Plantio de culturas"
-  },
-  {
     "tecnico": "Kheiliany Luara Souza Barbosa",
     "familia": "Alexandra Miranda da Silva",
     "osp": "STR Tucumã",
@@ -848,16 +838,6 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Gestão da produção, Capacitação em poda, Controle de plantas espontâneas"
   },
   {
-    "tecnico": "Francisco Romildo Xavier Idelfonso",
-    "familia": "Marilza Maria De Brito",
-    "osp": "ASPROFERRO",
-    "municipio": "Tucumã",
-    "visitaI": "Capacitação em poda, Capacitação em renovação de áreas",
-    "visitaII": "Gestão da produção, Adubação de cova/cobertura",
-    "visitaIII": "Controle de plantas espontâneas, Plantio de culturas",
-    "visitaIV": "Irrigação simples, Produção de mudas"
-  },
-  {
     "tecnico": "Carlos Eduardo Nunes Leal",
     "familia": "leida Alves Caldeira",
     "osp": "STR Tucumã",
@@ -876,16 +856,6 @@ const ATUALIZACOES_CACAU_II = [
     "visitaII": "Adubação de cova/cobertura, Capacitação em poda",
     "visitaIII": "Gestão da produção, Controle de plantas espontâneas, Produção de defensivos naturais",
     "visitaIV": "Gestão da produção, Controle de plantas espontâneas, Produção de defensivos naturais"
-  },
-  {
-    "tecnico": "Francisco Romildo Xavier Idelfonso",
-    "familia": "Marilza Maria De Brito",
-    "osp": "ASPROFERRO",
-    "municipio": "Tucumã",
-    "visitaI": "Gestão da produção, Adubação de cova/cobertura",
-    "visitaII": "Capacitação em poda, Capacitação em renovação de áreas",
-    "visitaIII": "Plantio de culturas, Produção de mudas",
-    "visitaIV": "Gestão da produção, Controle de plantas espontâneas"
   },
   {
     "tecnico": "Deborah da Silva Araújo",
@@ -1006,6 +976,246 @@ const ATUALIZACOES_CACAU_II = [
     "visitaII": "Capacitação em poda",
     "visitaIII": "Capacitação em renovação de áreas",
     "visitaIV": "Produção de defensivos naturais"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Adenilson Correia Da Silva",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Gestão da produção, Adubação de cova/cobertura",
+    "visitaII": "Capacitação em poda, Capacitação em renovação de áreas",
+    "visitaIII": "Produção de biofertilizante líquido",
+    "visitaIV": "Produção de defensivos naturais"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Claudia Lopes Rodrigues",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Adubação de cova/cobertura, Controle de plantas espontâneas",
+    "visitaII": "Capacitação em poda, Produção de mudas",
+    "visitaIII": "Gestão da produção",
+    "visitaIV": "Implantação de SAF, Plantio de culturas"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Claudson Ferreira Da Silva",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Gestão da produção, Implantação de SAF",
+    "visitaII": "Plantio de culturas, Produção de mudas",
+    "visitaIII": "Controle de plantas espontâneas, Irrigação simples",
+    "visitaIV": "Adubação de cova/cobertura, Capacitação em renovação de áreas"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Creomar Santana Ferreira Xavier",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Compostagem, Adubação de cova/cobertura",
+    "visitaII": "Gestão da produção, Implantação de SAF",
+    "visitaIII": "Capacitação em poda, Controle de plantas espontâneas",
+    "visitaIV": "Produção de biofertilizante líquido, Irrigação simples, Plantio de culturas"
+  },
+  {
+    "tecnico": "Vitor",
+    "familia": "Elane Silva Costa",
+    "osp": "STR Tucumã",
+    "municipio": "Tucumã",
+    "visitaI": "Adubação de cova/cobertura, Capacitação em poda",
+    "visitaII": "Compostagem, Capacitação em renovação de áreas",
+    "visitaIII": "Fermentação de cacau, Gestão da produção",
+    "visitaIV": "Irrigação simples"
+  },
+  {
+    "tecnico": "Vitor",
+    "familia": "Elizete Oliveira Silva Gonçalves",
+    "osp": "STR Tucumã",
+    "municipio": "Tucumã",
+    "visitaI": "Adubação de cova/cobertura, Capacitação em poda",
+    "visitaII": "Gestão da produção, Irrigação simples",
+    "visitaIII": "Produção de biofertilizante líquido",
+    "visitaIV": "Produção de defensivos naturais"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Girleia Dos Santos Silva",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Adubação de cova/cobertura, Capacitação em poda",
+    "visitaII": "Colheita e pós-colheita, Capacitação em renovação de áreas",
+    "visitaIII": "Produção de biofertilizante líquido, Produção de defensivos naturais",
+    "visitaIV": "Fermentação de cacau, Gestão da produção"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Jesuina Gomes Da Cruz",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Adubação de cova/cobertura, Produção de biofertilizante líquido",
+    "visitaII": "Capacitação em poda, Capacitação em renovação de áreas",
+    "visitaIII": "Gestão da produção",
+    "visitaIV": "Irrigação simples"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Jesus Oliveira Lopes",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Gestão da produção, Adubação de cova/cobertura, Controle de plantas espontâneas",
+    "visitaII": "Gestão da produção, Capacitação em poda, Irrigação simples",
+    "visitaIII": "Compostagem, Gestão da produção, Adubação de cova/cobertura",
+    "visitaIV": "Gestão da produção, Capacitação em poda, Produção de defensivos naturais, Plantio de culturas"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Joelma Gomes Da Silva",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Compostagem, Adubação de cova/cobertura",
+    "visitaII": "Capacitação em poda, Capacitação em renovação de áreas",
+    "visitaIII": "Gestão da produção, Controle de plantas espontâneas",
+    "visitaIV": "Produção de biofertilizante líquido, Irrigação simples"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Maria Das Dores Alves Gomes",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Adubação de cova/cobertura, Capacitação em poda",
+    "visitaII": "Capacitação em renovação de áreas, Controle de plantas espontâneas",
+    "visitaIII": "Gestão da produção",
+    "visitaIV": "Irrigação simples"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Maria De Oliveira Da Cruz",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Adubação de cova/cobertura, Capacitação em poda",
+    "visitaII": "Compostagem, Gestão da produção, Controle de plantas espontâneas",
+    "visitaIII": "Implantação de SAF, Irrigação simples",
+    "visitaIV": "Produção de biofertilizante líquido, Produção de defensivos naturais"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Maria Deuzuita Alves De Sousa",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Compostagem, Adubação de cova/cobertura, Produção de biofertilizante líquido",
+    "visitaII": "Controle de plantas espontâneas, Plantio de culturas",
+    "visitaIII": "Gestão da produção, Irrigação simples",
+    "visitaIV": "Capacitação em poda, Produção de defensivos naturais"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Marilza Maria De Brito",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Gestão da produção, Adubação de cova/cobertura",
+    "visitaII": "Capacitação em poda, Capacitação em renovação de áreas",
+    "visitaIII": "Plantio de culturas, Produção de mudas",
+    "visitaIV": "Gestão da produção, Controle de plantas espontâneas"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Natanael Lopes Dias Da Silva",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Adubação de cova/cobertura, Irrigação simples",
+    "visitaII": "Capacitação em poda, Capacitação em renovação de áreas",
+    "visitaIII": "Gestão da produção, Implantação de SAF",
+    "visitaIV": "Produção de mudas"
+  },
+  {
+    "tecnico": "Vitor",
+    "familia": "Neli Candido Costa Dartora",
+    "osp": "STR Tucumã",
+    "municipio": "Tucumã",
+    "visitaI": "Adubação de cova/cobertura, Capacitação em poda",
+    "visitaII": "Capacitação em renovação de áreas, Controle de plantas espontâneas",
+    "visitaIII": "Gestão da produção, Plantio de culturas",
+    "visitaIV": "Produção de biofertilizante líquido, Produção de defensivos naturais"
+  },
+  {
+    "tecnico": "Vitor",
+    "familia": "Ozana Lourenço De Oliveira",
+    "osp": "STR Tucumã",
+    "municipio": "Tucumã",
+    "visitaI": "Compostagem, Adubação de cova/cobertura",
+    "visitaII": "Produção de biofertilizante líquido, Produção de defensivos naturais",
+    "visitaIII": "Capacitação em poda, Capacitação em renovação de áreas",
+    "visitaIV": "Gestão da produção, Irrigação simples"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Paulo Henrique Do Carmo Borba",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Compostagem, Controle de plantas espontâneas",
+    "visitaII": "Gestão da produção, Irrigação simples",
+    "visitaIII": "Capacitação em poda, Capacitação em renovação de áreas",
+    "visitaIV": "Gestão da produção, Adubação de cova/cobertura"
+  },
+  {
+    "tecnico": "Vitor",
+    "familia": "Raquel Da Silva Martins",
+    "osp": "STR Tucumã",
+    "municipio": "Tucumã",
+    "visitaI": "Adubação de cova/cobertura, Capacitação em poda",
+    "visitaII": "Compostagem, Capacitação em renovação de áreas",
+    "visitaIII": "Gestão da produção, Irrigação simples, Plantio de culturas",
+    "visitaIV": "Produção de biofertilizante líquido, Produção de defensivos naturais"
+  },
+  {
+    "tecnico": "Vitor",
+    "familia": "Sandra Fontinelle Dos Santos",
+    "osp": "STR Tucumã",
+    "municipio": "Tucumã",
+    "visitaI": "Compostagem, Gestão da produção",
+    "visitaII": "Adubação de cova/cobertura, Capacitação em poda",
+    "visitaIII": "Produção de defensivos naturais",
+    "visitaIV": "Produção de biofertilizante líquido"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Ueliton Ferreira Soares",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Secagem de amêndoas, Gestão da produção",
+    "visitaII": "Capacitação em poda, Capacitação em renovação de áreas",
+    "visitaIII": "Adubação de cova/cobertura, Produção de biofertilizante líquido",
+    "visitaIV": "Compostagem, Irrigação simples"
+  },
+  {
+    "tecnico": "Vitor",
+    "familia": "Valdevaldo Pacheco Dos Santos",
+    "osp": "STR Tucumã",
+    "municipio": "Tucumã",
+    "visitaI": "Fermentação de cacau, Gestão da produção",
+    "visitaII": "Capacitação em poda, Controle de plantas espontâneas",
+    "visitaIII": "Adubação de cova/cobertura, Produção de biofertilizante líquido",
+    "visitaIV": "Produção de defensivos naturais"
+  },
+  {
+    "tecnico": "Vitor",
+    "familia": "Vanir Rodrigues Da Silva",
+    "osp": "STR Tucumã",
+    "municipio": "Tucumã",
+    "visitaI": "Compostagem, Gestão da produção",
+    "visitaII": "Adubação de cova/cobertura, Capacitação em poda",
+    "visitaIII": "Produção de biofertilizante líquido",
+    "visitaIV": "Produção de defensivos naturais"
+  },
+  {
+    "tecnico": "Valdemir Ferreira Lima",
+    "familia": "Waldilei Firmino Campo",
+    "osp": "ASPROFERRO",
+    "municipio": "Tucumã",
+    "visitaI": "Adubação de cova/cobertura, Produção de mudas",
+    "visitaII": "Capacitação em poda, Plantio de culturas",
+    "visitaIII": "Gestão da produção",
+    "visitaIV": "Controle de plantas espontâneas, Irrigação simples"
   }
 ];
 
@@ -1021,6 +1231,14 @@ function normalizar(valor) {
 function chave(tecnico, familia) {
   return `${normalizar(tecnico)}::${normalizar(familia)}`;
 }
+
+const TECNICO_FRANCISCO_REMANEJADO = "Francisco Romildo Xavier Idelfonso";
+
+const FAMILIAS_REMANEJADAS_FRANCISCO = new Set(
+  ATUALIZACOES_CACAU_II
+    .filter((item) => item.tecnico === "Valdemir Ferreira Lima" || item.tecnico === "Vitor")
+    .map((item) => chave(TECNICO_FRANCISCO_REMANEJADO, item.familia))
+);
 
 const ATUALIZACOES_POR_FAMILIA = new Map(
   ATUALIZACOES_CACAU_II.map((item) => [chave(item.tecnico, item.familia), item])
@@ -1060,6 +1278,7 @@ export function completarPraticasFamiliasCacauII(rows) {
 
   rows.forEach((row) => {
     const rowChave = chave(row[COLUNA_TECNICO], row[COLUNA_FAMILIA]);
+    if (FAMILIAS_REMANEJADAS_FRANCISCO.has(rowChave)) return;
     if (vistos.has(rowChave)) return;
     vistos.add(rowChave);
     atualizadas.push(aplicarPraticasFamiliasCacauII(row));
