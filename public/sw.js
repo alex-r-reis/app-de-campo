@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ater-cacau-campo-v5';
+const CACHE_NAME = 'ater-cacau-campo-v6';
 const APP_SHELL = ['/', '/index.html', '/admin.html', '/manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {

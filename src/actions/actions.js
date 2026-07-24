@@ -30,6 +30,58 @@ function fileToDataUrl(file) {
   });
 }
 
+function carregarImagem(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function canvasToBlob(canvas, tipo, qualidade) {
+  return new Promise((resolve) => {
+    if (canvas.toBlob) {
+      canvas.toBlob((blob) => resolve(blob), tipo, qualidade);
+      return;
+    }
+    fetch(canvas.toDataURL(tipo, qualidade))
+      .then((res) => res.blob())
+      .then(resolve)
+      .catch(() => resolve(null));
+  });
+}
+
+async function compactarFoto(file) {
+  if (!file?.type?.startsWith('image/')) {
+    return { file, dataUrl: await fileToDataUrl(file), tipo: file?.type || '', nome: file?.name || '' };
+  }
+
+  const urlOriginal = URL.createObjectURL(file);
+  try {
+    const img = await carregarImagem(urlOriginal);
+    const maxDim = 1280;
+    const escala = Math.min(1, maxDim / Math.max(img.width || maxDim, img.height || maxDim));
+    const width = Math.max(1, Math.round((img.width || maxDim) * escala));
+    const height = Math.max(1, Math.round((img.height || maxDim) * escala));
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+    const tipo = 'image/jpeg';
+    const blob = await canvasToBlob(canvas, tipo, 0.72);
+    if (!blob) throw new Error('Falha ao compactar imagem');
+    const nome = (file.name || 'foto.jpg').replace(/\.[^.]+$/, '.jpg');
+    const arquivo = typeof File !== 'undefined' ? new File([blob], nome, { type: tipo }) : blob;
+    return { file: arquivo, dataUrl: await fileToDataUrl(blob), tipo, nome };
+  } catch (err) {
+    console.warn('Nao foi possivel compactar foto; usando arquivo original', err);
+    return { file, dataUrl: await fileToDataUrl(file), tipo: file.type || '', nome: file.name || '' };
+  } finally {
+    URL.revokeObjectURL(urlOriginal);
+  }
+}
+
 function respostasDasMetas(metas) {
   return metas.reduce((acc, meta) => {
     if (state.respostas[meta.id]) acc[meta.id] = state.respostas[meta.id];
@@ -258,14 +310,14 @@ export function capturarGPS() {
 export async function onFotosSelecionadas(input) {
   const files = Array.from(input.files || []);
   for (const file of files) {
-    const url = URL.createObjectURL(file);
-    const dataUrl = await fileToDataUrl(file);
+    const foto = await compactarFoto(file);
+    const url = URL.createObjectURL(foto.file);
     state.fotos.push({
       url,
-      file,
-      dataUrl,
-      nome: file.name || '',
-      tipo: file.type || '',
+      file: foto.file,
+      dataUrl: foto.dataUrl,
+      nome: foto.nome,
+      tipo: foto.tipo,
       legenda: '',
       gps: state.gps ? { lat: state.gps.lat, lng: state.gps.lng, simulado: state.gps.simulado } : null,
       timestamp: Date.now(),
@@ -364,12 +416,6 @@ export function salvarVisita() {
   persistirEstadoLocal();
   render();
   showToast('Relatório de visita salvo no dispositivo');
-  gerarDocxVisita(visita).then(({ blob }) => {
-    visita.docxBlob = blob;
-    visita.docxGerado = true;
-    persistirEstadoLocal();
-    render();
-  });
 }
 
 export function removerVisitaSalva(id) {
@@ -414,6 +460,7 @@ export async function sincronizarTudo() {
       const resultado = await enviarVisitaParaServidor(visita, visita.docxBlob);
       visita.sincronizado = true;
       visita.driveUrl = resultado.pastaUrl || null;
+      visita.docxBlob = null;
       visita.syncError = '';
       sucesso++;
     } catch (err) {
