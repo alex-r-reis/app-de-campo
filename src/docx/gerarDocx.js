@@ -285,7 +285,7 @@ export async function gerarDocxVisita(visita, opts = {}) {
     ],
   });
 
-  // ---------- Fotos (georreferenciadas ou não, com legenda opcional) ----------
+  // ---------- Fotos com carimbo interno de data, GPS e identificação ----------
   const blocosFotos = [];
   for (const f of visita.fotos) {
     let dims = { width: 240, height: 180 };
@@ -315,17 +315,6 @@ export async function gerarDocxVisita(visita, opts = {}) {
         })
       );
     }
-    const coordTxt = f.gps
-      ? `Lat ${f.gps.lat.toFixed(5)}, Lng ${f.gps.lng.toFixed(5)}${f.gps.simulado ? ' (simulado)' : ''}`
-      : 'Sem coordenada';
-    blocosFotos.push(
-      new Paragraph({
-        alignment: AlignmentType.CENTER,
-        children: [
-          new TextRun({ text: `${coordTxt} · ${new Date(f.timestamp).toLocaleString('pt-BR')}`, size: 16, italics: true, color: '555555' }),
-        ],
-      })
-    );
     blocosFotos.push(new Paragraph({ text: '' }));
   }
   if (blocosFotos.length === 0) {

@@ -103,11 +103,12 @@ carregarEstadoLocal();
 
 async function aquecerCacheOffline() {
   if (!('caches' in window)) return;
-  const cache = await caches.open('ater-cacau-campo-v8');
+  const cache = await caches.open('ater-cacau-campo-v9');
   const urls = new Set([
     `${location.origin}/`,
     `${location.origin}/index.html`,
     `${location.origin}/manifest.webmanifest`,
+    `${location.origin}/brand/muiraquita-watermark.png`,
     ...performance
       .getEntriesByType('resource')
       .map((entry) => entry.name)

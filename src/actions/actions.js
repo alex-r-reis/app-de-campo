@@ -21,6 +21,9 @@ import { gerarDocxVisita } from '../docx/gerarDocx.js';
 import { buscarDadosCampo, enviarVisitaParaServidor, verificarServidorDisponivel } from '../services/api.js';
 import { proximaEtapa } from '../utils/cronograma.js';
 
+const LOGO_CARIMBO_SRC = '/brand/muiraquita-watermark.png';
+let logoCarimboPromise = null;
+
 function fileToDataUrl(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -37,6 +40,16 @@ function carregarImagem(src) {
     img.onerror = reject;
     img.src = src;
   });
+}
+
+function carregarLogoCarimbo() {
+  if (!logoCarimboPromise) {
+    logoCarimboPromise = carregarImagem(LOGO_CARIMBO_SRC).catch((err) => {
+      console.warn('Nao foi possivel carregar a logo do carimbo', err);
+      return null;
+    });
+  }
+  return logoCarimboPromise;
 }
 
 function canvasToBlob(canvas, tipo, qualidade) {
@@ -99,7 +112,18 @@ function textoCarimboFoto({ gps, familia, tecnico, visita, timestamp }) {
   return linhas.filter(Boolean);
 }
 
-function aplicarCarimbo(ctx, width, height, linhas) {
+function desenharLogoCarimbo(ctx, logo, width, height, boxHeight, margem) {
+  if (!logo) return;
+  const logoSize = Math.min(Math.round(boxHeight * 0.82), Math.round(width * 0.18));
+  const x = width - margem - logoSize;
+  const y = height - boxHeight + Math.round((boxHeight - logoSize) / 2);
+  ctx.save();
+  ctx.globalAlpha = 0.28;
+  ctx.drawImage(logo, x, y, logoSize, logoSize);
+  ctx.restore();
+}
+
+function aplicarCarimbo(ctx, width, height, linhas, logo) {
   const margem = Math.max(16, Math.round(width * 0.025));
   const fontSize = Math.max(18, Math.round(width * 0.028));
   const lineHeight = Math.round(fontSize * 1.28);
@@ -107,11 +131,13 @@ function aplicarCarimbo(ctx, width, height, linhas) {
   ctx.save();
   ctx.fillStyle = 'rgba(0, 0, 0, 0.68)';
   ctx.fillRect(0, height - boxHeight, width, boxHeight);
+  desenharLogoCarimbo(ctx, logo, width, height, boxHeight, margem);
   ctx.fillStyle = '#ffffff';
   ctx.font = `600 ${fontSize}px Arial, sans-serif`;
   ctx.textBaseline = 'top';
+  const logoReserva = logo ? Math.min(Math.round(boxHeight * 0.92), Math.round(width * 0.2)) + margem : 0;
   linhas.forEach((linha, idx) => {
-    ctx.fillText(linha, margem, height - boxHeight + Math.round(margem / 2) + idx * lineHeight, width - margem * 2);
+    ctx.fillText(linha, margem, height - boxHeight + Math.round(margem / 2) + idx * lineHeight, width - margem * 2 - logoReserva);
   });
   ctx.restore();
 }
@@ -133,7 +159,8 @@ async function compactarFoto(file, metadados = {}) {
     canvas.height = height;
     const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0, width, height);
-    aplicarCarimbo(ctx, width, height, textoCarimboFoto(metadados));
+    const logo = await carregarLogoCarimbo();
+    aplicarCarimbo(ctx, width, height, textoCarimboFoto(metadados), logo);
     const tipo = 'image/jpeg';
     const blob = await canvasToBlob(canvas, tipo, 0.72);
     if (!blob) throw new Error('Falha ao compactar imagem');
