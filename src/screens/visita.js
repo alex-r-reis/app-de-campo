@@ -75,16 +75,16 @@ export function screenVisita() {
   const fotos = state.fotos
     .map((f, i) => {
       const temGps = !!f.gps;
-      const coordTxt = temGps ? `${fmtCoord(f.gps.lat)}, ${fmtCoord(f.gps.lng)}${f.gps.simulado ? ' (simulado)' : ''}` : 'sem coordenada';
+      const coordTxt = temGps ? `${fmtCoord(f.gps.lat)}, ${fmtCoord(f.gps.lng)}` : 'sem coordenada';
       return `
     <div class="photo-item">
-      <button class="photo-remove" onclick="removerFoto(${i})">×</button>
+      <button class="photo-remove" onclick="removerFoto(${i})">x</button>
       <div class="photo-thumb"><img src="${f.url}"></div>
       <div class="photo-item-body">
         <input class="photo-legenda" type="text" value="${f.legenda || ''}" placeholder="Legenda da foto (opcional)" oninput="state.fotos[${i}].legenda=this.value">
         <div class="photo-meta-row">
-          <span class="photo-coord ${temGps ? 'com-gps' : ''}">${coordTxt} · ${fmtDataHora(f.timestamp)}</span>
-          <button class="photo-gps-btn ${temGps ? 'ativo' : ''}" onclick="alternarGpsFoto(${i})">${temGps ? 'Remover coordenada' : 'Usar coordenada atual'}</button>
+          <span class="photo-coord ${temGps ? 'com-gps' : ''}">${coordTxt} - ${fmtDataHora(f.timestamp)} - dados gravados na imagem</span>
+          <button class="photo-gps-btn ativo" onclick="salvarFotoNoCelular(${i})">Salvar foto no celular</button>
         </div>
       </div>
     </div>`;
@@ -157,10 +157,10 @@ export function screenVisita() {
     <div class="section-label">Registros fotográficos</div>
     <div class="card">
       <label class="btn btn-ghost" style="display:block; text-align:center;">
-        Adicionar fotos da galeria / câmera
+        Tirar foto / adicionar imagem com GPS automático
         <input type="file" accept="image/*" multiple capture="environment" style="display:none" onchange="onFotosSelecionadas(this)">
       </label>
-      ${state.fotos.length ? `<div class="photos-list">${fotos}</div>` : `<div style="font-size:11px;color:var(--text-dim); margin-top:8px;">A coordenada GPS de cada foto é opcional - use "Usar coordenada atual" em cada foto para georreferenciá-la, ou deixe sem coordenada.</div>`}
+      ${state.fotos.length ? `<div class="photos-list">${fotos}</div>` : `<div style="font-size:11px;color:var(--text-dim); margin-top:8px;">Ao tirar/adicionar foto, o app tenta capturar GPS real e grava data, hora, família, ATEC, etapa e coordenada dentro da imagem.</div>`}
     </div>
 
     <button class="btn btn-primary" style="margin-top:16px;" ${podeSalvar ? '' : 'disabled'} onclick="salvarVisita()">

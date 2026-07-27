@@ -52,7 +52,63 @@ function canvasToBlob(canvas, tipo, qualidade) {
   });
 }
 
-async function compactarFoto(file) {
+function obterGpsAtual() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve(null);
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        resolve({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          acc: Math.round(pos.coords.accuracy),
+          timestamp: Date.now(),
+          simulado: false,
+        });
+      },
+      () => resolve(null),
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  });
+}
+
+function dataUrlParaBlob(dataUrl) {
+  return fetch(dataUrl).then((res) => res.blob());
+}
+
+function textoCarimboFoto({ gps, familia, tecnico, visita, timestamp }) {
+  const linhas = [
+    `Data/hora: ${new Date(timestamp).toLocaleString('pt-BR')}`,
+    gps
+      ? `GPS: ${gps.lat.toFixed(5)}, ${gps.lng.toFixed(5)} | precisao +/-${gps.acc}m`
+      : 'GPS: nao capturado pelo dispositivo',
+    `Familia: ${familia?.chefeFamilia || ''}`,
+    `ATEC: ${tecnico?.nome || ''}`,
+    `Etapa: ${visita || ''}`,
+  ];
+  return linhas.filter(Boolean);
+}
+
+function aplicarCarimbo(ctx, width, height, linhas) {
+  const margem = Math.max(16, Math.round(width * 0.025));
+  const fontSize = Math.max(18, Math.round(width * 0.028));
+  const lineHeight = Math.round(fontSize * 1.28);
+  const boxHeight = lineHeight * linhas.length + margem;
+  ctx.save();
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.68)';
+  ctx.fillRect(0, height - boxHeight, width, boxHeight);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = `600 ${fontSize}px Arial, sans-serif`;
+  ctx.textBaseline = 'top';
+  linhas.forEach((linha, idx) => {
+    ctx.fillText(linha, margem, height - boxHeight + Math.round(margem / 2) + idx * lineHeight, width - margem * 2);
+  });
+  ctx.restore();
+}
+
+async function compactarFoto(file, metadados = {}) {
   if (!file?.type?.startsWith('image/')) {
     return { file, dataUrl: await fileToDataUrl(file), tipo: file?.type || '', nome: file?.name || '' };
   }
@@ -67,7 +123,9 @@ async function compactarFoto(file) {
     const canvas = document.createElement('canvas');
     canvas.width = width;
     canvas.height = height;
-    canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, width, height);
+    aplicarCarimbo(ctx, width, height, textoCarimboFoto(metadados));
     const tipo = 'image/jpeg';
     const blob = await canvasToBlob(canvas, tipo, 0.72);
     if (!blob) throw new Error('Falha ao compactar imagem');
@@ -272,45 +330,31 @@ export function removerRisco(idx) {
 }
 
 export function capturarGPS() {
-  const fam = getFamilia(state.familiaId);
-  const aplicarSimulado = () => {
-    state.gps = {
-      lat: fam.coordBase.lat + (Math.random() - 0.5) * 0.0009,
-      lng: fam.coordBase.lng + (Math.random() - 0.5) * 0.0009,
-      acc: (8 + Math.random() * 10).toFixed(0),
-      timestamp: Date.now(),
-      simulado: true,
-    };
+  obterGpsAtual().then((gps) => {
+    if (!gps) {
+      showToast('Nao foi possivel capturar GPS real. Verifique a permissao de localizacao.');
+      return;
+    }
+    state.gps = gps;
     persistirEstadoLocal();
     render();
-  };
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        state.gps = {
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-          acc: Math.round(pos.coords.accuracy),
-          timestamp: Date.now(),
-          simulado: false,
-        };
-        persistirEstadoLocal();
-        render();
-      },
-      () => {
-        aplicarSimulado();
-      },
-      { timeout: 4000 }
-    );
-  } else {
-    aplicarSimulado();
-  }
+  });
 }
 
 export async function onFotosSelecionadas(input) {
   const files = Array.from(input.files || []);
+  const fam = getFamilia(state.familiaId);
   for (const file of files) {
-    const foto = await compactarFoto(file);
+    const timestamp = Date.now();
+    const gps = await obterGpsAtual();
+    if (gps) state.gps = gps;
+    const foto = await compactarFoto(file, {
+      gps,
+      familia: fam,
+      tecnico: state.tecnico,
+      visita: state.nomeVisita,
+      timestamp,
+    });
     const url = URL.createObjectURL(foto.file);
     state.fotos.push({
       url,
@@ -319,13 +363,14 @@ export async function onFotosSelecionadas(input) {
       nome: foto.nome,
       tipo: foto.tipo,
       legenda: '',
-      gps: state.gps ? { lat: state.gps.lat, lng: state.gps.lng, simulado: state.gps.simulado } : null,
-      timestamp: Date.now(),
+      gps,
+      timestamp,
     });
   }
   persistirEstadoLocal();
   render();
   input.value = '';
+  if (files.length) showToast('Foto registrada com data, hora e GPS na imagem');
 }
 
 export function removerFoto(idx) {
@@ -351,6 +396,35 @@ export function alternarGpsFoto(idx) {
   }
   persistirEstadoLocal();
   render();
+}
+
+export async function salvarFotoNoCelular(idx) {
+  try {
+    const foto = state.fotos[idx];
+    if (!foto?.dataUrl) return;
+    const nome = foto.nome || `foto_${idx + 1}.jpg`;
+    const blob = await dataUrlParaBlob(foto.dataUrl);
+    const arquivo = typeof File !== 'undefined' ? new File([blob], nome, { type: foto.tipo || 'image/jpeg' }) : null;
+
+    if (navigator.canShare && arquivo && navigator.canShare({ files: [arquivo] }) && navigator.share) {
+      await navigator.share({ files: [arquivo], title: nome });
+      return;
+    }
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nome;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 1000);
+  } catch (err) {
+    console.error('Falha ao salvar foto no celular', err);
+    showToast('Nao foi possivel salvar a foto no celular');
+  }
 }
 
 export function salvarVisita() {
