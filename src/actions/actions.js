@@ -78,6 +78,14 @@ function dataUrlParaBlob(dataUrl) {
   return fetch(dataUrl).then((res) => res.blob());
 }
 
+function nomeArquivoSeguro(valor) {
+  return String(valor || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
 function textoCarimboFoto({ gps, familia, tecnico, visita, timestamp }) {
   const linhas = [
     `Data/hora: ${new Date(timestamp).toLocaleString('pt-BR')}`,
@@ -424,6 +432,52 @@ export async function salvarFotoNoCelular(idx) {
   } catch (err) {
     console.error('Falha ao salvar foto no celular', err);
     showToast('Nao foi possivel salvar a foto no celular');
+  }
+}
+
+export async function salvarFotosVisitaNoCelular(id) {
+  try {
+    const visita = state.visitasSalvas.find((item) => item.id === id);
+    const fotos = visita?.fotos || [];
+    if (!fotos.length) {
+      showToast('Este relatorio nao possui fotos');
+      return;
+    }
+
+    const arquivos = [];
+    for (const [idx, foto] of fotos.entries()) {
+      if (!foto.dataUrl) continue;
+      const blob = await dataUrlParaBlob(foto.dataUrl);
+      const nome = `${nomeArquivoSeguro(visita.chefeFamilia)}_${idx + 1}.jpg`;
+      if (typeof File !== 'undefined') {
+        arquivos.push(new File([blob], nome, { type: foto.tipo || 'image/jpeg' }));
+      } else {
+        arquivos.push({ blob, nome });
+      }
+    }
+
+    if (navigator.canShare && arquivos[0] instanceof File && navigator.canShare({ files: arquivos }) && navigator.share) {
+      await navigator.share({ files: arquivos, title: `Fotos ${visita.chefeFamilia}` });
+      return;
+    }
+
+    arquivos.forEach((arquivo, idx) => {
+      const blob = arquivo instanceof File ? arquivo : arquivo.blob;
+      const nome = arquivo instanceof File ? arquivo.name : arquivo.nome;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = nome || `foto_${idx + 1}.jpg`;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 1000 + idx * 100);
+    });
+  } catch (err) {
+    console.error('Falha ao salvar fotos no celular', err);
+    showToast('Nao foi possivel salvar as fotos no celular');
   }
 }
 

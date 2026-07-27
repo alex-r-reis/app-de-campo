@@ -62,16 +62,6 @@ export function screenVisita() {
     )
     .join('');
 
-  const gpsBox = state.gps
-    ? `
-    <div class="gps-readout">
-      LAT ${fmtCoord(state.gps.lat)}  LNG ${fmtCoord(state.gps.lng)}<br>
-      precisão ±${state.gps.acc}m · ${fmtDataHora(state.gps.timestamp)}
-    </div>
-    ${state.gps.simulado ? '<div class="gps-warn">Coordenada simulada - permissão de localização indisponível neste navegador</div>' : ''}
-  `
-    : `<div class="gps-readout empty">Nenhuma coordenada capturada ainda</div>`;
-
   const fotos = state.fotos
     .map((f, i) => {
       const temGps = !!f.gps;
@@ -146,12 +136,6 @@ export function screenVisita() {
     <div class="info-box">
       <span class="info-lbl">Selecione a próxima etapa</span>
       <select class="input-inline" onchange="state.proximosPassos=this.value" ${proximasEtapas.length ? '' : 'disabled'}>${proximasOpts}</select>
-    </div>
-
-    <div class="section-label" style="margin-top:18px;">Localização GPS</div>
-    <div class="gps-box">
-      ${gpsBox}
-      <button class="btn btn-ghost" onclick="capturarGPS()">Capturar localização atual</button>
     </div>
 
     <div class="section-label">Registros fotográficos</div>

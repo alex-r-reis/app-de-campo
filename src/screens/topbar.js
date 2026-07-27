@@ -1,5 +1,5 @@
 // src/screens/topbar.js
-import { state, isOnline, pendentesCount } from '../state/store.js';
+import { state, isOnline } from '../state/store.js';
 
 export function topbar() {
   if (!state.tecnico) return '';
@@ -30,15 +30,13 @@ export function topbar() {
 }
 
 export function pendingStrip() {
-  const n = pendentesCount();
+  const n = state.visitasSalvas.length;
   if (n === 0) return '';
-  const online = isOnline();
   return `
   <div class="pending-strip">
-    <span>${n} relat\u00f3rio${n > 1 ? 's' : ''} pendente${n > 1 ? 's' : ''} de sincroniza\u00e7\u00e3o</span>
+    <span>${n} relat\u00f3rio${n > 1 ? 's' : ''} salvo${n > 1 ? 's' : ''} no dispositivo</span>
     <div class="pending-actions">
       <button onclick="irParaFila()">Ver relat\u00f3rios</button>
-      <button onclick="sincronizarTudo()" ${online ? '' : 'disabled'}>${online ? 'Sincronizar' : 'Sem conex\u00e3o'}</button>
     </div>
   </div>`;
 }
@@ -46,7 +44,7 @@ export function pendingStrip() {
 export function steps() {
   if (!['plano', 'visita', 'fila'].includes(state.screen)) return '';
   const order = ['familias', 'plano', 'visita', 'fila'];
-  const labels = ['01 FAM\u00cdLIA', '02 PLANO', '03 VISITA', '04 ENVIO'];
+  const labels = ['01 FAM\u00cdLIA', '02 PLANO', '03 VISITA', '04 RELAT\u00d3RIOS'];
   const idx = order.indexOf(state.screen);
   return `<div class="steps">${labels
     .map((l, i) => {
