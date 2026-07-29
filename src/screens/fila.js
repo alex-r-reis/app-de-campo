@@ -11,6 +11,11 @@ export function screenFila() {
     </div>`;
   }
 
+  const ultimo = state.visitasSalvas[state.visitasSalvas.length - 1];
+  const prontoResumo = ultimo
+    ? `<div class="info-box"><span class="info-lbl">Relatório pronto</span>${ultimo.chefeFamilia} - ${ultimo.nomeVisita}</div>`
+    : '';
+
   const rows = state.visitasSalvas
     .slice()
     .reverse()
@@ -26,8 +31,10 @@ export function screenFila() {
             <div class="fam-name" style="font-size:14px;">${v.chefeFamilia}</div>
             <div class="fam-meta">${v.nomeVisita}<br>${v.data} - ${Object.keys(v.respostas || {}).length} metas - ${(v.fotos || []).length} foto(s)</div>
           </div>
+          <span class="stamp ok">PRONTO</span>
         </div>
-        <button class="btn btn-ghost" style="margin-top:10px;" onclick="gerarDocxVisita(visitaPorId('${v.id}'))">Baixar relatório (.docx)</button>
+        <button class="btn btn-ghost" style="margin-top:10px;" onclick="editarVisitaSalva('${v.id}')">Revisar / editar no app</button>
+        <button class="btn btn-ghost" style="margin-top:8px;" onclick="gerarDocxVisita(visitaPorId('${v.id}'))">Baixar relatório pronto (.docx)</button>
         ${fotosBtn}
         <button class="btn btn-danger" style="margin-top:8px;" onclick="removerVisitaSalva('${v.id}')">Retirar relatório do aparelho</button>
       </div>`;
@@ -38,7 +45,8 @@ export function screenFila() {
   <div class="content">
     <span class="back-link" onclick="voltarFamilias()">‹ FAMÍLIAS</span>
     <h2 class="screen-title">Relatórios salvos</h2>
-    <div class="screen-sub">Relatórios armazenados no dispositivo. Baixe o .docx e salve as fotos carimbadas antes de retirar do aparelho.</div>
+    <div class="screen-sub">Relatórios prontos armazenados no dispositivo. Revise, edite ou baixe o .docx antes de retirar do aparelho.</div>
+    ${prontoResumo}
     ${rows}
   </div>`;
 }

@@ -25,6 +25,7 @@ export const state = {
   proximosPassos: '',
   gps: null,
   fotos: [],
+  editandoVisitaId: null,
   visitasSalvas: [],
   familiasCampo: [],
   dadosCampoVariant: '',
@@ -188,6 +189,7 @@ function rascunhoParaPersistencia() {
     proximosPassos: state.proximosPassos,
     gps: state.gps,
     fotos: fotosParaPersistencia(state.fotos),
+    editandoVisitaId: state.editandoVisitaId,
   };
 }
 
@@ -285,6 +287,7 @@ export function carregarEstadoLocal() {
         file: null,
         url: foto.dataUrl || '',
       }));
+      state.editandoVisitaId = payload.draft.editandoVisitaId || null;
     }
   } catch (err) {
     console.warn('Nao foi possivel restaurar dados locais', err);
@@ -307,7 +310,8 @@ export function temRascunhoAtivo() {
         (state.riscos || []).length ||
         state.conclusao ||
         state.gps ||
-        (state.fotos || []).length
+        (state.fotos || []).length ||
+        state.editandoVisitaId
     )
   );
 }

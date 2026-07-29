@@ -84,6 +84,7 @@ export function screenVisita() {
   const respondidas = totalRespondidas(metas);
   const total = metas.length;
   const podeSalvar = respondidas === total;
+  const emRevisao = !!state.editandoVisitaId;
 
   const visitaOpts = visitas.map(
     (v) => `<option value="${v}" ${state.nomeVisita === v ? 'selected' : ''}>${v}</option>`
@@ -99,9 +100,10 @@ export function screenVisita() {
 
   return `
   <div class="content">
-    <span class="back-link" onclick="voltarPlano()">‹ PLANO</span>
-    <h2 class="screen-title">Relatório de Acompanhamento de Visita</h2>
+    <span class="back-link" onclick="${emRevisao ? 'irParaFila()' : 'voltarPlano()'}">‹ ${emRevisao ? 'RELATÓRIOS' : 'PLANO'}</span>
+    <h2 class="screen-title">${emRevisao ? 'Revisar relatório pronto' : 'Relatório de Acompanhamento de Visita'}</h2>
     <div class="screen-sub">Cadeia Produtiva do Cacau · ${respondidas}/${total} metas avaliadas</div>
+    ${emRevisao ? '<div class="info-box"><span class="info-lbl">Relatório em revisão</span>Edite os campos necessários e salve para substituir o relatório pronto neste dispositivo.</div>' : ''}
 
     <div class="header-grid">
       <div class="mi"><div class="lbl">Chefe de Família</div><div class="val">${fam.chefeFamilia}</div></div>
@@ -148,7 +150,7 @@ export function screenVisita() {
     </div>
 
     <button class="btn btn-primary" style="margin-top:16px;" ${podeSalvar ? '' : 'disabled'} onclick="salvarVisita()">
-      ${isOnline() ? 'Salvar relatório no dispositivo' : 'Salvar no dispositivo (offline)'}
+      ${emRevisao ? 'Atualizar relatório pronto' : isOnline() ? 'Salvar relatório no dispositivo' : 'Salvar no dispositivo (offline)'}
     </button>
     ${!podeSalvar ? '<div style="font-size:11px;color:var(--text-dim); margin-top:6px; text-align:center;">Avalie o cumprimento de todas as metas desta atividade para salvar</div>' : ''}
   </div>`;

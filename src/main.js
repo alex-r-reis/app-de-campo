@@ -32,6 +32,7 @@ import {
   alternarGpsFoto,
   salvarFotoNoCelular,
   salvarFotosVisitaNoCelular,
+  editarVisitaSalva,
   salvarVisita,
   removerVisitaSalva,
   sincronizarTudo,
@@ -64,6 +65,7 @@ window.removerFoto = removerFoto;
 window.alternarGpsFoto = alternarGpsFoto;
 window.salvarFotoNoCelular = salvarFotoNoCelular;
 window.salvarFotosVisitaNoCelular = salvarFotosVisitaNoCelular;
+window.editarVisitaSalva = editarVisitaSalva;
 window.salvarVisita = salvarVisita;
 window.removerVisitaSalva = removerVisitaSalva;
 window.sincronizarTudo = sincronizarTudo;
@@ -103,7 +105,7 @@ carregarEstadoLocal();
 
 async function aquecerCacheOffline() {
   if (!('caches' in window)) return;
-  const cache = await caches.open('ater-cacau-campo-v9');
+  const cache = await caches.open('ater-cacau-campo-v10');
   const urls = new Set([
     `${location.origin}/`,
     `${location.origin}/index.html`,

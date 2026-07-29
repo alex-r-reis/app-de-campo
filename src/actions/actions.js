@@ -282,6 +282,7 @@ export function logout() {
     proximosPassos: '',
     gps: null,
     fotos: [],
+    editandoVisitaId: null,
     erroDadosCampo: '',
   });
   persistirEstadoLocal();
@@ -303,6 +304,7 @@ export function abrirFamilia(id) {
   state.conclusao = '';
   state.gps = null;
   state.fotos = [];
+  state.editandoVisitaId = null;
   state.screen = 'plano';
   persistirEstadoLocal();
   render();
@@ -324,6 +326,7 @@ export function irParaVisita() {
 }
 
 export function irParaFila() {
+  state.editandoVisitaId = null;
   state.screen = 'fila';
   persistirEstadoLocal();
   render();
@@ -341,6 +344,7 @@ export function voltarFamilias() {
 }
 
 export function voltarPlano() {
+  state.editandoVisitaId = null;
   state.screen = 'plano';
   persistirEstadoLocal();
   render();
@@ -508,9 +512,34 @@ export async function salvarFotosVisitaNoCelular(id) {
   }
 }
 
+export function editarVisitaSalva(id) {
+  const visita = state.visitasSalvas.find((item) => item.id === id);
+  if (!visita) return;
+
+  state.familiaId = visita.familiaId;
+  state.nomeVisita = visita.nomeVisita;
+  state.resumoVisita = visita.resumoVisita || '';
+  state.respostas = { ...(visita.respostas || {}) };
+  state.riscos = (visita.riscos || []).map((risco) => ({ ...risco }));
+  state.conclusao = visita.conclusao || '';
+  state.proximosPassos = visita.proximosPassos || '';
+  state.gps = visita.gps || null;
+  state.fotos = (visita.fotos || []).map((foto) => ({
+    ...foto,
+    file: foto.file || null,
+    url: foto.url || foto.dataUrl || '',
+  }));
+  state.editandoVisitaId = id;
+  state.screen = 'visita';
+  persistirEstadoLocal();
+  render();
+}
+
 export function salvarVisita() {
   const fam = getFamilia(state.familiaId);
   const visitas = visitasDaFamilia(fam);
+  const editandoId = state.editandoVisitaId;
+  const visitaOriginal = editandoId ? state.visitasSalvas.find((item) => item.id === editandoId) : null;
   const objetivosSnapshot = objetivosAtivos(fam, state.nomeVisita);
   const metas = metasAtivas(fam, state.nomeVisita);
   const respostas = respostasDasMetas(metas);
@@ -518,7 +547,7 @@ export function salvarVisita() {
     ? state.proximosPassos
     : proximaEtapa(state.nomeVisita, visitas);
   const visita = {
-    id: 'v' + Date.now(),
+    id: editandoId || 'v' + Date.now(),
     familiaId: fam.id,
     chefeFamilia: fam.chefeFamilia,
     osp: fam.osp,
@@ -528,7 +557,8 @@ export function salvarVisita() {
     appNome: state.appNome,
     nomeVisita: state.nomeVisita,
     data: fmtDataHoje(),
-    ts: Date.now(),
+    ts: visitaOriginal?.ts || Date.now(),
+    atualizadoEm: editandoId ? new Date().toISOString() : null,
     resumoVisita: state.resumoVisita,
     atividade: state.nomeVisita,
     objetivosSnapshot: JSON.parse(JSON.stringify(objetivosSnapshot)),
@@ -553,7 +583,17 @@ export function salvarVisita() {
     driveUrl: null,
     syncError: '',
   };
-  state.visitasSalvas.push(visita);
+  if (editandoId) {
+    const idx = state.visitasSalvas.findIndex((item) => item.id === editandoId);
+    if (idx >= 0) {
+      state.visitasSalvas.splice(idx, 1);
+      state.visitasSalvas.push(visita);
+    } else {
+      state.visitasSalvas.push(visita);
+    }
+  } else {
+    state.visitasSalvas.push(visita);
+  }
   fam.status = 'visitado';
   if (visitas.includes(visita.proximosPassos)) {
     fam.proximaVisita = visita.proximosPassos;
@@ -567,10 +607,11 @@ export function salvarVisita() {
   state.proximosPassos = '';
   state.gps = null;
   state.fotos = [];
+  state.editandoVisitaId = null;
   state.screen = 'fila';
   persistirEstadoLocal();
   render();
-  showToast('Relatório de visita salvo no dispositivo');
+  showToast(editandoId ? 'Relatorio atualizado no dispositivo' : 'Relatório de visita salvo no dispositivo');
 }
 
 export function removerVisitaSalva(id) {
