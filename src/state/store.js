@@ -51,8 +51,31 @@ export function getFamilias() {
   return FAMILIAS[state.tecnico.id] || [];
 }
 
+function familiaDaVisitaSalva(visita) {
+  if (!visita) return null;
+  return {
+    id: visita.familiaId,
+    chefeFamilia: visita.chefeFamilia,
+    osp: visita.osp || '',
+    comunidade: visita.comunidade || '',
+    area: visita.area || 'Não informada',
+    tecnicoNome: visita.tecnicoNome || state.tecnico?.nome || '',
+    proximaVisita: visita.proximosPassos || visita.nomeVisita,
+    visitasPadrao: state.visitasPadrao?.length ? state.visitasPadrao : [visita.nomeVisita],
+    atividadesPorVisita: {
+      [visita.nomeVisita]: visita.objetivosSnapshot || [],
+    },
+    plano: { objetivos: visita.objetivosSnapshot || [] },
+  };
+}
+
 export function getFamilia(id) {
-  return getFamilias().find((f) => f.id === id);
+  const familia = getFamilias().find((f) => f.id === id);
+  if (familia) return familia;
+  const visita = state.editandoVisitaId
+    ? state.visitasSalvas.find((item) => item.id === state.editandoVisitaId)
+    : state.visitasSalvas.find((item) => item.familiaId === id);
+  return familiaDaVisitaSalva(visita);
 }
 
 export function visitasDaFamilia(familia) {

@@ -143,10 +143,14 @@ export function screenVisita() {
     <div class="section-label">Registros fotográficos</div>
     <div class="card">
       <label class="btn btn-ghost" style="display:block; text-align:center;">
-        Tirar foto / adicionar imagem com GPS automático
-        <input type="file" accept="image/*" multiple capture="environment" style="display:none" onchange="onFotosSelecionadas(this)">
+        Tirar foto com GPS automático
+        <input type="file" accept="image/*" capture="environment" style="display:none" onchange="onFotosSelecionadas(this)">
       </label>
-      ${state.fotos.length ? `<div class="photos-list">${fotos}</div>` : `<div style="font-size:11px;color:var(--text-dim); margin-top:8px;">Ao tirar/adicionar foto, o app tenta capturar GPS real e grava data, hora, família, ATEC, etapa e coordenada dentro da imagem.</div>`}
+      <label class="btn btn-ghost" style="display:block; text-align:center; margin-top:8px;">
+        Adicionar imagem do computador
+        <input type="file" accept="image/*" multiple style="display:none" onchange="onFotosSelecionadas(this)">
+      </label>
+      ${state.fotos.length ? `<div class="photos-list">${fotos}</div>` : `<div style="font-size:11px;color:var(--text-dim); margin-top:8px;">Ao tirar/adicionar foto, o app tenta capturar GPS real e grava data, hora, família, ATEC, etapa e coordenada dentro da imagem. No computador, a imagem será aceita mesmo sem GPS disponível.</div>`}
     </div>
 
     <button class="btn btn-primary" style="margin-top:16px;" ${podeSalvar ? '' : 'disabled'} onclick="salvarVisita()">
