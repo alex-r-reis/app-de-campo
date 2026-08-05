@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ater-cacau-campo-v11';
+const CACHE_NAME = 'ater-cacau-campo-v12';
 const APP_SHELL = ['/', '/index.html', '/admin.html', '/manifest.webmanifest', '/brand/muiraquita-watermark.png'];
 
 self.addEventListener('install', (event) => {

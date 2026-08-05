@@ -18,7 +18,7 @@ const TECNICOS = [
   { id: 't14', nome: 'Kheiliany Luara Souza Barbosa', registro: 'ATEC-1014', regiao: 'Tucumã' },
   { id: 't15', nome: 'Lucas Morais Silva', registro: 'ATEC-1015', regiao: 'Tucumã' },
   { id: 't16', nome: 'Pablo Henrique Schmidt Amaral', registro: 'ATEC-1016', regiao: 'Tucumã' },
-  { id: 't17', nome: 'Vitor', registro: 'ATEC-1017', regiao: 'Tucumã' },
+  { id: 't17', nome: 'Vitor Ramos do Prado', registro: 'ATEC-1017', regiao: 'Tucumã' },
 ];
 
 const TECNICOS_POR_CONTRATO = {

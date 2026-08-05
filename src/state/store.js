@@ -40,11 +40,13 @@ export function isOnline() {
 }
 
 export function getFamilias() {
+  const nomesTecnico = [state.tecnico?.nome];
+  if (state.tecnico?.id === 't17') nomesTecnico.push('Vitor');
   const cacheCompativel = !state.dadosCampoVariant || state.dadosCampoVariant === state.appVariant;
   const dinamicas = cacheCompativel
     ? state.familiasCampo
         .map(normalizarFamiliaCampo)
-        .filter((familia) => normalizar(familia.tecnicoNome) === normalizar(state.tecnico.nome))
+        .filter((familia) => nomesTecnico.some((nome) => normalizar(familia.tecnicoNome) === normalizar(nome)))
     : [];
   if (dinamicas.length) return dinamicas;
   if (state.appVariant && state.appVariant !== 'cacau_i') return [];
