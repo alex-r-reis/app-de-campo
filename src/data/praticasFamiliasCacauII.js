@@ -1169,7 +1169,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Produção de biofertilizante líquido, Produção de defensivos naturais"
   },
   {
-    "tecnico": "Vitor Ramos do Prado",
+    "tecnico": "Valdemir Ferreira Lima",
     "familia": "Sandra Fontinelle Dos Santos",
     "osp": "STR Tucumã",
     "municipio": "Tucumã",
