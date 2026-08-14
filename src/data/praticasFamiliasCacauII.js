@@ -1189,7 +1189,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Compostagem, Irrigação simples"
   },
   {
-    "tecnico": "Vitor Ramos do Prado",
+    "tecnico": "Valdemir Ferreira Lima",
     "familia": "Valdevaldo Pacheco Dos Santos",
     "osp": "STR Tucumã",
     "municipio": "Tucumã",
