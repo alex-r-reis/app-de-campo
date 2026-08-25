@@ -5,6 +5,7 @@ const COLUNA_VISITA_I = "Quais práticas serão realizadas (I)";
 const COLUNA_VISITA_II = "Quais práticas serão realizadas (II)";
 const COLUNA_VISITA_III = "Quais práticas serão realizadas (III)";
 const COLUNA_VISITA_IV = "Quais práticas serão realizadas IV";
+const TECNICO_LUCAS = "Lucas Morais Silva";
 const TECNICO_VITOR = "Vitor Ramos do Prado";
 
 const ATUALIZACOES_CACAU_II = [
@@ -1079,7 +1080,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Produção de biofertilizante líquido, Irrigação simples"
   },
   {
-    "tecnico": "Vitor Ramos do Prado",
+    "tecnico": "Lucas Morais Silva",
     "familia": "Maria Das Dores Alves Gomes",
     "osp": "ASPROFERRO",
     "municipio": "Tucumã",
@@ -1129,7 +1130,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Produção de mudas"
   },
   {
-    "tecnico": "Vitor Ramos do Prado",
+    "tecnico": "Lucas Morais Silva",
     "familia": "Neli Candido Costa Dartora",
     "osp": "STR Tucumã",
     "municipio": "Tucumã",
@@ -1139,7 +1140,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Produção de biofertilizante líquido, Produção de defensivos naturais"
   },
   {
-    "tecnico": "Vitor Ramos do Prado",
+    "tecnico": "Lucas Morais Silva",
     "familia": "Ozana Lourenço De Oliveira",
     "osp": "STR Tucumã",
     "municipio": "Tucumã",
@@ -1159,7 +1160,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Gestão da produção, Adubação de cova/cobertura"
   },
   {
-    "tecnico": "Vitor Ramos do Prado",
+    "tecnico": "Lucas Morais Silva",
     "familia": "Raquel Da Silva Martins",
     "osp": "STR Tucumã",
     "municipio": "Tucumã",
@@ -1199,7 +1200,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Produção de defensivos naturais"
   },
   {
-    "tecnico": "Vitor Ramos do Prado",
+    "tecnico": "Lucas Morais Silva",
     "familia": "Vanir Rodrigues Da Silva",
     "osp": "STR Tucumã",
     "municipio": "Tucumã",
@@ -1235,15 +1236,21 @@ function chave(tecnico, familia) {
 
 const TECNICO_FRANCISCO_REMANEJADO = "Francisco Romildo Xavier Idelfonso";
 const TECNICOS_ANTIGOS_VITOR = new Set([normalizar(TECNICO_FRANCISCO_REMANEJADO), normalizar("Vitor"), normalizar("Valdemir Ferreira Lima")]);
+const TECNICOS_ANTIGOS_LUCAS = new Set([normalizar(TECNICO_FRANCISCO_REMANEJADO), normalizar("Vitor"), normalizar(TECNICO_VITOR), normalizar("Valdemir Ferreira Lima")]);
 const FAMILIAS_ATRIBUIDAS_VITOR = new Set(
   ATUALIZACOES_CACAU_II
     .filter((item) => normalizar(item.tecnico) === normalizar(TECNICO_VITOR))
     .map((item) => normalizar(item.familia))
 );
+const FAMILIAS_ATRIBUIDAS_LUCAS = new Set(
+  ATUALIZACOES_CACAU_II
+    .filter((item) => normalizar(item.tecnico) === normalizar(TECNICO_LUCAS))
+    .map((item) => normalizar(item.familia))
+);
 
 const FAMILIAS_REMANEJADAS_FRANCISCO = new Set(
   ATUALIZACOES_CACAU_II
-    .filter((item) => item.tecnico === "Valdemir Ferreira Lima" || item.tecnico === TECNICO_VITOR)
+    .filter((item) => item.tecnico === "Valdemir Ferreira Lima" || item.tecnico === TECNICO_VITOR || item.tecnico === TECNICO_LUCAS)
     .map((item) => chave(TECNICO_FRANCISCO_REMANEJADO, item.familia))
 );
 
@@ -1286,6 +1293,7 @@ export function completarPraticasFamiliasCacauII(rows) {
   rows.forEach((row) => {
     const rowChave = chave(row[COLUNA_TECNICO], row[COLUNA_FAMILIA]);
     if (FAMILIAS_ATRIBUIDAS_VITOR.has(normalizar(row[COLUNA_FAMILIA])) && TECNICOS_ANTIGOS_VITOR.has(normalizar(row[COLUNA_TECNICO]))) return;
+    if (FAMILIAS_ATRIBUIDAS_LUCAS.has(normalizar(row[COLUNA_FAMILIA])) && TECNICOS_ANTIGOS_LUCAS.has(normalizar(row[COLUNA_TECNICO]))) return;
     if (FAMILIAS_REMANEJADAS_FRANCISCO.has(rowChave)) return;
     if (vistos.has(rowChave)) return;
     vistos.add(rowChave);

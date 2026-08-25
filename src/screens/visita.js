@@ -83,7 +83,8 @@ export function screenVisita() {
 
   const respondidas = totalRespondidas(metas);
   const total = metas.length;
-  const podeSalvar = respondidas === total;
+  const fotosSemGps = state.fotos.some((foto) => !foto.gps);
+  const podeSalvar = respondidas === total && !fotosSemGps;
   const emRevisao = !!state.editandoVisitaId;
 
   const visitaOpts = visitas.map(
@@ -150,12 +151,12 @@ export function screenVisita() {
         Adicionar imagem do computador
         <input type="file" accept="image/*" multiple style="display:none" onchange="onFotosSelecionadas(this)">
       </label>
-      ${state.fotos.length ? `<div class="photos-list">${fotos}</div>` : `<div style="font-size:11px;color:var(--text-dim); margin-top:8px;">Ao tirar/adicionar foto, o app tenta capturar GPS real e grava data, hora, família, ATEC, etapa e coordenada dentro da imagem. No computador, a imagem será aceita mesmo sem GPS disponível.</div>`}
+      ${state.fotos.length ? `<div class="photos-list">${fotos}</div>` : `<div style="font-size:11px;color:var(--text-dim); margin-top:8px;">Ao tirar/adicionar foto, o app captura GPS real e grava data, hora, família, ATEC, etapa e coordenada dentro da imagem.</div>`}
     </div>
 
     <button class="btn btn-primary" style="margin-top:16px;" ${podeSalvar ? '' : 'disabled'} onclick="salvarVisita()">
       ${emRevisao ? 'Atualizar relatório pronto' : isOnline() ? 'Salvar relatório no dispositivo' : 'Salvar no dispositivo (offline)'}
     </button>
-    ${!podeSalvar ? '<div style="font-size:11px;color:var(--text-dim); margin-top:6px; text-align:center;">Avalie o cumprimento de todas as metas desta atividade para salvar</div>' : ''}
+    ${!podeSalvar ? `<div style="font-size:11px;color:var(--text-dim); margin-top:6px; text-align:center;">${fotosSemGps ? 'Remova e adicione novamente as fotos sem GPS para salvar' : 'Avalie o cumprimento de todas as metas desta atividade para salvar'}</div>` : ''}
   </div>`;
 }

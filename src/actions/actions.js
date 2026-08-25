@@ -65,7 +65,7 @@ function canvasToBlob(canvas, tipo, qualidade) {
   });
 }
 
-function obterGpsAtual() {
+function lerGpsAtual(opcoes) {
   return new Promise((resolve) => {
     if (!navigator.geolocation) {
       resolve(null);
@@ -82,9 +82,24 @@ function obterGpsAtual() {
         });
       },
       () => resolve(null),
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      opcoes
     );
   });
+}
+
+async function obterGpsAtual() {
+  const tentativas = [
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 0 },
+    { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 },
+    { enableHighAccuracy: false, timeout: 20000, maximumAge: 0 },
+  ];
+
+  for (const opcoes of tentativas) {
+    const gps = await lerGpsAtual(opcoes);
+    if (gps) return gps;
+  }
+
+  return null;
 }
 
 function dataUrlParaBlob(dataUrl) {
@@ -383,10 +398,17 @@ export function capturarGPS() {
 export async function onFotosSelecionadas(input) {
   const files = Array.from(input.files || []);
   const fam = getFamilia(state.familiaId);
+  let registradas = 0;
+  let falhasGps = 0;
   for (const file of files) {
     const timestamp = Date.now();
+    showToast('Capturando GPS da foto...');
     const gps = await obterGpsAtual();
-    if (gps) state.gps = gps;
+    if (!gps) {
+      falhasGps++;
+      continue;
+    }
+    state.gps = gps;
     const foto = await compactarFoto(file, {
       gps,
       familia: fam,
@@ -405,11 +427,13 @@ export async function onFotosSelecionadas(input) {
       gps,
       timestamp,
     });
+    registradas++;
   }
   persistirEstadoLocal();
   render();
   input.value = '';
-  if (files.length) showToast('Foto registrada com data, hora e GPS na imagem');
+  if (registradas) showToast('Foto registrada com data, hora e GPS na imagem');
+  if (falhasGps) showToast('GPS obrigatório não capturado. Verifique a permissão de localização e tente novamente.');
 }
 
 export function removerFoto(idx) {
