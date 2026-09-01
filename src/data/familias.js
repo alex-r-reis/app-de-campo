@@ -5855,4 +5855,7 @@ const FAMILIAS = {
   ]
 };
 
+FAMILIAS.t17 = FAMILIAS.t6;
+delete FAMILIAS.t6;
+
 export { FAMILIAS };

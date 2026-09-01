@@ -334,7 +334,7 @@ const ATUALIZACOES_CACAU_I = [
     "visitaIV": "Produção de defensivos naturais"
   },
   {
-    "tecnico": "Valdemir Ferreira Lima",
+    "tecnico": "Vitor Ramos do Prado",
     "familia": "ANDREIA DA SILVA SOUSA",
     "osp": "AMPPF",
     "municipio": "São Félix do Xingu",
@@ -342,7 +342,7 @@ const ATUALIZACOES_CACAU_I = [
     "visitaIV": "Gestão da produção, Adubação de cova/cobertura, Controle de plantas espontâneas, Plantio de culturas"
   },
   {
-    "tecnico": "Valdemir Ferreira Lima",
+    "tecnico": "Vitor Ramos do Prado",
     "familia": "GERUSA PEREIRA BEZERRA",
     "osp": "AMPPF",
     "municipio": "São Félix do Xingu",
@@ -350,7 +350,7 @@ const ATUALIZACOES_CACAU_I = [
     "visitaIV": "Capacitação em poda, Controle de plantas espontâneas, Implantação de SAF, Plantio de culturas"
   },
   {
-    "tecnico": "Valdemir Ferreira Lima",
+    "tecnico": "Vitor Ramos do Prado",
     "familia": "JESSICA MIRANDA BATISTA",
     "osp": "AMPPF",
     "municipio": "São Félix do Xingu",
@@ -358,7 +358,7 @@ const ATUALIZACOES_CACAU_I = [
     "visitaIV": "Capacitação em poda, Produção de defensivos naturais, Implantação de SAF, Plantio de culturas"
   },
   {
-    "tecnico": "Valdemir Ferreira Lima",
+    "tecnico": "Vitor Ramos do Prado",
     "familia": "LAIANE SOARES DOS SANTOS",
     "osp": "AMPPF",
     "municipio": "São Félix do Xingu",
@@ -366,7 +366,7 @@ const ATUALIZACOES_CACAU_I = [
     "visitaIV": "Gestão da produção, Adubação de cova/cobertura, Produção de defensivos naturais, Implantação de SAF, Plantio de culturas"
   },
   {
-    "tecnico": "Valdemir Ferreira Lima",
+    "tecnico": "Vitor Ramos do Prado",
     "familia": "LENICE DIVINA RAMOS",
     "osp": "AMPPF",
     "municipio": "São Félix do Xingu",
@@ -374,7 +374,7 @@ const ATUALIZACOES_CACAU_I = [
     "visitaIV": "Capacitação em poda, Produção de defensivos naturais, Construção de viveiro, Plantio de culturas"
   },
   {
-    "tecnico": "Valdemir Ferreira Lima",
+    "tecnico": "Vitor Ramos do Prado",
     "familia": "MARIA FERREIRA DA COSTA",
     "osp": "AMPPF",
     "municipio": "São Félix do Xingu",
@@ -382,7 +382,7 @@ const ATUALIZACOES_CACAU_I = [
     "visitaIV": "Gestão da produção, Controle de plantas espontâneas, Produção de defensivos naturais, Plantio de culturas"
   },
   {
-    "tecnico": "Valdemir Ferreira Lima",
+    "tecnico": "Vitor Ramos do Prado",
     "familia": "PATRICIA MOURÃO DA SILVA",
     "osp": "AMPPF",
     "municipio": "São Félix do Xingu",
@@ -390,7 +390,7 @@ const ATUALIZACOES_CACAU_I = [
     "visitaIV": "Compostagem, Gestão da produção, Controle de plantas espontâneas, Produção de biofertilizante líquido, Produção de defensivos naturais"
   },
   {
-    "tecnico": "Valdemir Ferreira Lima",
+    "tecnico": "Vitor Ramos do Prado",
     "familia": "MARIVALDA NUNES NEGREIRO",
     "osp": "AMPPF",
     "municipio": "São Félix do Xingu",
@@ -398,7 +398,7 @@ const ATUALIZACOES_CACAU_I = [
     "visitaIV": "Controle de plantas espontâneas, Produção de biofertilizante líquido, Implantação de SAF"
   },
   {
-    "tecnico": "Valdemir Ferreira Lima",
+    "tecnico": "Vitor Ramos do Prado",
     "familia": "SANDRO LANGHINOTTI",
     "osp": "AMPPF",
     "municipio": "São Félix do Xingu",
