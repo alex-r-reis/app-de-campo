@@ -473,16 +473,6 @@ const ATUALIZACOES_CACAU_II = [
   },
   {
     "tecnico": "Kheiliany Luara Souza Barbosa",
-    "familia": "Clerio Rodrigues de Aguiar",
-    "osp": "STR Tucumã",
-    "municipio": "Tucumã",
-    "visitaI": "Capacitação em poda",
-    "visitaII": "Colheita e pós-colheita, Compostagem",
-    "visitaIII": "Controle de plantas espontâneas",
-    "visitaIV": "Gestão da produção"
-  },
-  {
-    "tecnico": "Kheiliany Luara Souza Barbosa",
     "familia": "Edvan Leoncio dos Santos",
     "osp": "STR Tucumã",
     "municipio": "Tucumã",
@@ -1237,6 +1227,7 @@ const FAMILIAS_ATRIBUIDAS_KHEILIANY = new Set(
 );
 const FAMILIAS_REMOVIDAS_KHEILIANY = new Set([
   normalizar("Cirlene Oliveira Marafon"),
+  normalizar("Clerio Rodrigues de Aguiar"),
   normalizar("Maria Do Carmo Dias Pereira Melo"),
 ]);
 

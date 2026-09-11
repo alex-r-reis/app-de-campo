@@ -5907,6 +5907,7 @@ moverFamiliasEntreTecnicos('t10', 't15', [
 
 removerFamiliasDoTecnico('t14', [
   'Cirlene Oliveira Marafon',
+  'Clerio Rodrigues de Aguiar',
   'Maria do Carmo Dias Pereira Melo',
 ]);
 
