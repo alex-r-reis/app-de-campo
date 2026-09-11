@@ -5,6 +5,8 @@ const COLUNA_VISITA_I = "Quais práticas serão realizadas (I)";
 const COLUNA_VISITA_II = "Quais práticas serão realizadas (II)";
 const COLUNA_VISITA_III = "Quais práticas serão realizadas (III)";
 const COLUNA_VISITA_IV = "Quais práticas serão realizadas IV";
+const TECNICO_CARLOS = "Carlos Eduardo Nunes Leal";
+const TECNICO_KHEILIANY = "Kheiliany Luara Souza Barbosa";
 const TECNICO_LUCAS = "Lucas Morais Silva";
 const TECNICO_VITOR = "Vitor Ramos do Prado";
 
@@ -40,7 +42,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Capacitação em poda, Plantio de culturas, Seleção de sementes/mudas"
   },
   {
-    "tecnico": "Carlos Eduardo Nunes Leal",
+    "tecnico": TECNICO_KHEILIANY,
     "familia": "Dagusan Pereira Lima",
     "osp": "ASPROFERRO",
     "municipio": "Tucumã",
@@ -471,16 +473,6 @@ const ATUALIZACOES_CACAU_II = [
   },
   {
     "tecnico": "Kheiliany Luara Souza Barbosa",
-    "familia": "Cirlene Oliveira Marafon",
-    "osp": "STR Tucumã",
-    "municipio": "Tucumã",
-    "visitaI": "Capacitação em poda",
-    "visitaII": "Colheita e pós-colheita",
-    "visitaIII": "Compostagem",
-    "visitaIV": "Gestão da produção"
-  },
-  {
-    "tecnico": "Kheiliany Luara Souza Barbosa",
     "familia": "Clerio Rodrigues de Aguiar",
     "osp": "STR Tucumã",
     "municipio": "Tucumã",
@@ -621,16 +613,6 @@ const ATUALIZACOES_CACAU_II = [
   },
   {
     "tecnico": "Kheiliany Luara Souza Barbosa",
-    "familia": "Maria do Carmo dias Pereira Melo",
-    "osp": "STR Tucumã",
-    "municipio": "Tucumã",
-    "visitaI": "Adubação de cova/cobertura",
-    "visitaII": "Colheita e pós-colheita",
-    "visitaIII": "Produção de biofertilizante líquido",
-    "visitaIV": "Produção de defensivos naturais"
-  },
-  {
-    "tecnico": "Kheiliany Luara Souza Barbosa",
     "familia": "Maria Lucimar Barbosa da Silva",
     "osp": "STR Tucumã",
     "municipio": "Tucumã",
@@ -670,7 +652,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Gestão da produção, Capacitação em poda, Controle de plantas espontâneas, Produção de defensivos naturais"
   },
   {
-    "tecnico": "Carlos Eduardo Nunes Leal",
+    "tecnico": TECNICO_KHEILIANY,
     "familia": "wilson jose alves",
     "osp": "ASPROFERRO",
     "municipio": "Tucumã",
@@ -710,7 +692,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Gestão da produção, Adubação de cova/cobertura, Produção de defensivos naturais"
   },
   {
-    "tecnico": "Carlos Eduardo Nunes Leal",
+    "tecnico": TECNICO_KHEILIANY,
     "familia": "valdecy pereira lopes",
     "osp": "ASPROFERRO",
     "municipio": "Tucumã",
@@ -720,7 +702,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Colheita e pós-colheita, Adubação de cova/cobertura, Capacitação em poda, Produção de defensivos naturais"
   },
   {
-    "tecnico": "Carlos Eduardo Nunes Leal",
+    "tecnico": TECNICO_LUCAS,
     "familia": "flavia leite costa",
     "osp": "ASPROFERRO",
     "municipio": "Tucumã",
@@ -760,7 +742,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Gestão da produção, Capacitação em poda, Controle de plantas espontâneas, Produção de defensivos naturais"
   },
   {
-    "tecnico": "Carlos Eduardo Nunes Leal",
+    "tecnico": TECNICO_LUCAS,
     "familia": "magna alves de oliveira rodrigues",
     "osp": "ASPROFERRO",
     "municipio": "Tucumã",
@@ -770,7 +752,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Gestão da produção, Adubação de cova/cobertura, Capacitação em poda, Produção de defensivos naturais"
   },
   {
-    "tecnico": "Carlos Eduardo Nunes Leal",
+    "tecnico": TECNICO_KHEILIANY,
     "familia": "Valderez gonçalves de souza",
     "osp": "ASPROFERRO",
     "municipio": "Tucumã",
@@ -780,7 +762,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Gestão da produção, Adubação de cova/cobertura, Capacitação em poda, Produção de defensivos naturais"
   },
   {
-    "tecnico": "Carlos Eduardo Nunes Leal",
+    "tecnico": TECNICO_LUCAS,
     "familia": "rogerenry ferreira de sousa",
     "osp": "ASPROFERRO",
     "municipio": "Tucumã",
@@ -790,7 +772,7 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Gestão da produção, Capacitação em poda, Capacitação em renovação de áreas, Controle de plantas espontâneas, Produção de defensivos naturais"
   },
   {
-    "tecnico": "Carlos Eduardo Nunes Leal",
+    "tecnico": TECNICO_KHEILIANY,
     "familia": "darlan costa silva",
     "osp": "ASPROFERRO",
     "municipio": "Tucumã",
@@ -800,8 +782,8 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Adubação de cova/cobertura, Capacitação em poda, Capacitação em renovação de áreas, Produção de defensivos naturais"
   },
   {
-    "tecnico": "Carlos Eduardo Nunes Leal",
-    "familia": "geraldo batista silva",
+    "tecnico": TECNICO_KHEILIANY,
+    "familia": "Geraldo Batista Da Silva",
     "osp": "ASPROFERRO",
     "municipio": "Tucumã",
     "visitaI": "Capacitação em renovação de áreas, Controle de plantas espontâneas, Produção de defensivos naturais",
@@ -830,8 +812,8 @@ const ATUALIZACOES_CACAU_II = [
     "visitaIV": "Adubação de cova/cobertura, Capacitação em poda"
   },
   {
-    "tecnico": "Carlos Eduardo Nunes Leal",
-    "familia": "geraldo batista silva",
+    "tecnico": TECNICO_KHEILIANY,
+    "familia": "Geraldo Batista Da Silva",
     "osp": "ASPROFERRO",
     "municipio": "Tucumã",
     "visitaI": "Adubação de cova/cobertura, Capacitação em poda, Controle de plantas espontâneas, Produção de defensivos naturais",
@@ -1236,7 +1218,8 @@ function chave(tecnico, familia) {
 
 const TECNICO_FRANCISCO_REMANEJADO = "Francisco Romildo Xavier Idelfonso";
 const TECNICOS_ANTIGOS_VITOR = new Set([normalizar(TECNICO_FRANCISCO_REMANEJADO), normalizar("Vitor"), normalizar("Valdemir Ferreira Lima")]);
-const TECNICOS_ANTIGOS_LUCAS = new Set([normalizar(TECNICO_FRANCISCO_REMANEJADO), normalizar("Vitor"), normalizar(TECNICO_VITOR), normalizar("Valdemir Ferreira Lima")]);
+const TECNICOS_ANTIGOS_LUCAS = new Set([normalizar(TECNICO_FRANCISCO_REMANEJADO), normalizar("Vitor"), normalizar(TECNICO_VITOR), normalizar("Valdemir Ferreira Lima"), normalizar(TECNICO_CARLOS)]);
+const TECNICOS_ANTIGOS_KHEILIANY = new Set([normalizar(TECNICO_CARLOS)]);
 const FAMILIAS_ATRIBUIDAS_VITOR = new Set(
   ATUALIZACOES_CACAU_II
     .filter((item) => normalizar(item.tecnico) === normalizar(TECNICO_VITOR))
@@ -1247,6 +1230,15 @@ const FAMILIAS_ATRIBUIDAS_LUCAS = new Set(
     .filter((item) => normalizar(item.tecnico) === normalizar(TECNICO_LUCAS))
     .map((item) => normalizar(item.familia))
 );
+const FAMILIAS_ATRIBUIDAS_KHEILIANY = new Set(
+  ATUALIZACOES_CACAU_II
+    .filter((item) => normalizar(item.tecnico) === normalizar(TECNICO_KHEILIANY))
+    .map((item) => normalizar(item.familia))
+);
+const FAMILIAS_REMOVIDAS_KHEILIANY = new Set([
+  normalizar("Cirlene Oliveira Marafon"),
+  normalizar("Maria Do Carmo Dias Pereira Melo"),
+]);
 
 const FAMILIAS_REMANEJADAS_FRANCISCO = new Set(
   ATUALIZACOES_CACAU_II
@@ -1292,8 +1284,10 @@ export function completarPraticasFamiliasCacauII(rows) {
 
   rows.forEach((row) => {
     const rowChave = chave(row[COLUNA_TECNICO], row[COLUNA_FAMILIA]);
+    if (FAMILIAS_REMOVIDAS_KHEILIANY.has(normalizar(row[COLUNA_FAMILIA])) && normalizar(row[COLUNA_TECNICO]) === normalizar(TECNICO_KHEILIANY)) return;
     if (FAMILIAS_ATRIBUIDAS_VITOR.has(normalizar(row[COLUNA_FAMILIA])) && TECNICOS_ANTIGOS_VITOR.has(normalizar(row[COLUNA_TECNICO]))) return;
     if (FAMILIAS_ATRIBUIDAS_LUCAS.has(normalizar(row[COLUNA_FAMILIA])) && TECNICOS_ANTIGOS_LUCAS.has(normalizar(row[COLUNA_TECNICO]))) return;
+    if (FAMILIAS_ATRIBUIDAS_KHEILIANY.has(normalizar(row[COLUNA_FAMILIA])) && TECNICOS_ANTIGOS_KHEILIANY.has(normalizar(row[COLUNA_TECNICO]))) return;
     if (FAMILIAS_REMANEJADAS_FRANCISCO.has(rowChave)) return;
     if (vistos.has(rowChave)) return;
     vistos.add(rowChave);

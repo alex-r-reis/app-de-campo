@@ -5855,6 +5855,61 @@ const FAMILIAS = {
   ]
 };
 
+function normalizarNomeFamilia(valor) {
+  return String(valor || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLowerCase();
+}
+
+function moverFamiliasEntreTecnicos(origem, destino, nomes) {
+  const nomesNormalizados = new Set(nomes.map(normalizarNomeFamilia));
+  const familiasOrigem = FAMILIAS[origem] || [];
+  const familiasDestino = FAMILIAS[destino] || [];
+  const jaNoDestino = new Set(familiasDestino.map((familia) => normalizarNomeFamilia(familia.chefeFamilia)));
+  const remanejadas = [];
+
+  FAMILIAS[origem] = familiasOrigem.filter((familia) => {
+    if (!nomesNormalizados.has(normalizarNomeFamilia(familia.chefeFamilia))) return true;
+    remanejadas.push(familia);
+    return false;
+  });
+
+  FAMILIAS[destino] = [
+    ...familiasDestino,
+    ...remanejadas.filter((familia) => !jaNoDestino.has(normalizarNomeFamilia(familia.chefeFamilia))),
+  ];
+}
+
+function removerFamiliasDoTecnico(tecnico, nomes) {
+  const nomesNormalizados = new Set(nomes.map(normalizarNomeFamilia));
+  FAMILIAS[tecnico] = (FAMILIAS[tecnico] || []).filter(
+    (familia) => !nomesNormalizados.has(normalizarNomeFamilia(familia.chefeFamilia))
+  );
+}
+
+moverFamiliasEntreTecnicos('t10', 't14', [
+  'Dagusan Pereira Lima',
+  'Darlan Costa Silva',
+  'Valderez Gonçalves de Souza',
+  'Wilson Jose Alves',
+  'Valdecy Pereira Lopes',
+  'Geraldo Batista da Silva',
+]);
+
+moverFamiliasEntreTecnicos('t10', 't15', [
+  'Flavia Leite Costa',
+  'Magna Alves de Oliveira Rodrigues',
+  'Rogerenry Ferreira de Sousa',
+]);
+
+removerFamiliasDoTecnico('t14', [
+  'Cirlene Oliveira Marafon',
+  'Maria do Carmo Dias Pereira Melo',
+]);
+
 FAMILIAS.t17 = FAMILIAS.t6;
 delete FAMILIAS.t6;
 
