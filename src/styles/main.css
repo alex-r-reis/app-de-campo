@@ -123,6 +123,20 @@
   .fam-row{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
   .fam-name{font-size:16px; font-weight:700; margin-bottom:2px;}
   .fam-meta{font-size:12px; color:var(--text-dim); font-family:'Cascadia Mono','Consolas',monospace;}
+  .family-tools{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    margin:0 0 12px 0; padding:10px 12px;
+    background:var(--surface-2); border:1px solid var(--line); border-radius:6px;
+  }
+  .family-order-label{
+    font-family:'Cascadia Mono','Consolas',monospace; font-size:11px;
+    color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em;
+  }
+  .family-order-select{
+    min-width:88px; background:var(--surface); color:var(--accent);
+    border:1px solid var(--line); border-radius:5px; padding:7px 9px;
+    font-size:12px; font-weight:700;
+  }
 
   .stamp{
     font-family:'Cascadia Mono','Consolas',monospace;

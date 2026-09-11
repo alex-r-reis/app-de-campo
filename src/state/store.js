@@ -32,6 +32,7 @@ export const state = {
   dadosCampoAtualizadoEm: '',
   carregandoDadosCampo: false,
   erroDadosCampo: '',
+  ordemFamilias: 'az',
   toast: null,
 };
 
@@ -247,6 +248,7 @@ export function persistirEstadoLocal() {
       : null,
     draft: rascunhoParaPersistencia(),
     forcedOffline: state.forcedOffline,
+    ordemFamilias: state.ordemFamilias,
   };
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
@@ -285,6 +287,7 @@ export function carregarEstadoLocal() {
     state.dadosCampoVariant = payload.dadosCampoVariant || '';
     state.dadosCampoAtualizadoEm = payload.dadosCampoAtualizadoEm || '';
     state.forcedOffline = Boolean(payload.forcedOffline);
+    state.ordemFamilias = payload.ordemFamilias === 'za' ? 'za' : 'az';
 
     if (payload.session?.appVariant && payload.session?.tecnicoId) {
       aplicarContrato(payload.session.appVariant, payload.session.appNome || '');

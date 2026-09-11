@@ -22,6 +22,7 @@ import {
   irParaFila,
   editarArea,
   voltarFamilias,
+  alterarOrdemFamilias,
   voltarPlano,
   responder,
   adicionarRisco,
@@ -55,6 +56,7 @@ window.irParaVisita = irParaVisita;
 window.irParaFila = irParaFila;
 window.editarArea = editarArea;
 window.voltarFamilias = voltarFamilias;
+window.alterarOrdemFamilias = alterarOrdemFamilias;
 window.voltarPlano = voltarPlano;
 window.responder = responder;
 window.adicionarRisco = adicionarRisco;
@@ -105,7 +107,7 @@ carregarEstadoLocal();
 
 async function aquecerCacheOffline() {
   if (!('caches' in window)) return;
-  const cache = await caches.open('ater-cacau-campo-v16');
+  const cache = await caches.open('ater-cacau-campo-v17');
   const urls = new Set([
     `${location.origin}/`,
     `${location.origin}/index.html`,

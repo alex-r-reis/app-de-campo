@@ -358,6 +358,12 @@ export function voltarFamilias() {
   render();
 }
 
+export function alterarOrdemFamilias(valor) {
+  state.ordemFamilias = valor === 'za' ? 'za' : 'az';
+  persistirEstadoLocal();
+  render();
+}
+
 export function voltarPlano() {
   state.editandoVisitaId = null;
   state.screen = 'plano';
