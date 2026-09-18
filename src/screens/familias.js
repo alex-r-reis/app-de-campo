@@ -2,6 +2,7 @@ import { state, getFamilias } from '../state/store.js';
 
 export function screenFamilias() {
   const familias = getFamilias();
+  const municipios = [...new Set(familias.map((familia) => familia.comunidade).filter(Boolean))].join(' / ');
   const ordemFamilias = state.ordemFamilias === 'za' ? 'za' : 'az';
   const sentidoOrdenacao = ordemFamilias === 'za' ? -1 : 1;
   const collator = new Intl.Collator('pt-BR', { sensitivity: 'base' });
@@ -41,7 +42,7 @@ export function screenFamilias() {
   return `
   <div class="content">
     <h2 class="screen-title">Famílias atendidas</h2>
-    <div class="screen-sub">${state.appNome} · ${state.tecnico.regiao} · ${familias.length} famílias · ${origem}${atualizacao}</div>
+    <div class="screen-sub">${state.appNome}${municipios ? ` · ${municipios}` : ''} · ${familias.length} famílias · ${origem}${atualizacao}</div>
     ${statusDados}
     ${totalRelatorios ? `<button class="btn btn-ghost" style="margin-bottom:12px;" onclick="irParaFila()">Ver relat\u00f3rios realizados (${totalRelatorios})</button>` : ''}
     <div class="family-tools">

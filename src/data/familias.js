@@ -5914,4 +5914,15 @@ removerFamiliasDoTecnico('t14', [
 FAMILIAS.t17 = FAMILIAS.t6;
 delete FAMILIAS.t6;
 
+moverFamiliasEntreTecnicos('t10', 't6', [
+  'Ademar Ferreira Do Nascimento',
+  'Joana Darc Batista França',
+  'Leida Alves Caldeira',
+  'Maria Angelica De Souza Viana',
+  'Nilza Pereira De Macedo Amorim',
+  'Reginaldo Gomes De Oliveira',
+  'Renata Pereira Do Nascimento Leal',
+  'Rogerio Pereira Dos Santos',
+]);
+
 export { FAMILIAS };

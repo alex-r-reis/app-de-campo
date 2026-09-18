@@ -2,6 +2,7 @@ import { FAMILIAS } from '../data/familias.js';
 import { objetivosDaAtividade } from '../data/atividades.js';
 import { visitasPadrao } from '../data/appConfig.js';
 import { tecnicoPorId } from '../data/tecnicos.js';
+import { remanejarFamiliaCacauII } from '../data/praticasFamiliasCacauII.js';
 
 const STORAGE_KEY = 'ater-cacau-campo:v2';
 const CACAU_I_DIA_CAMPO_II_PADRAO = 'Dia de Campo II - Controle Integrado de Pragas e Doenças (MIPD)';
@@ -117,6 +118,9 @@ function objetivoDiaCampoCaepim() {
 }
 
 function normalizarFamiliaCampo(familia) {
+  if (normalizar(familia?.variant || state.dadosCampoVariant) === 'cacau_ii') {
+    return remanejarFamiliaCacauII(familia);
+  }
   if (normalizar(familia?.variant) !== 'cacau_i' || normalizar(familia?.osp) !== 'caepim') {
     return familia;
   }

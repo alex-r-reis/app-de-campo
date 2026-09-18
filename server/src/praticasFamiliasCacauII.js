@@ -1206,6 +1206,37 @@ function chave(tecnico, familia) {
   return `${normalizar(tecnico)}::${normalizar(familia)}`;
 }
 
+const FAMILIAS_TRANSFERIDAS_VALDEMIR = new Map([
+  "Ademar Ferreira Do Nascimento",
+  "Joana Darc Batista França",
+  "Leida Alves Caldeira",
+  "Maria Angelica De Souza Viana",
+  "Nilza Pereira De Macedo Amorim",
+  "Reginaldo Gomes De Oliveira",
+  "Renata Pereira Do Nascimento Leal",
+  "Rogerio Pereira Dos Santos",
+].map((nome) => [normalizar(nome), nome]));
+
+function nomeFamiliaTransferida(nome) {
+  const normalizado = normalizar(nome);
+  return FAMILIAS_TRANSFERIDAS_VALDEMIR.get(
+    normalizado === 'reginal gomes de oliveira' ? 'reginaldo gomes de oliveira' : normalizado
+  );
+}
+
+export function remanejarFamiliaCacauII(familia) {
+  const nome = nomeFamiliaTransferida(familia.chefeFamilia);
+  if (!nome) return familia;
+  return { ...familia, chefeFamilia: nome, tecnicoNome: 'Valdemir Ferreira Lima' };
+}
+
+ATUALIZACOES_CACAU_II.forEach((item) => {
+  const nome = nomeFamiliaTransferida(item.familia);
+  if (!nome) return;
+  item.familia = nome;
+  item.tecnico = 'Valdemir Ferreira Lima';
+});
+
 const TECNICO_FRANCISCO_REMANEJADO = "Francisco Romildo Xavier Idelfonso";
 const TECNICOS_ANTIGOS_VITOR = new Set([normalizar(TECNICO_FRANCISCO_REMANEJADO), normalizar("Vitor"), normalizar("Valdemir Ferreira Lima")]);
 const TECNICOS_ANTIGOS_LUCAS = new Set([normalizar(TECNICO_FRANCISCO_REMANEJADO), normalizar("Vitor"), normalizar(TECNICO_VITOR), normalizar("Valdemir Ferreira Lima"), normalizar(TECNICO_CARLOS)]);
@@ -1274,6 +1305,10 @@ export function completarPraticasFamiliasCacauII(rows) {
   const atualizadas = [];
 
   rows.forEach((row) => {
+    const nomeTransferido = nomeFamiliaTransferida(row[COLUNA_FAMILIA]);
+    if (nomeTransferido) {
+      row = { ...row, [COLUNA_FAMILIA]: nomeTransferido, [COLUNA_TECNICO]: 'Valdemir Ferreira Lima' };
+    }
     const rowChave = chave(row[COLUNA_TECNICO], row[COLUNA_FAMILIA]);
     if (FAMILIAS_REMOVIDAS_KHEILIANY.has(normalizar(row[COLUNA_FAMILIA])) && normalizar(row[COLUNA_TECNICO]) === normalizar(TECNICO_KHEILIANY)) return;
     if (FAMILIAS_ATRIBUIDAS_VITOR.has(normalizar(row[COLUNA_FAMILIA])) && TECNICOS_ANTIGOS_VITOR.has(normalizar(row[COLUNA_TECNICO]))) return;
@@ -1289,7 +1324,8 @@ export function completarPraticasFamiliasCacauII(rows) {
     const itemChave = chave(item.tecnico, item.familia);
     if (vistos.has(itemChave)) return;
     vistos.add(itemChave);
-    atualizadas.push(linhaDaAtualizacao(item));
+    const detalhe = nomeFamiliaTransferida(item.familia) ? ATUALIZACOES_POR_FAMILIA.get(itemChave) : item;
+    atualizadas.push(linhaDaAtualizacao(detalhe));
   });
 
   return atualizadas;

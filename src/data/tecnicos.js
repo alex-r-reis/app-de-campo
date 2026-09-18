@@ -7,7 +7,7 @@ const TECNICOS = [
   { id: 't3', nome: 'Geraldo Magela Andrade Rodrigues Junior', registro: 'ATEC-1003', regiao: 'Altamira / Medicilândia / Brasil Novo' },
   { id: 't4', nome: 'Marcelo Rodrigues Lima Filho', registro: 'ATEC-1004', regiao: 'Igarapé-Miri' },
   { id: 't5', nome: 'Paulo André Miranda Moreira', registro: 'ATEC-1005', regiao: 'Brasil Novo / Altamira' },
-  { id: 't6', nome: 'Valdemir Ferreira Lima', registro: 'ATEC-1006', regiao: 'São Félix do Xingu' },
+  { id: 't6', nome: 'Valdemir Ferreira Lima', registro: 'ATEC-1006', regiao: 'Tucumã' },
   { id: 't7', nome: 'Wellington Rodrigues Carneiro', registro: 'ATEC-1007', regiao: 'Igarapé-Miri' },
   { id: 't8', nome: 'Wellington Varela de Fraga', registro: 'ATEC-1008', regiao: 'Brasil Novo / Altamira' },
   { id: 't9', nome: 'Whalif Silva de Freitas', registro: 'ATEC-1009', regiao: 'São Félix do Xingu' },
