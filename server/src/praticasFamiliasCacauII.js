@@ -1208,6 +1208,7 @@ function chave(tecnico, familia) {
 
 const FAMILIAS_TRANSFERIDAS_VALDEMIR = new Map([
   "Ademar Ferreira Do Nascimento",
+  "Dagusan Pereira Lima",
   "Joana Darc Batista França",
   "Leida Alves Caldeira",
   "Maria Angelica De Souza Viana",

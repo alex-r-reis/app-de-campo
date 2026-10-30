@@ -5925,4 +5925,8 @@ moverFamiliasEntreTecnicos('t10', 't6', [
   'Rogerio Pereira Dos Santos',
 ]);
 
+moverFamiliasEntreTecnicos('t14', 't6', [
+  'Dagusan Pereira Lima',
+]);
+
 export { FAMILIAS };
